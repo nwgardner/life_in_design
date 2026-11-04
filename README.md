@@ -1,6 +1,12 @@
-# Life in Design Coach · v1 + Phase A
+# Life in Design Coach
 
-A responsive web app that coaches a person through Nate Gardner's Life in Design Framework, with a Google Sheet as its database and Claude as the coach.
+A responsive web app that coaches a person through Nate Gardner's Life in Design Framework, with Claude as the coach.
+
+It runs three ways from the same code:
+
+- **Hosted alpha** (current): a Node server on Render, with Supabase for accounts and data. Invite-only, sign-in by emailed link, each person able to see only their own design. Setup: [docs/alpha-setup.md](docs/alpha-setup.md).
+- **Google Apps Script** (v1): the Google Sheet as the database, as described below.
+- **Preview**: the front end alone, saving to the browser, with Claude answering through claude.ai.
 
 - **Database:** [Life in Design Coach – Database](https://docs.google.com/spreadsheets/d/1wv_mxigQ2TIDVD6A5f_RVVI7IW5m7ZLdEBsMjPSGYYU/edit) (Sheet ID `1wv_mxigQ2TIDVD6A5f_RVVI7IW5m7ZLdEBsMjPSGYYU`)
 - **Live app:** Google Apps Script web app (`dist/apps-script/Code.gs` + `dist/apps-script/Index.html`)
@@ -12,15 +18,19 @@ A responsive web app that coaches a person through Nate Gardner's Life in Design
 | Path | What it is |
 |---|---|
 | `src/` | Editable source: `shared.js` (the coaching engine), `backend.gs.js` (Apps Script server), `ui.html` (front end), `guide.md` (coach instructions) |
+| `server/` | The hosted alpha's web server: sign-in checks, the engine over each person's rows, Claude streaming. No third-party packages. |
+| `supabase/` | `migrations/` (applied by Supabase's GitHub integration on every change to `main`), `schema.sql` (the full current schema, generated from `framework.json`) and `config.toml` |
+| `render.yaml` | Render Blueprint for the alpha |
 | `framework.json` | The 9 elements, 14 belief areas, 7 lenses, 10 tests and the database schema |
-| `dist/` | Built files: `apps-script/Code.gs` and `apps-script/Index.html` to paste into Apps Script, and `preview.html` |
+| `dist/` | Built files: `web/index.html` and `server/engine.js` for the alpha, `apps-script/Code.gs` and `apps-script/Index.html` for Apps Script, and `preview.html` |
 | `test/` | Backend simulation and browser walkthroughs |
 | `build_sheet.py` | Builds a fresh copy of the Google Sheet database |
+| `docs/alpha-setup.md` | Step-by-step setup for Supabase and Render |
 | `docs/roadmap.md` | Decisions and what comes next |
 
-Run `npm run build` after editing anything in `src/` or `framework.json`, and `npm test` before committing.
+Run `npm run build` after editing anything in `src/` or `framework.json` (it also regenerates `supabase/schema.sql`), and `npm test` before committing. `npm run test:ui` drives the hosted app in a browser and needs Playwright.
 
-## Go live (about 10 minutes)
+## Apps Script version: go live (about 10 minutes)
 
 1. Open the database Sheet → **Extensions → Apps Script**.
 2. Replace everything in `Code.gs` with `dist/apps-script/Code.gs`. The Sheet ID is already filled in.
@@ -123,7 +133,10 @@ The engine (`src/shared.js`) is one piece of code shared by the backend and the 
 `src/` holds the editable source: `shared.js` (engine), `backend.gs.js` (Apps Script), `ui.html` (front end), `guide.md` (coach instructions). `framework.json` defines elements, areas, lenses and the Sheet schema.
 
 ```
-node build.js <SHEET_ID>     # → dist/apps-script/Code.gs, Index.html, dist/preview.html
+npm run build                # everything in dist/, plus supabase/schema.sql
+npm run db:migration -- name # record a schema change as a new Supabase migration
+npm test                     # migrations current, engine (60 checks), database rules in Postgres (15), hosted server end to end (25)
+npm run test:ui              # hosted app in a browser with the real Supabase sign-in library
 node test/gas_sim.js         # full journey + Phase A against a mock Sheet and fake Claude (60 checks)
 python3 test/ui_smoke.py     # browser walkthrough at desktop and phone width
 python3 test/ui_phaseA.py    # Phase A walkthrough: tests, journal, learning, review, accept/adapt/decline, notifications

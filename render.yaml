@@ -1,0 +1,25 @@
+# Render Blueprint for the Life in Design hosted alpha.
+# Render → New → Blueprint → pick this repo. It asks for the three secret values below once.
+services:
+  - type: web
+    name: life-in-design
+    runtime: node
+    plan: free
+    branch: main
+    buildCommand: npm run build
+    startCommand: npm start
+    healthCheckPath: /healthz
+    autoDeployTrigger: commit
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_ANON_KEY
+        sync: false
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: ANTHROPIC_MODEL
+        value: claude-sonnet-5-5
+      - key: COACH_CALLS_PER_HOUR
+        value: "60"

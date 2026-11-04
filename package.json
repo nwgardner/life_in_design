@@ -1,11 +1,20 @@
 {
   "name": "life-in-design",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "private": true,
   "description": "Life in Design Coach: an AI coach built on Nate Gardner's Life in Design Framework",
   "scripts": {
-    "build": "node build.js 1wv_mxigQ2TIDVD6A5f_RVVI7IW5m7ZLdEBsMjPSGYYU",
-    "test": "node test/gas_sim.js"
+    "build": "node build.js 1wv_mxigQ2TIDVD6A5f_RVVI7IW5m7ZLdEBsMjPSGYYU && node scripts/build_schema.js",
+    "start": "node server/index.js",
+    "test": "node scripts/check_migrations.js && node test/gas_sim.js && node test/db_test.js && node test/server_test.js",
+    "test:ui": "node test/hosted_ui_test.js",
+    "db:migration": "node scripts/new_migration.js"
   },
-  "engines": { "node": ">=20" }
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "0.2.12",
+    "@supabase/supabase-js": "2.118.0"
+  }
 }

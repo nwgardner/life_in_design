@@ -49,6 +49,7 @@
   --grain-o:.32; --grain-blend:overlay; color-scheme:dark }
 
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 html,body{min-height:100%}
 body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.65;-webkit-font-smoothing:antialiased;font-optical-sizing:auto}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--paper)}
@@ -525,7 +526,7 @@ var LID = (function () {
   function createUser(d, a) {
     if (!truthy(a.is18)) throw new Error('This coach is designed for adults aged 18 and over.');
     var u = {
-      UserID: uid(), Name: need(a.name, 'Name').trim(), Email: (a.email || '').trim(), CreatedAt: now(), LastActiveAt: now(),
+      UserID: a.newUserId || uid(), Name: need(a.name, 'Name').trim(), Email: (a.email || '').trim(), CreatedAt: now(), LastActiveAt: now(),
       Stage: 'design', CurrentFocus: 'Core Beliefs Exploration', WhatBroughtYou: a.whatBrought || '', HopedChange: a.hopedChange || '',
       Is18OrOlder: 'TRUE', PlainStyle: truthy(a.plain) ? 'TRUE' : 'FALSE'
     };
@@ -1166,6 +1167,10 @@ var GUIDE_PUBLIC = '';
 (function(){
 'use strict';
 var IS_GAS = typeof google !== 'undefined' && google.script && google.script.run;
+/* Hosted alpha: served by server/index.js, which writes window.LID_CONFIG; sign-in through Supabase. */
+var CFG = !IS_GAS && window.LID_CONFIG ? window.LID_CONFIG : null;
+var HOSTED = !!(CFG && CFG.supabaseUrl && CFG.supabaseAnonKey && window.supabase && window.supabase.createClient);
+var HOST_PROBLEM = CFG && !HOSTED ? (!CFG.supabaseUrl || !CFG.supabaseAnonKey ? 'config' : 'library') : '';
 var FW = LID.FW;
 var $ = function(s, r){ return (r||document).querySelector(s); };
 var store = {
@@ -1229,8 +1234,73 @@ var Local = (function(){
   };
 })();
 
+/* ---------- hosted backend: the server runs the engine as the signed-in person ---------- */
+var Hosted = (function(){
+  if (!HOSTED) return null;
+  var sb = window.supabase.createClient(CFG.supabaseUrl, CFG.supabaseAnonKey, {
+    auth: { persistSession:true, autoRefreshToken:true, detectSessionInUrl:true, flowType:'implicit' }
+  });
+  function session(){ return sb.auth.getSession().then(function(r){ return r && r.data ? r.data.session : null; }); }
+  function signedOut(){ var e = new Error('Please sign in again.'); e.code = 'signed_out'; return e; }
+  function call(action, args, onText){
+    return session().then(function(ses){
+      if (!ses) throw signedOut();
+      return fetch('/api/'+action, { method:'POST', headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer '+ses.access_token }, body: JSON.stringify({ args:args }) });
+    }).then(function(res){
+      if (res.status === 401) throw signedOut();
+      var type = res.headers.get('Content-Type') || '';
+      if (res.ok && type.indexOf('ndjson') >= 0) return readStream(res, onText);
+      return res.json().catch(function(){ return { error:'The app could not be reached. Check your connection and try again.' }; }).then(function(j){
+        if (!res.ok || j.error) throw new Error(j.error || 'Something went wrong. Try again.');
+        return j.result;
+      });
+    }, function(e){
+      if (e && e.code) throw e;
+      throw new Error('The app could not be reached. Check your connection and try again.');
+    });
+  }
+  function readStream(res, onText){
+    var reader = res.body.getReader(), decoder = new TextDecoder(), buf = '', result, error;
+    function handle(line){
+      if (!line.trim()) return;
+      var m; try { m = JSON.parse(line); } catch(e){ return; }
+      if (m.t === 'text' && onText) onText(m.text);
+      else if (m.t === 'done') result = m.result;
+      else if (m.t === 'error') error = m.error;
+    }
+    function pump(){
+      return reader.read().then(function(r){
+        if (r.done){ handle(buf); if (error) throw new Error(error); if (result === undefined) throw new Error('The coach was interrupted. Try again.'); return result; }
+        buf += decoder.decode(r.value, { stream:true });
+        var i; while ((i = buf.indexOf('\n')) >= 0){ handle(buf.slice(0, i)); buf = buf.slice(i+1); }
+        return pump();
+      });
+    }
+    return pump();
+  }
+  function sendLink(email){
+    return sb.auth.signInWithOtp({ email:email, options:{ emailRedirectTo: location.origin + location.pathname, shouldCreateUser:true } }).then(function(r){
+      if (!r.error) return true;
+      var msg = String(r.error.message || ''), status = r.error.status || 0;
+      if (/invite-only|database error|signups? not allowed/i.test(msg)) throw new Error('Life in Design is invite-only during the alpha. If you would like to join, ask for an invitation.');
+      if (/not authori[sz]ed/i.test(msg)) throw new Error('Sign-in emails can\'t be sent to this address yet: the app\'s email sender still needs to be set up.');
+      if (status === 429 || /rate limit|too many/i.test(msg)) throw new Error('Too many sign-in emails just now. Wait a few minutes and try again.');
+      throw new Error('The sign-in email could not be sent: ' + msg);
+    });
+  }
+  return {
+    session: session, api: call, sendLink: sendLink,
+    signOut: function(){ return sb.auth.signOut().catch(function(){}); },
+    onChange: function(fn){ sb.auth.onAuthStateChange(function(ev, ses){ fn(ev, ses); }); }
+  };
+})();
+
 function api(action, args, onText){
   args = Object.assign({ userId:S.userId, sessionId:S.sessionId }, args||{});
+  if (HOSTED) return Hosted.api(action, args, onText).catch(function(e){
+    if (e && e.code === 'signed_out' && S.view !== 'signin'){ S.state = null; S.userId = null; S.view = 'signin'; render(); }
+    throw e;
+  });
   if (IS_GAS) return new Promise(function(res, rej){
     google.script.run.withSuccessHandler(function(r){ if(r && r.error) rej(new Error(r.error)); else res(r); })
       .withFailureHandler(function(e){ rej(e instanceof Error ? e : new Error(String(e && e.message || e))); }).api(action, args);
@@ -1239,7 +1309,7 @@ function api(action, args, onText){
 }
 
 /* ---------- state ---------- */
-var S = { userId:store.get('lid.userId'), sessionId:null, state:null, view:'loading', ctx:null, messages:[], busy:false, coachErr:null };
+var S = { userId: HOSTED || CFG ? null : store.get('lid.userId'), email:'', linkSentTo:'', signinErr:'', sessionId:null, state:null, view:'loading', ctx:null, messages:[], busy:false, coachErr:null };
 
 function toast(t){
   Array.prototype.forEach.call(document.querySelectorAll('.toast'), function(x){ x.remove(); });
@@ -1282,7 +1352,7 @@ setTimeOfDay(); applyPhase(); setInterval(setTimeOfDay, 15*60*1000);
 
 /* ---------- rendering ---------- */
 function render(){
-  $('#modeTag').hidden = IS_GAS;
+  var mt = $('#modeTag'); mt.hidden = IS_GAS; mt.textContent = CFG ? 'Alpha' : 'Preview';
   var signedIn = !!(S.state && S.state.user);
   $('#nav').hidden = !signedIn;
   Array.prototype.forEach.call(document.querySelectorAll('#nav button'), function(b){
@@ -1291,7 +1361,7 @@ function render(){
   });
   var v = $('#view');
   var keep = $('#msg') ? $('#msg').value : '';
-  var fns = { welcome:vWelcome, journey:vJourney, explore:vExplore, studio:vStudio, design:vDesign, map:vMap, parked:vParked, you:vYou, under18:vUnder18, inputs:vInputs, iterate:vIterate };
+  var fns = { welcome:vWelcome, journey:vJourney, explore:vExplore, studio:vStudio, design:vDesign, map:vMap, parked:vParked, you:vYou, under18:vUnder18, inputs:vInputs, iterate:vIterate, signin:vSignIn, setup:vSetup };
   v.innerHTML = (fns[S.view] || function(){ return '<p class="muted">Opening your design…</p>'; })();
   if (S.view==='studio') { paintStream(); var ta=$('#msg'); if(ta){ if(keep && !S.busy) ta.value=keep; autoGrow(ta); } }
 }
@@ -1345,11 +1415,47 @@ function vWelcome(){
     '<label class="choice"><input type="checkbox" id="ob-plain"> I prefer plain, simple language</label>'+
     '<p class="err" id="ob-err" hidden></p>'+
     '<div class="row"><button class="btn primary" type="submit">Begin with the Why</button></div>'+
+    (HOSTED ? '<p class="muted" style="font-size:.9rem">Signed in as '+esc(S.email)+' · <button class="btn ghost small" type="button" data-act="signOut">Sign out</button></p>' :
     '<details><summary>Started on another device? Use your personal key</summary>'+
       '<div class="add-area" style="margin-top:10px"><div class="field"><label for="ob-key">Personal key</label><input id="ob-key" type="text" spellcheck="false"></div><button class="btn" type="button" data-act="useKey">Continue</button></div>'+
-    '</details>'+
+    '</details>')+
    '</form>'+
   '</div>';
+}
+
+function welcomeIntro(){
+  return '<section class="intro">'+
+    '<p class="eyebrow">Life in Design · a coaching practice</p>'+
+    '<h1>Consider yourself an iterative design.</h1>'+
+    '<p class="lede">Life in Design is a pyramid you build from the ground up. Your <strong>Why</strong> is the foundation, your <strong>How</strong> is the structure raised on it, and your <strong>What</strong> is the living part people see.</p>'+
+    pyramidArt()+'<p class="hand" style="font-size:1.3rem;color:var(--muted);margin-top:-6px">built from the ground up, one stone at a time</p>'+
+  '</section>';
+}
+function vSignIn(){
+  var form = S.linkSentTo
+    ? '<section class="panel" style="padding:30px;display:grid;gap:16px;border-radius:36px 28px 34px 30px/30px 34px 28px 36px">'+
+        '<h2>Check your email</h2>'+
+        '<p>We sent a sign-in link to <strong>'+esc(S.linkSentTo)+'</strong>. Open it on this device or any other, and you\'ll land in your design.</p>'+
+        '<p class="muted" style="font-size:.92rem">It can take a minute to arrive. Check the spam folder if it doesn\'t.</p>'+
+        '<div class="row"><button class="btn" data-act="resendLink">Send it again</button><button class="btn ghost" data-act="otherEmail">Use a different email</button></div>'+
+      '</section>'
+    : '<form class="panel" id="signinForm" style="padding:30px;display:grid;gap:18px;border-radius:36px 28px 34px 30px/30px 34px 28px 36px">'+
+        '<h2>Sign in</h2>'+
+        '<p class="muted">Life in Design is in an invite-only alpha. Enter the email you were invited with and we\'ll send you a sign-in link. No password needed.</p>'+
+        '<div class="field"><label for="si-email">Email</label><input id="si-email" type="email" required autocomplete="email" maxlength="160"></div>'+
+        '<p class="err" id="si-err"'+(S.signinErr?'':' hidden')+'>'+esc(S.signinErr)+'</p>'+
+        '<div class="row"><button class="btn primary" type="submit">Send me a sign-in link</button></div>'+
+      '</form>';
+  return '<div class="welcome">'+welcomeIntro()+form+'</div>';
+}
+function vSetup(){
+  var msg = HOST_PROBLEM === 'config'
+    ? 'This app isn\'t connected to its database yet. Add SUPABASE_URL and SUPABASE_ANON_KEY in Render → Environment, then redeploy.'
+    : HOST_PROBLEM === 'library'
+      ? 'The sign-in library didn\'t load. Check your connection and reload the page.'
+      : (S.bootErr || 'Something went wrong while opening your design.');
+  return '<section class="panel card" style="max-width:640px"><h2>Not quite ready</h2><p>'+esc(msg)+'</p>'+
+    '<div class="row"><button class="btn primary" data-act="reload">Try again</button>'+(HOSTED?'<button class="btn ghost" data-act="signOut">Sign out</button>':'')+'</div></section>';
 }
 
 function vUnder18(){
@@ -1357,7 +1463,7 @@ function vUnder18(){
     '<h2>Thank you for being honest.</h2>'+
     '<p>Life in Design is built for adults aged 18 and over, so the coach can\'t begin a design with you yet. The questions it asks are worth asking at any age, and they are best explored with people who know you: a parent, teacher, mentor or counselor you trust.</p>'+
     '<p>If things feel heavy right now, please talk to a trusted adult. In the US you can call or text <strong>988</strong> any time to reach someone who will listen.</p>'+
-    '<div class="row"><button class="btn" data-act="nav" data-view="welcome">Back</button></div>'+
+    '<div class="row"><button class="btn" data-act="nav" data-view="welcome">Back</button>'+(HOSTED?'<button class="btn ghost" data-act="signOut">Sign out</button>':'')+'</div>'+
   '</section>';
 }
 
@@ -1586,14 +1692,16 @@ function vYou(){
   return '<section class="hero"><p class="eyebrow">You</p><h1>'+esc(u.Name)+'</h1><p class="lede">Your design is personal and confidential.</p></section>'+
     '<div class="stack" style="max-width:680px">'+
     '<form class="panel card" id="youForm"><div class="field"><label for="you-name">Name</label><input id="you-name" type="text" value="'+esc(u.Name)+'" maxlength="60"></div>'+
-      '<div class="field"><label for="you-email">Email <span class="hint">Optional. Used only for your weekly nudge email.</span></label><input id="you-email" type="email" value="'+esc(u.Email||'')+'" maxlength="120" autocomplete="email"></div>'+
+      (HOSTED ? '' : '<div class="field"><label for="you-email">Email <span class="hint">Optional. Used only for your weekly nudge email.</span></label><input id="you-email" type="email" value="'+esc(u.Email||'')+'" maxlength="120" autocomplete="email"></div>')+
       '<label class="choice"><input type="checkbox" id="you-plain"'+(LID.truthy(u.PlainStyle)?' checked':'')+'> I prefer plain, simple language</label>'+
       '<div class="row"><button class="btn" type="submit">Save</button></div></form>'+
     notifPanel()+
+    (HOSTED ? '<section class="panel card"><span class="eyebrow">Your account</span><p>Signed in as <strong>'+esc(S.email)+'</strong>. Sign in with this email on any device to open your design.</p>'+
+      '<div class="row"><button class="btn" data-act="signOut">Sign out</button></div></section>' :
     '<section class="panel card"><span class="eyebrow">Personal key</span><p>Use this key to open your design on another device. Keep it private: anyone with it can read your design.</p>'+
       '<div class="row"><code id="keyText" class="statement" style="font-family:var(--mono);font-size:.85rem;user-select:all">'+esc(S.userId)+'</code><button class="btn small" data-act="copyKey">Copy</button></div></section>'+
     '<section class="panel card"><span class="eyebrow">This device</span><div class="row"><button class="btn" data-act="signOut">Sign out here</button>'+(IS_GAS?'':'<button class="btn ghost" data-act="resetPreview">Erase preview data</button>')+'</div>'+
-      (IS_GAS?'':'<p class="muted" style="font-size:.9rem">This is the preview. Everything stays in this browser; the live app saves to your Google Sheet.</p>')+'</section>'+
+      (IS_GAS?'':'<p class="muted" style="font-size:.9rem">This is the preview. Everything stays in this browser; the live app saves to your Google Sheet.</p>')+'</section>')+
     '</div>';
 }
 
@@ -1669,7 +1777,13 @@ document.addEventListener('click', function(ev){
     try { navigator.clipboard.writeText(S.userId).then(function(){ toast('Key copied.'); }, function(){ selectKey(); }); } catch(e){ selectKey(); }
     return;
   }
-  if (act==='signOut'){ store.del('lid.userId'); S.userId=null; S.state=null; S.sessionId=null; go('welcome'); return; }
+  if (act==='signOut'){
+    if (HOSTED){ Hosted.signOut().then(function(){ S.userId=null; S.state=null; S.sessionId=null; S.email=''; S.linkSentTo=''; go('signin'); }); return; }
+    store.del('lid.userId'); S.userId=null; S.state=null; S.sessionId=null; go('welcome'); return;
+  }
+  if (act==='resendLink'){ var to=S.linkSentTo; t.disabled=true; Hosted.sendLink(to).then(function(){ toast('Sent again to '+to+'.'); }, function(e){ S.linkSentTo=''; S.signinErr=e.message; render(); }); return; }
+  if (act==='otherEmail'){ S.linkSentTo=''; S.signinErr=''; render(); return; }
+  if (act==='reload'){ location.reload(); return; }
   if (act==='resetPreview'){ openDialog('<h2>Erase the preview data?</h2><p>This clears every design saved in this browser\'s preview. The live app and your Google Sheet are not touched.</p><div class="row"><button class="btn primary" data-act="confirmReset">Erase</button><button class="btn ghost" data-act="cancel">Keep it</button></div>'); return; }
   if (act==='confirmReset'){ Local.reset(); store.del('lid.userId'); S.userId=null; S.state=null; go('welcome'); toast('Preview data erased.'); return; }
   if (act==='useKey'){ var k=($('#ob-key').value||'').trim(); if(!k) return; signIn(k); return; }
@@ -1680,6 +1794,13 @@ document.addEventListener('submit', function(ev){
   ev.preventDefault();
   var f = ev.target;
   if (f.id==='onboard') return onboard();
+  if (f.id==='signinForm'){
+    var em=($('#si-email').value||'').trim().toLowerCase(), btn=f.querySelector('button[type=submit]');
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){ S.signinErr='That email address doesn\'t look complete.'; render(); return; }
+    btn.disabled=true; btn.textContent='Sending…';
+    Hosted.sendLink(em).then(function(){ S.linkSentTo=em; S.signinErr=''; render(); breathe(); }, function(e){ S.signinErr=e.message; render(); });
+    return;
+  }
   if (f.id==='compose'){ var ta=$('#msg'), v=(ta.value||'').trim(); if(!v||S.busy) return; S.messages.push({ Role:'user', Content:v, Timestamp:new Date().toISOString() }); ta.value=''; coachTurnWith(v); return; }
   if (f.id==='addArea'){ var a=($('#newArea').value||'').trim().replace(/\s+/g,' '); if(!a) return; openCtx('explore:'+a.charAt(0).toUpperCase()+a.slice(1)); return; }
   if (f.id==='parkForm'){ var d=($('#parkText').value||'').trim(); if(!d) return; api('parkProblem',{ description:d, returnState:true }).then(setState).then(function(){ render(); breathe(); toast('Parked.'); }).catch(fail); return; }
@@ -2018,7 +2139,7 @@ function notifPanel(){
   return '<section class="panel card" aria-label="Notifications"><span class="eyebrow">Notifications</span>'+
     '<label class="toggle"><span class="tx"><strong>Nudges and guidance</strong><span class="hint">Shown on your Journey when something needs you.</span></span><input type="checkbox" id="nf-all"'+(pr.nudges?' checked':'')+'></label>'+
     LID.NUDGE_TYPES.map(function(t){ return '<label class="toggle" style="padding-left:16px"><span class="tx"><span>'+esc(t.label)+'</span><span class="hint">'+esc(t.hint)+'</span></span><input type="checkbox" data-nf="'+t.key+'"'+(pr.types[t.key]?' checked':'')+(pr.nudges?'':' disabled')+'></label>'; }).join('')+
-    '<label class="toggle"><span class="tx"><strong>Weekly email</strong><span class="hint">'+(u.Email?'Monday mornings to '+esc(u.Email)+'.':'Add your email above to receive it.')+' Only when something needs you.</span></span><input type="checkbox" id="nf-email"'+(pr.email&&u.Email?' checked':'')+(pr.nudges&&u.Email?'':' disabled')+'></label>'+
+    (HOSTED ? '' : '<label class="toggle"><span class="tx"><strong>Weekly email</strong><span class="hint">'+(u.Email?'Monday mornings to '+esc(u.Email)+'.':'Add your email above to receive it.')+' Only when something needs you.</span></span><input type="checkbox" id="nf-email"'+(pr.email&&u.Email?' checked':'')+(pr.nudges&&u.Email?'':' disabled')+'></label>')+
   '</section>';
 }
 document.addEventListener('change', function(ev){
@@ -2116,7 +2237,36 @@ function phaseASubmit(f){
 }
 
 /* ---------- boot ---------- */
+function bootHosted(){
+  Hosted.session().then(function(ses){
+    if (!ses){ S.view='signin'; render(); return; }
+    S.userId = ses.user.id; S.email = ses.user.email || '';
+    return api('getState').then(function(st){ setState(st); return api('startSession'); })
+      .then(function(s){ S.sessionId=s.SessionID; go('journey'); })
+      .catch(function(e){
+        if (e && e.code === 'signed_out') return;
+        if (/No design found/.test(e && e.message)){ S.view='welcome'; render(); return; }
+        S.bootErr = e.message; S.view='setup'; render();
+      });
+  });
+}
+var bootedFor = null;
 function boot(){
+  if (HOST_PROBLEM){ S.view='setup'; render(); return; }
+  if (HOSTED){
+    Hosted.onChange(function(ev, ses){
+      var id = ses && ses.user ? ses.user.id : null;
+      if (ev === 'SIGNED_IN' && id && id !== bootedFor){ bootedFor = id; bootHosted(); }
+      if (ev === 'SIGNED_OUT' && S.view !== 'signin'){ S.state=null; S.userId=null; S.view='signin'; render(); }
+    });
+    Hosted.session().then(function(ses){
+      var id = ses && ses.user ? ses.user.id : null;
+      if (id && id === bootedFor) return;
+      if (id) bootedFor = id;
+      bootHosted();
+    });
+    return;
+  }
   if (!S.userId){ S.view='welcome'; render(); return; }
   api('getState').then(function(st){ setState(st); return api('startSession'); })
     .then(function(s){ S.sessionId=s.SessionID; go('journey'); })
