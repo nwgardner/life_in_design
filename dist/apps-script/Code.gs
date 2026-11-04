@@ -333,7 +333,7 @@ var LID = (function () {
   function createUser(d, a) {
     if (!truthy(a.is18)) throw new Error('This coach is designed for adults aged 18 and over.');
     var u = {
-      UserID: uid(), Name: need(a.name, 'Name').trim(), Email: (a.email || '').trim(), CreatedAt: now(), LastActiveAt: now(),
+      UserID: a.newUserId || uid(), Name: need(a.name, 'Name').trim(), Email: (a.email || '').trim(), CreatedAt: now(), LastActiveAt: now(),
       Stage: 'design', CurrentFocus: 'Core Beliefs Exploration', WhatBroughtYou: a.whatBrought || '', HopedChange: a.hopedChange || '',
       Is18OrOlder: 'TRUE', PlainStyle: truthy(a.plain) ? 'TRUE' : 'FALSE'
     };
