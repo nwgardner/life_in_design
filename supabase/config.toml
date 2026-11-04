@@ -1,0 +1,3 @@
+# Settings for the Supabase CLI and Supabase's GitHub integration.
+# The integration applies new files in supabase/migrations/ when main changes.
+project_id = "life_in_design"

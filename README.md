@@ -19,7 +19,7 @@ It runs three ways from the same code:
 |---|---|
 | `src/` | Editable source: `shared.js` (the coaching engine), `backend.gs.js` (Apps Script server), `ui.html` (front end), `guide.md` (coach instructions) |
 | `server/` | The hosted alpha's web server: sign-in checks, the engine over each person's rows, Claude streaming. No third-party packages. |
-| `supabase/schema.sql` | Tables, row-level security, invite list and snapshot function. Generated; run it in Supabase's SQL Editor. |
+| `supabase/` | `migrations/` (applied by Supabase's GitHub integration on every change to `main`), `schema.sql` (the full current schema, generated from `framework.json`) and `config.toml` |
 | `render.yaml` | Render Blueprint for the alpha |
 | `framework.json` | The 9 elements, 14 belief areas, 7 lenses, 10 tests and the database schema |
 | `dist/` | Built files: `web/index.html` and `server/engine.js` for the alpha, `apps-script/Code.gs` and `apps-script/Index.html` for Apps Script, and `preview.html` |
@@ -134,7 +134,8 @@ The engine (`src/shared.js`) is one piece of code shared by the backend and the 
 
 ```
 npm run build                # everything in dist/, plus supabase/schema.sql
-npm test                     # engine (60 checks), database rules in Postgres (15), hosted server end to end (25)
+npm run db:migration -- name # record a schema change as a new Supabase migration
+npm test                     # migrations current, engine (60 checks), database rules in Postgres (15), hosted server end to end (25)
 npm run test:ui              # hosted app in a browser with the real Supabase sign-in library
 node test/gas_sim.js         # full journey + Phase A against a mock Sheet and fake Claude (60 checks)
 python3 test/ui_smoke.py     # browser walkthrough at desktop and phone width

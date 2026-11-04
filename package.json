@@ -6,8 +6,9 @@
   "scripts": {
     "build": "node build.js 1wv_mxigQ2TIDVD6A5f_RVVI7IW5m7ZLdEBsMjPSGYYU && node scripts/build_schema.js",
     "start": "node server/index.js",
-    "test": "node test/gas_sim.js && node test/db_test.js && node test/server_test.js",
-    "test:ui": "node test/hosted_ui_test.js"
+    "test": "node scripts/check_migrations.js && node test/gas_sim.js && node test/db_test.js && node test/server_test.js",
+    "test:ui": "node test/hosted_ui_test.js",
+    "db:migration": "node scripts/new_migration.js"
   },
   "engines": {
     "node": ">=20"

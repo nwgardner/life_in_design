@@ -4,15 +4,27 @@ The alpha runs on three free accounts: **GitHub** (this repo), **Supabase** (dat
 
 Nothing secret ever goes in this repo. Keys live in Render's settings.
 
-## 1. Set up the database in Supabase
+## 1. Connect Supabase to this repo
 
-1. Open your Supabase project → **SQL Editor** → **New query**.
-2. Paste the whole of [`supabase/schema.sql`](../supabase/schema.sql) and press **Run**. It creates the tables, turns on row-level security with an "only your own rows" rule on every table, adds the invite list, and creates the function the server uses to load a person's design. It's safe to run again after an update.
-3. Invite yourself first. In a new query, run:
-   ```sql
-   insert into public.invites (email) values ('your-email@example.com');
-   ```
-   Add each tester the same way. Anyone not on this list is refused at sign-up.
+Supabase applies database changes straight from GitHub: every push or merge to `main` runs any new files in [`supabase/migrations/`](../supabase/migrations). This works on the free plan.
+
+1. In your Supabase project, open **Project Settings → Integrations** and choose **Authorize GitHub**.
+2. Pick the repository `nwgardner/life_in_design`.
+3. Set **Working directory** to `.` (the `supabase` folder is at the top of the repo) and the **production branch** to `main`.
+4. Turn on **Deploy to production**. Leave automatic preview branches off: those are a paid feature this alpha doesn't need.
+5. **Enable integration.**
+
+The first migration creates everything: the tables, an "only your own rows" rule on every table, the invite list, and the function the server uses to load a person's design. If `main` already holds it when you connect, push any small change (or re-run the latest deployment from the integration's page) to trigger it. You can also paste [`supabase/schema.sql`](../supabase/schema.sql) into **SQL Editor → New query → Run**; it's safe to run alongside the migrations.
+
+Then invite yourself. In **SQL Editor → New query**, run:
+```sql
+insert into public.invites (email) values ('your-email@example.com');
+```
+Add each tester the same way. Invites are data, not code, so they never live in the repo. Anyone not on the list is refused at sign-up.
+
+### Changing the database later
+
+The schema is generated from `framework.json`. After a change there, run `npm run db:migration -- short_name`. It writes a new dated file in `supabase/migrations/`, which Supabase applies when the change reaches `main`. `npm test` fails if the schema changed without a migration, so nothing slips through.
 
 ## 2. Configure sign-in in Supabase
 
@@ -60,4 +72,4 @@ Open your Render address, enter your invited email, open the link from your inbo
 | "Too many sign-in emails just now" | The built-in sender's 2-per-hour limit |
 | The link opens the app but you're still signed out | The Render address isn't in Supabase's Redirect URLs |
 | "The coach could not sign in to Claude" | `ANTHROPIC_API_KEY` is wrong or missing |
-| "Loading your design failed (404)" | `supabase/schema.sql` hasn't been run |
+| "Loading your design failed (404)" | The first migration hasn't run: check **Project Settings → Integrations → GitHub** in Supabase |
