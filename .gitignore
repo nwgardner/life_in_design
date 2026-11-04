@@ -1,0 +1,8 @@
+node_modules/
+__pycache__/
+test/shots/
+*.xlsx
+*.b64
+.env
+.env.*
+.DS_Store

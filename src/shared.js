@@ -1,0 +1,737 @@
+/* Life in Design · shared engine (runs in Apps Script and in the browser) */
+var LID = (function () {
+  var FW = /*@@FRAMEWORK@@*/null;
+  var ELEMENTS = FW.elements;
+  var STEPS = [{ key: 'exploration', name: 'Core Beliefs Exploration', layer: 'Why', order: 0 }]
+    .concat(ELEMENTS.map(function (e) { return { key: e.element, name: e.element, layer: e.layer, order: e.order, el: e }; }));
+
+  function uid() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+      var r = Math.random() * 16 | 0; return (c === 'x' ? r : (r & 3 | 8)).toString(16);
+    });
+  }
+  function now() { return new Date().toISOString(); }
+  function truthy(v) { return v === true || v === 'true' || v === 'TRUE'; }
+  function clip(s, n) { s = String(s || ''); return s.length > n ? s.slice(0, n) + '…' : s; }
+  function elementDef(name) { return ELEMENTS.filter(function (e) { return e.element === name; })[0]; }
+  function areaDef(name) { return FW.areas.filter(function (a) { return a.area === name; })[0]; }
+  function mine(d, table, userId) { return d.rows(table).filter(function (r) { return r.UserID === userId; }); }
+  function need(v, what) { if (v === undefined || v === null || String(v).trim() === '') throw new Error(what + ' is required.'); return v; }
+
+  /* ---------- reads ---------- */
+  function getState(d, a) {
+    var userId = need(a.userId, 'userId');
+    var user = mine(d, 'Users', userId)[0];
+    if (!user) throw new Error('No design found for that key.');
+    var commitments = mine(d, 'Commitments', userId);
+    return {
+      user: user,
+      design: mine(d, 'DesignRecord', userId),
+      history: mine(d, 'ElementHistory', userId),
+      exploration: mine(d, 'BeliefExploration', userId),
+      chosen: mine(d, 'ChosenBeliefs', userId),
+      parked: mine(d, 'ParkedProblems', userId),
+      commitments: commitments.slice(-30),
+      assessments: mine(d, 'Assessments', userId),
+      journal: mine(d, 'Journal', userId).filter(function (j) { return j.Entry; }).slice(-60),
+      growth: mine(d, 'Growth', userId).filter(function (g) { return g.Title; }),
+      recs: mine(d, 'Recommendations', userId).slice(-80),
+      reviews: mine(d, 'Reviews', userId)
+    };
+  }
+
+  function getMessages(d, a) {
+    var rows = mine(d, 'Messages', a.userId).filter(function (m) { return m.Context === a.context; });
+    return a.limit ? rows.slice(-a.limit) : rows;
+  }
+
+  /* ---------- progress & exploration state (pure) ---------- */
+  function latestChosen(state, area) {
+    var rows = state.chosen.filter(function (c) { return c.Area === area; });
+    return rows[rows.length - 1] || null;
+  }
+  function chosenByArea(state) {
+    var out = {}; state.chosen.forEach(function (c) { out[c.Area] = c; }); return out;
+  }
+  function designMap(state) {
+    var m = {}; state.design.forEach(function (r) { m[r.Element] = r; }); return m;
+  }
+  function progress(state) {
+    var dm = designMap(state);
+    var hasChosen = state.chosen.length > 0;
+    var steps = STEPS.map(function (s) {
+      var row = dm[s.key];
+      return {
+        key: s.key, name: s.name, layer: s.layer, order: s.order, el: s.el,
+        done: s.key === 'exploration' ? hasChosen : !!(row && String(row.Statement).trim()),
+        status: row ? row.Status : '', version: row ? Number(row.Version) || 0 : 0, statement: row ? row.Statement : ''
+      };
+    });
+    steps.forEach(function (s, i) { s.unlocked = i === 0 || steps[i - 1].done; });
+    var next = steps.filter(function (s) { return s.unlocked && !s.done; })[0] || null;
+    var allDrafted = steps.slice(1).every(function (s) { return s.done; });
+    var ka = steps.filter(function (s) { return s.key === 'Key Activities'; })[0];
+    return { steps: steps, next: next, allDrafted: allDrafted, whatOpen: ka.unlocked };
+  }
+  function areaState(state, area) {
+    var rows = state.exploration.filter(function (r) { return r.Area === area; });
+    var lenses = FW.lenses.map(function (l) {
+      var r = rows.filter(function (x) { return Number(x.LensOrder) === l.order; })[0];
+      var response = r ? String(r.Response || '') : '';
+      var skipped = r ? (truthy(r.Skipped) || r.LensStatus === 'Skipped') : false;
+      var explored = r ? r.LensStatus === 'Explored' : false;
+      return { order: l.order, lens: l.lens, kind: l.kind, questions: l.questions, alt: l.alt, response: response, skipped: skipped, explored: explored, covered: explored || skipped };
+    });
+    var current = lenses.filter(function (l) { return !l.covered; })[0] || null;
+    var started = rows.length > 0;
+    return {
+      area: area, lenses: lenses, current: current, started: started,
+      complete: !current, coveredCount: lenses.filter(function (l) { return l.covered; }).length,
+      chosen: latestChosen(state, area), isCustom: rows.some(function (r) { return truthy(r.IsCustomArea); }) || !areaDef(area)
+    };
+  }
+  function allAreas(state) {
+    var names = FW.areas.map(function (a) { return a.area; });
+    state.exploration.concat(state.chosen).forEach(function (r) { if (names.indexOf(r.Area) < 0) names.push(r.Area); });
+    return names;
+  }
+
+  /* ---------- writes ---------- */
+  function createUser(d, a) {
+    if (!truthy(a.is18)) throw new Error('This coach is designed for adults aged 18 and over.');
+    var u = {
+      UserID: uid(), Name: need(a.name, 'Name').trim(), Email: (a.email || '').trim(), CreatedAt: now(), LastActiveAt: now(),
+      Stage: 'design', CurrentFocus: 'Core Beliefs Exploration', WhatBroughtYou: a.whatBrought || '', HopedChange: a.hopedChange || '',
+      Is18OrOlder: 'TRUE', PlainStyle: truthy(a.plain) ? 'TRUE' : 'FALSE'
+    };
+    d.insert('Users', u);
+    if (a.pressing && String(a.pressing).trim()) parkProblem(d, { userId: u.UserID, description: a.pressing });
+    return u;
+  }
+  function updateUser(d, a) {
+    var allowed = ['Name', 'Email', 'Stage', 'CurrentFocus', 'PlainStyle', 'WhatBroughtYou', 'HopedChange'];
+    var patch = { LastActiveAt: now() };
+    Object.keys(a.patch || {}).forEach(function (k) { if (allowed.indexOf(k) >= 0) patch[k] = a.patch[k]; });
+    d.update('Users', function (r) { return r.UserID === a.userId; }, patch);
+    return mine(d, 'Users', a.userId)[0];
+  }
+  function addMessage(d, userId, sessionId, context, role, content) {
+    var m = { MessageID: uid(), UserID: userId, SessionID: sessionId || '', Timestamp: now(), Context: context, Role: role, Content: content };
+    d.insert('Messages', m); return m;
+  }
+  function note(d, a, text) { return addMessage(d, a.userId, a.sessionId, a.context, 'user', '[note] ' + text); }
+
+  function saveElement(d, a) {
+    var el = elementDef(need(a.element, 'Element'));
+    if (!el) throw new Error('Unknown element: ' + a.element);
+    var statement = need(a.statement, 'Statement');
+    var status = a.status === 'Approved' ? 'Approved' : 'Draft';
+    var state = getState(d, a);
+    var p = progress(state);
+    var step = p.steps.filter(function (s) { return s.key === el.element; })[0];
+    if (!step.unlocked) throw new Error(el.element + ' opens once the element beneath it has a first draft.');
+    var cur = designMap(state)[el.element];
+    var version = cur ? (Number(cur.Version) || 0) + 1 : 1;
+    var ts = now();
+    var noteText = a.changeNote || (cur ? '' : 'First draft');
+    if (cur) {
+      d.update('DesignRecord', function (r) { return r.UserID === a.userId && r.Element === el.element; },
+        { Statement: statement, Status: status, Version: String(version), UpdatedAt: ts });
+    } else {
+      d.insert('DesignRecord', { UserID: a.userId, Layer: el.layer, Element: el.element, ElementOrder: String(el.order), Statement: statement, Status: status, Version: String(version), UpdatedAt: ts });
+    }
+    d.insert('ElementHistory', { HistoryID: uid(), UserID: a.userId, Element: el.element, Version: String(version), Statement: statement, Status: status, ChangedAt: ts, ChangeNote: noteText });
+    note(d, { userId: a.userId, sessionId: a.sessionId, context: 'element:' + el.element },
+      'The person saved ' + el.element + ' v' + version + ' as ' + status + (noteText ? ' (' + noteText + ')' : '') + ': "' + statement + '"');
+    updateUser(d, { userId: a.userId, patch: { CurrentFocus: el.element } });
+    return getState(d, a);
+  }
+
+  function lensRow(d, userId, area, order) {
+    return d.rows('BeliefExploration').filter(function (r) { return r.UserID === userId && r.Area === area && Number(r.LensOrder) === order; })[0];
+  }
+  function writeLens(d, a) {
+    var lens = FW.lenses.filter(function (l) { return l.order === a.lensOrder; })[0];
+    var row = lensRow(d, a.userId, a.area, a.lensOrder);
+    var isCustom = areaDef(a.area) ? 'FALSE' : 'TRUE';
+    if (row) {
+      var patch = { UpdatedAt: now() };
+      if (a.append) patch.Response = (row.Response ? row.Response + '\n\n' : '') + a.append;
+      if (a.response !== undefined) patch.Response = a.response;
+      if (a.skipped !== undefined) patch.Skipped = a.skipped ? 'TRUE' : 'FALSE';
+      if (a.status) patch.LensStatus = a.status;
+      d.update('BeliefExploration', function (r) { return r.EntryID === row.EntryID; }, patch);
+    } else {
+      d.insert('BeliefExploration', {
+        EntryID: uid(), UserID: a.userId, Area: a.area, IsCustomArea: isCustom, LensOrder: String(lens.order), Lens: lens.lens,
+        Response: a.append || a.response || '', Skipped: a.skipped ? 'TRUE' : 'FALSE', UpdatedAt: now(), LensStatus: a.status || 'Open'
+      });
+    }
+  }
+  function startArea(d, a) {
+    var area = need(a.area, 'Area').trim();
+    var st = areaState(getState(d, a), area);
+    var ctx = 'explore:' + area;
+    if (!getMessages(d, { userId: a.userId, context: ctx }).length) {
+      var first = st.current || st.lenses[0];
+      note(d, { userId: a.userId, sessionId: a.sessionId, context: ctx },
+        'Area: ' + area + '. Lens ' + first.order + ' of 7 · ' + first.lens + '.');
+    }
+    updateUser(d, { userId: a.userId, patch: { CurrentFocus: 'Exploration · ' + area } });
+    return { context: ctx };
+  }
+  function advanceLens(d, a) {
+    var state = getState(d, a);
+    var st = areaState(state, a.area);
+    if (!st.current) throw new Error('Every lens in this area is already explored.');
+    if (a.skip) writeLens(d, { userId: a.userId, area: a.area, lensOrder: st.current.order, skipped: true, status: 'Skipped' });
+    else if (!st.current.response.trim()) throw new Error('Share something on this lens first, or skip it.');
+    else writeLens(d, { userId: a.userId, area: a.area, lensOrder: st.current.order, skipped: false, status: 'Explored' });
+    var after = areaState(getState(d, a), a.area);
+    var ctx = 'explore:' + a.area;
+    var text = (a.skip ? 'The person chose to skip the ' + st.current.lens + ' lens. ' : 'The person is ready to move on from the ' + st.current.lens + ' lens. ') +
+      (after.current ? 'Now: lens ' + after.current.order + ' of 7 · ' + after.current.lens + '.' : 'All seven lenses are explored. Time to close the area with a choice.');
+    note(d, { userId: a.userId, sessionId: a.sessionId, context: ctx }, text);
+    return getState(d, a);
+  }
+  function saveChosenBelief(d, a) {
+    var row = { ChoiceID: uid(), UserID: a.userId, Area: need(a.area, 'Area'), ChosenBelief: need(a.belief, 'Belief'), Why: a.why || '', ApprovedAt: now() };
+    d.insert('ChosenBeliefs', row);
+    note(d, { userId: a.userId, sessionId: a.sessionId, context: 'explore:' + a.area },
+      'The person closed this area and saved their chosen belief: "' + row.ChosenBelief + '"' + (row.Why ? ' Why: "' + row.Why + '"' : ''));
+    return getState(d, a);
+  }
+  function parkProblem(d, a) {
+    d.insert('ParkedProblems', { ProblemID: uid(), UserID: a.userId, Description: need(a.description, 'Description').trim(), ParkedAt: now(), Status: 'Parked', ResolvedAt: '', ResolutionNote: '' });
+    return a.returnState ? getState(d, a) : true;
+  }
+  function updateProblem(d, a) {
+    var patch = { Status: a.status };
+    if (a.status === 'Resolved') patch.ResolvedAt = now();
+    if (a.note !== undefined) patch.ResolutionNote = a.note;
+    d.update('ParkedProblems', function (r) { return r.ProblemID === a.problemId && r.UserID === a.userId; }, patch);
+    return getState(d, a);
+  }
+  function addCommitment(d, a) {
+    d.insert('Commitments', { CommitmentID: uid(), UserID: a.userId, SessionID: a.sessionId || '', Focus: a.focus || '', Commitment: need(a.text, 'Commitment').trim(), Status: 'Open', CreatedAt: now(), CompletedAt: '', Reflection: '' });
+    if (a.context) note(d, a, 'The person ended the session committing to: "' + a.text.trim() + '"');
+    if (a.sessionId) d.update('Sessions', function (r) { return r.SessionID === a.sessionId; }, { EndedAt: now(), Focus: a.focus || '', Summary: 'Committed: ' + a.text.trim() });
+    return getState(d, a);
+  }
+  function updateCommitment(d, a) {
+    var patch = { Status: a.status };
+    if (a.status !== 'Open') patch.CompletedAt = now();
+    if (a.reflection !== undefined) patch.Reflection = a.reflection;
+    d.update('Commitments', function (r) { return r.CommitmentID === a.commitmentId && r.UserID === a.userId; }, patch);
+    return getState(d, a);
+  }
+  function startSession(d, a) {
+    var s = { SessionID: uid(), UserID: need(a.userId, 'userId'), StartedAt: now(), EndedAt: '', Focus: '', Summary: '' };
+    d.insert('Sessions', s);
+    d.update('Users', function (r) { return r.UserID === a.userId; }, { LastActiveAt: now() });
+    return s;
+  }
+
+  /* ---------- the coach's context ---------- */
+  function lensPrompt(l) { return 'Lens ' + l.order + ' of 7 · ' + l.lens + ' (' + l.kind.toLowerCase() + '). Explore: ' + l.questions + (l.alt ? ' Care note: ' + l.alt : ''); }
+
+  function focusBlock(state, ctx) {
+    var p = progress(state);
+    var parts = [];
+    if (ctx.indexOf('explore:') === 0) {
+      var area = ctx.slice(8);
+      var st = areaState(state, area);
+      var def = areaDef(area);
+      var firstEver = state.exploration.filter(function (r) { return r.Area !== area; }).length === 0 && state.chosen.length === 0;
+      parts.push('FOCUS: the Core Beliefs Exploration, area "' + area + '"' + (def ? '' : ' (an area the person named themselves)') + '.');
+      if (def && def.weight === 'Tender') parts.push('This is a tender area. Slow down, check in, and make skipping easy.');
+      if (area === 'God') parts.push('Every answer is welcome here, including none, doubt and searching. Explore origins and coherence; never evaluate the belief itself.');
+      if (firstEver) parts.push('This is the person\'s first area. Briefly share the premise of the exploration in your own words before the first lens.');
+      st.lenses.forEach(function (l) {
+        if (l.skipped) parts.push('- ' + l.lens + ': skipped by choice.');
+        else if (l.response) parts.push('- ' + l.lens + ' (their words so far): ' + clip(l.response, 700));
+      });
+      if (st.current) {
+        parts.push('CURRENT ' + lensPrompt(st.current));
+        parts.push('Stay with this lens only, one or two questions at a time. The app records the person\'s replies under this lens. When it feels explored, invite them to tap "Next lens" (or "Skip this lens" if it is hard). Do not move to the next lens yourself.');
+      } else {
+        parts.push('All seven lenses are explored. Reflect the patterns you notice (echoes, contrasts, inherited beliefs that shrink them) as observations, then invite the person to close the area: one sentence on what they now choose to believe about ' + area + ' and why. They save it with the "Close this area" button, which saves only what they approve.');
+      }
+      if (st.chosen) parts.push('They already closed this area once with: "' + st.chosen.ChosenBelief + '". They may be revisiting it.');
+    } else if (ctx.indexOf('element:') === 0) {
+      var name = ctx.slice(8);
+      var e = elementDef(name);
+      var step = p.steps.filter(function (s) { return s.key === name; })[0];
+      parts.push('FOCUS: designing ' + e.layer + ' · ' + e.element + '. In one line: ' + e.oneLine + '.');
+      parts.push('Defining question: ' + e.definingQuestion);
+      parts.push('A strong draft: ' + e.strongDraft);
+      parts.push(step.statement ? 'Their current statement (v' + step.version + ', ' + step.status + '): "' + step.statement + '"' : 'Nothing saved yet for this element.');
+      if (name === 'Core Beliefs') parts.push('Synthesize from the chosen beliefs of the Exploration: look across them for themes about self, others and the universe, and help the person distill 3–7 Core Belief statements in their own words.');
+      if (name === 'Resources') parts.push('Draw on their strengths and personality results and their learning & skills log (below, if any) to help them take an immodest, honest inventory. Results are self-reported lenses, not verdicts.');
+      if (name === 'Relationships' || name === 'Methods' || name === 'Key Activities') parts.push('Where their test results illuminate this element (how they give and receive care, how they take action, which work energizes or drains them), bring them in as observations to test against their experience.');
+      var dmRow = designMap(state)[name];
+      var pending = state.recs.filter(function (r) { return r.Status === 'Accepted' && r.ActionType === 'revise' && r.ActionElement === name && (!dmRow || r.RespondedAt > dmRow.UpdatedAt); });
+      if (pending.length) parts.push('Guidance the person accepted from a congruence review, to work into this element now (it is a new input; start from what they accepted, and remember it is saved only when they capture and approve a new version): ' +
+        pending.map(function (r) { return '"' + r.ActionText.replace(' ⟨Skill⟩', '') + '"' + (r.UserNote === 'Adapted' ? ' (adapted in their own words)' : '') + ' — from the card "' + r.Title + ': ' + clip(r.Body, 300) + '", serving their ' + (r.TracesTo || 'Why'); }).join('; '));
+      if (e.layer === 'What') {
+        var open = state.parked.filter(function (x) { return x.Status !== 'Resolved'; });
+        if (open.length) parts.push('The What layer has arrived. Bring back the parked problems listed above when it fits, and work them through the design they have built.');
+      }
+      parts.push('When the person has material for a draft, invite them to tap "Capture a draft": the app proposes wording from their own words for them to edit and approve. Never say you have saved anything yourself.');
+    } else if (ctx === 'iterate') {
+      parts.push(iterateFocus(state));
+    } else if (ctx === 'alignment') {
+      parts.push('FOCUS: the Alignment check. A first draft of all nine elements exists. Review the stack together, top-down and bottom-up, one break at a time: an activity that serves no strategy, a Governing Principle with no root in the Why, a goal that does not advance the Purpose, a part of the foundation with nothing built on it. Name each break plainly and kindly and ask what the person makes of it. Changes are saved by revisiting the element.');
+    } else if (ctx === 'checkin') {
+      parts.push('FOCUS: Living with the design. A short check-in: what did they do, what did they learn, what will they change? Use their design as the lens for any decision they bring. Ask about their open commitments.');
+    } else if (ctx === 'remodel') {
+      parts.push('FOCUS: a Remodel. Life has shifted or the design no longer fits. Name this as normal and good: deconstructing and rebuilding is part of the framework. Revisit from the top (the Why), asking what still holds and what has changed. Changes are saved by revisiting each element.');
+    }
+    return parts.join('\n');
+  }
+
+  function contextBlock(state, ctx) {
+    var u = state.user;
+    var p = progress(state);
+    var L = [];
+    L.push('# Live context from the app (private; use it, do not recite it)');
+    L.push('Today: ' + new Date().toDateString() + '.');
+    L.push('Person: ' + u.Name + '.' + (truthy(u.PlainStyle) ? ' They asked for plain, simple language: keep the play light and the clarity high.' : ''));
+    if (u.WhatBroughtYou) L.push('What brought them here: "' + clip(u.WhatBroughtYou, 600) + '"');
+    if (u.HopedChange) L.push('What they hope will be different: "' + clip(u.HopedChange, 600) + '"');
+    L.push('Journey (strict order; ✓ = has a first draft): ' + p.steps.map(function (s) { return (s.done ? '✓ ' : (s.unlocked ? '→ ' : '· ')) + s.name; }).join(' | '));
+    L.push('## Their design record');
+    ['Why', 'How', 'What'].forEach(function (layer) {
+      p.steps.filter(function (s) { return s.layer === layer && s.key !== 'exploration'; }).forEach(function (s) {
+        L.push('- ' + layer + ' · ' + s.name + ': ' + (s.statement ? '"' + clip(s.statement, 900) + '" (v' + s.version + ', ' + s.status + ')' : '(gap)'));
+      });
+    });
+    var cb = chosenByArea(state);
+    var areas = Object.keys(cb);
+    if (areas.length) {
+      L.push('## Chosen beliefs from the Exploration');
+      areas.forEach(function (a) { L.push('- ' + a + ': "' + cb[a].ChosenBelief + '"' + (cb[a].Why ? ' — why: "' + clip(cb[a].Why, 300) + '"' : '')); });
+    }
+    var parked = state.parked.filter(function (x) { return x.Status !== 'Resolved'; });
+    if (parked.length) {
+      L.push('## Parked What problems (held until the What layer; offer no fixes before then)');
+      parked.forEach(function (x) { L.push('- ' + clip(x.Description, 300)); });
+    }
+    var openC = state.commitments.filter(function (c) { return c.Status === 'Open'; }).slice(-3);
+    if (openC.length) {
+      L.push('## Open commitments');
+      openC.forEach(function (c) { L.push('- ' + clip(c.Commitment, 200) + ' (from ' + String(c.CreatedAt).slice(0, 10) + ')'); });
+    }
+    var inp = inputsBlock(state);
+    if (inp) L.push(inp);
+    L.push('');
+    L.push(focusBlock(state, ctx));
+    L.push('');
+    L.push('Messages that begin with "[note]" are written by the app, not the person: they mark lens changes and saves. Never quote them back.');
+    L.push('Format: plain conversational text, short paragraphs, no headings. Light emphasis with *italics* is fine.');
+    return L.join('\n');
+  }
+
+  function toModelMessages(history) {
+    var out = [];
+    history.forEach(function (m) {
+      var role = m.Role === 'assistant' ? 'assistant' : 'user';
+      var content = String(m.Content || '');
+      if (out.length && out[out.length - 1].role === role) out[out.length - 1].content += '\n\n' + content;
+      else out.push({ role: role, content: content });
+    });
+    if (!out.length || out[0].role !== 'user') out.unshift({ role: 'user', content: '[note] The person opened this session.' });
+    if (out[out.length - 1].role !== 'user') out.push({ role: 'user', content: '[note] The person has returned to this conversation. Reconnect briefly: recall where you left off and ask what has changed.' });
+    return out;
+  }
+
+  /* Prepare one coaching turn. mode: 'chat' (with message), 'open' (no message), 'draft' (propose wording). */
+  function coachPrepare(d, a) {
+    var ctx = need(a.context, 'context');
+    var state = getState(d, a);
+    var mode = a.mode || 'chat';
+    if (mode === 'review') return reviewPrepare(d, a);
+    if (ctx === 'iterate' && !progress(state).allDrafted) throw new Error('Iteration begins once all nine elements have a first draft.');
+    if (ctx.indexOf('element:') === 0) {
+      var step = progress(state).steps.filter(function (s) { return s.key === ctx.slice(8); })[0];
+      if (!step || !step.unlocked) throw new Error('That element opens once the one beneath it has a first draft.');
+    }
+    if (mode === 'chat') {
+      var msg = need(a.message, 'Message');
+      if (ctx.indexOf('explore:') === 0) {
+        var st = areaState(state, ctx.slice(8));
+        if (st.current) writeLens(d, { userId: a.userId, area: st.area, lensOrder: st.current.order, append: msg });
+        state = getState(d, a);
+      }
+      addMessage(d, a.userId, a.sessionId, ctx, 'user', msg);
+    }
+    var history = getMessages(d, { userId: a.userId, context: ctx, limit: 40 });
+    var messages = toModelMessages(history);
+    if (mode === 'draft') {
+      var task;
+      if (ctx.indexOf('explore:') === 0) {
+        task = 'TASK FOR THE APP (not a chat reply): From this conversation, propose the one-sentence belief the person seems to be choosing about "' + ctx.slice(8) + '", and the reason they gave, using their own words as much as possible. Reply with exactly two lines:\nBelief: <one sentence>\nWhy: <one sentence>\nIf they have not yet said enough to do this honestly, reply with exactly: NOT_ENOUGH';
+      } else {
+        var e = elementDef(ctx.slice(8));
+        task = 'TASK FOR THE APP (not a chat reply): Propose a draft of ' + e.element + ' for the person to edit, built from their own words in this conversation and their design record. Aim for: ' + e.strongDraft + ' Keep their phrasing; do not add beliefs, values or goals they did not express. Output only the draft text, with no preamble, quotes or commentary. Use short lines or "- " bullets if the element has several statements. If they have not yet said enough to draft honestly, reply with exactly: NOT_ENOUGH';
+      }
+      messages[messages.length - 1].content += '\n\n' + task;
+    }
+    return { system: contextBlock(state, ctx), messages: messages, mode: mode, context: ctx };
+  }
+
+  function coachRecord(d, a, prepared, text) {
+    text = String(text || '').trim();
+    if (prepared.mode === 'review') return reviewRecord(d, a, text);
+    if (prepared.mode === 'draft') {
+      if (/^NOT_ENOUGH/.test(text)) return { draft: null, notEnough: true };
+      if (prepared.context.indexOf('explore:') === 0) {
+        var b = (text.match(/Belief:\s*(.+)/i) || [])[1] || text;
+        var w = (text.match(/Why:\s*(.+)/i) || [])[1] || '';
+        return { draft: { belief: b.trim(), why: w.trim() } };
+      }
+      return { draft: text };
+    }
+    var m = addMessage(d, a.userId, a.sessionId, prepared.context, 'assistant', text);
+    return { reply: m };
+  }
+
+  /* =====================================================================
+     Phase A · supplementary inputs, iteration loop, nudges
+     ===================================================================== */
+  var TESTS = FW.tests;
+  function testDef(key) { return TESTS.filter(function (t) { return t.key === key; })[0]; }
+  function parseJSON(s, fallback) { try { return s ? JSON.parse(s) : fallback; } catch (e) { return fallback; } }
+
+  /* ---------- preferences ---------- */
+  var NUDGE_TYPES = [
+    { key: 'reflection', label: 'Reflection prompts', hint: 'A nudge to journal when it has been a while.' },
+    { key: 'recommendations', label: 'Guidance waiting', hint: 'When a review has left cards for you to accept or decline.' },
+    { key: 'review', label: 'Review reminders', hint: 'A congruence review every two weeks, and a deeper look at your Why each quarter.' },
+    { key: 'commitments', label: 'Small steps', hint: 'A check on steps you committed to more than a week ago.' },
+    { key: 'inputs', label: 'Inputs', hint: 'Suggestions to add strengths results or log what you are learning.' }
+  ];
+  function getPrefs(user) {
+    var p = parseJSON(user && user.Prefs, {}) || {};
+    var types = {};
+    NUDGE_TYPES.forEach(function (t) { types[t.key] = !(p.types && p.types[t.key] === false); });
+    return { nudges: p.nudges !== false, email: p.email !== false, types: types, lastEmailAt: p.lastEmailAt || '' };
+  }
+  function savePrefs(d, a) {
+    var cur = getPrefs(mine(d, 'Users', a.userId)[0]);
+    var next = a.prefs || {};
+    var merged = {
+      nudges: next.nudges !== undefined ? !!next.nudges : cur.nudges,
+      email: next.email !== undefined ? !!next.email : cur.email,
+      types: Object.assign({}, cur.types, next.types || {}),
+      lastEmailAt: next.lastEmailAt !== undefined ? next.lastEmailAt : cur.lastEmailAt
+    };
+    d.update('Users', function (r) { return r.UserID === a.userId; }, { Prefs: JSON.stringify(merged) });
+    return a.silent ? merged : getState(d, a);
+  }
+
+  /* ---------- assessments ---------- */
+  function summarizeAssessment(key, v) {
+    var t = testDef(key); if (!t || !v) return '';
+    function groupOf(field, name) { var o = (field.options || []).filter(function (x) { return x.v === name; })[0]; return o ? (o.g || o.code || '') : ''; }
+    switch (key) {
+      case 'clifton': case 'via': {
+        var f = t.fields[0], list = v[f.key] || [];
+        if (!list.length) return '';
+        var top = list.slice(0, 5);
+        var counts = {}; top.forEach(function (n) { var g = groupOf(f, n); counts[g] = (counts[g] || 0) + 1; });
+        var lead = Object.keys(counts).sort(function (a, b) { return counts[b] - counts[a]; })[0];
+        return (key === 'via' ? 'Signature strengths: ' : 'Top 5: ') + top.join(', ') + (lead && counts[lead] > 1 ? ' (mostly ' + lead + ')' : '') + (list.length > 5 ? ' · ' + list.length + ' ranked' : '');
+      }
+      case 'mbti': {
+        var pairs = v.pairs || {}; var letters = t.fields[0].pairs.map(function (p, i) { return (pairs[i] && pairs[i].pick) || '?'; }).join('');
+        if (letters.indexOf('?') >= 0) return '';
+        var pct = t.fields[0].pairs.map(function (p, i) { return pairs[i] && pairs[i].pct ? pairs[i].pick + ' ' + pairs[i].pct + '%' : ''; }).filter(Boolean);
+        return letters + (v.identity ? '-' + v.identity : '') + (pct.length ? ' (' + pct.join(', ') + ')' : '');
+      }
+      case 'enneagram': {
+        if (!v.type) return '';
+        var nm = (t.fields[0].options.filter(function (o) { return o.v === v.type; })[0] || {}).label || v.type;
+        return 'Type ' + nm.replace(/^\d · /, v.type + ' · ') + (v.wing ? ', wing ' + v.type + 'w' + v.wing : '') + (v.instinct ? ', ' + v.instinct + ' instinct' : '') + (v.tritype ? ', tritype ' + v.tritype : '');
+      }
+      case 'bigfive': case 'kolbe': case 'love': {
+        var f2 = t.fields[0], sc = v[f2.key] || {};
+        var items = f2.items.filter(function (n) { return sc[n] !== undefined && sc[n] !== ''; });
+        if (!items.length) return '';
+        if (key === 'love') { items.sort(function (a, b) { return Number(sc[b]) - Number(sc[a]); }); return 'Primary: ' + items[0] + ' · ' + items.map(function (n) { return n + ' ' + sc[n]; }).join(', '); }
+        return items.map(function (n) { return n + ' ' + sc[n]; }).join(', ');
+      }
+      case 'disc': {
+        if (!v.primary) return '';
+        var sc2 = v.scores || {}; var s = Object.keys(sc2).filter(function (k) { return sc2[k] !== ''; }).map(function (k) { return k.charAt(0) + ' ' + sc2[k]; });
+        return 'Style ' + v.primary + (v.secondary ? v.secondary : '') + (s.length ? ' (' + s.join(', ') + ')' : '');
+      }
+      case 'genius': {
+        var b = v.buckets || {}; function of(k) { return t.fields[0].items.filter(function (n) { return b[n] === k; }); }
+        if (!of('genius').length) return '';
+        return 'Genius: ' + of('genius').join(' & ') + ' · Competency: ' + of('competency').join(' & ') + ' · Frustration: ' + of('frustration').join(' & ');
+      }
+      case 'holland': {
+        var c = v.code || []; if (!c.length) return '';
+        return c.map(function (n) { return groupOf(t.fields[0], n); }).join('') + ' · ' + c.join(', ');
+      }
+    }
+    return '';
+  }
+  function validateAssessment(key, v) {
+    var t = testDef(key); if (!t) throw new Error('Unknown test.');
+    t.fields.forEach(function (f) {
+      var val = v[f.key];
+      if (f.type === 'rank') {
+        var n = (val || []).length;
+        if (n < f.min) throw new Error(f.min === f.max ? 'Add exactly ' + f.min + ' for ' + t.name + '.' : 'Add at least ' + f.min + ' for ' + t.name + '.');
+        if (n > f.max) throw new Error('Too many entries for ' + t.name + '.');
+      }
+      if (f.type === 'pairs' && t.fields[0].pairs.some(function (p, i) { return !(val && val[i] && val[i].pick); })) throw new Error('Choose one letter in each pair.');
+      if (f.type === 'select' && !f.optional && !val) throw new Error('Choose your ' + f.label.toLowerCase() + '.');
+      if (f.type === 'scores' && !f.optional) {
+        var missing = f.items.filter(function (n) { return !val || val[n] === undefined || val[n] === ''; });
+        if (missing.length) throw new Error('Add a score for ' + missing.join(', ') + '.');
+      }
+      if (f.type === 'buckets') {
+        f.buckets.forEach(function (bk) {
+          var n2 = f.items.filter(function (it) { return val && val[it] === bk.v; }).length;
+          if (n2 !== bk.count) throw new Error('Place exactly ' + bk.count + ' in ' + bk.label + '.');
+        });
+      }
+    });
+  }
+  function saveAssessment(d, a) {
+    var t = testDef(need(a.test, 'Test'));
+    var values = a.values || {};
+    validateAssessment(t.key, values);
+    var summary = summarizeAssessment(t.key, values);
+    var row = { Test: t.key, TakenOn: a.takenOn || '', Results: JSON.stringify(values), Summary: summary, Notes: a.notes || '', UpdatedAt: now() };
+    var existing = mine(d, 'Assessments', a.userId).filter(function (r) { return r.Test === t.key; })[0];
+    if (existing) d.update('Assessments', function (r) { return r.AssessmentID === existing.AssessmentID; }, row);
+    else d.insert('Assessments', Object.assign({ AssessmentID: uid(), UserID: a.userId }, row));
+    return getState(d, a);
+  }
+  function clearAssessment(d, a) {
+    d.update('Assessments', function (r) { return r.UserID === a.userId && r.Test === a.test; }, { Results: '', Summary: '', Notes: '', TakenOn: '', UpdatedAt: now() });
+    return getState(d, a);
+  }
+
+  /* ---------- journal & growth ---------- */
+  function addJournal(d, a) {
+    d.insert('Journal', { EntryID: uid(), UserID: a.userId, CreatedAt: now(), Prompt: a.prompt || '', Entry: need(a.entry, 'Entry').trim(), CoachCanRead: a.coachCanRead === false ? 'FALSE' : 'TRUE', Tag: a.tag || '' });
+    return getState(d, a);
+  }
+  function updateJournal(d, a) {
+    var patch = {};
+    if (a.coachCanRead !== undefined) patch.CoachCanRead = a.coachCanRead ? 'TRUE' : 'FALSE';
+    if (a.erase) { patch.Entry = ''; patch.Prompt = ''; patch.CoachCanRead = 'FALSE'; }
+    d.update('Journal', function (r) { return r.EntryID === a.entryId && r.UserID === a.userId; }, patch);
+    return getState(d, a);
+  }
+  function addGrowth(d, a) {
+    var kind = a.kind === 'Skill' ? 'Skill' : 'Knowledge';
+    d.insert('Growth', { ItemID: uid(), UserID: a.userId, Kind: kind, Title: need(a.title, 'Title').trim(), Detail: a.detail || '', Source: a.source || '',
+      Status: a.status === 'Planned' ? 'Planned' : 'Acquired', AcquiredOn: a.status === 'Planned' ? '' : (a.acquiredOn || now().slice(0, 10)), LinkedElement: a.linkedElement || '', CreatedAt: now() });
+    return a.silent ? true : getState(d, a);
+  }
+  function updateGrowth(d, a) {
+    var patch = {};
+    if (a.status) { patch.Status = a.status; patch.AcquiredOn = a.status === 'Acquired' ? now().slice(0, 10) : ''; }
+    if (a.erase) patch.Title = '';
+    d.update('Growth', function (r) { return r.ItemID === a.itemId && r.UserID === a.userId; }, patch);
+    return getState(d, a);
+  }
+
+  /* ---------- congruence review ---------- */
+  var LAYERS = ['Why', 'How', 'What'];
+  var KINDS = { Why: ['contemplate'], How: ['challenge'], What: ['suggest', 'community'] };
+  var CAPS = { Why: 1, How: 2, What: 3 };
+  var ACTIONS_OK = ['revise', 'journal', 'learn', 'community', 'none'];
+
+  function latestReview(state) { return state.reviews[state.reviews.length - 1] || null; }
+
+  function reviewPrepare(d, a) {
+    var state = getState(d, a);
+    if (!progress(state).allDrafted) throw new Error('Iteration begins once all nine elements have a first draft.');
+    var declined = state.recs.filter(function (r) { return r.Status === 'Declined'; }).slice(-6);
+    var open = state.recs.filter(function (r) { return r.Status === 'New'; });
+    var task = [
+      'TASK FOR THE APP (not a chat reply): run a congruence review of this person\'s Life Design as an objective evaluator. Be provocative, challenging and guiding, and kind. Ground every point in their own words from the design record and inputs above.',
+      '',
+      '1. TRACE. For each distinct item in Key Activities, Methods and Resources (up to 12 items, their wording, shortened), say which How and Why elements it serves. status: "traced" (clearly serves Strategy/Principles and through them the Purpose), "weak" (a loose or assumed link) or "untraced" (no visible link to the How or Why).',
+      '2. ORPHANS. Up to 3 parts of the Why or How that nothing above them carries out (a vision part with no strategy, a principle no activity expresses).',
+      '3. CARDS. Up to 6 guidance cards, honoring the depth gradient:',
+      '   - Why: at most 1, kind "contemplate". A question that provokes contemplation and elevates the Why. Never propose a belief, vision or purpose for them. action.type "journal" with the question as action.text.',
+      '   - How: at most 2, kind "challenge". Is the What accomplishing the Why through the How? Name the gap and its implication plainly. action.type "revise" with action.element a How or What element, action.text a short description of what to reconsider (not wording for them).',
+      '   - What: at most 3, kind "suggest" or "community". Concrete Whats drawing on their strengths and resources, new learning, and skills to attain; or, for "community", a kind of group to look for that fits the design (action.type "community", plus "search": a short web search phrase such as "crossfit gym near me"). For learning, use action.type "learn" with action.kind "Knowledge" or "Skill" and action.text the thing to learn. For a change to their week, action.type "revise" with action.element "Key Activities".',
+      '   - Every card: "tracesTo" names the Why or How element it serves. Do not repeat guidance that is still open or that they declined (listed below) unless the evidence has clearly changed.',
+      '4. SUMMARY. Two or three sentences: an honest overall read of their congruence and the single most important tension.',
+      '',
+      open.length ? 'Still open from earlier reviews: ' + open.map(function (r) { return '"' + clip(r.Title, 80) + '"'; }).join('; ') : '',
+      declined.length ? 'Declined earlier: ' + declined.map(function (r) { return '"' + clip(r.Title, 80) + '"' + (r.UserNote ? ' (their reason: ' + clip(r.UserNote, 120) + ')' : ''); }).join('; ') : '',
+      '',
+      'Reply with only one JSON object, no prose before or after, in this shape:',
+      '{"summary": "...", "trace": [{"item": "...", "element": "Key Activities", "tracesTo": ["Strategy", "Purpose"], "status": "traced", "note": "one short clause"}], "orphans": [{"element": "Vision", "text": "...", "note": "..."}], "cards": [{"layer": "How", "kind": "challenge", "title": "short, specific", "body": "two or three sentences in the coach voice", "tracesTo": "Purpose", "action": {"type": "revise", "element": "Strategy", "text": "...", "kind": ""}, "search": ""}]}',
+      'Keep notes short. Use the element names exactly.'
+    ].filter(function (x) { return x !== null; }).join('\n');
+    return { system: contextBlock(state, 'iterate'), messages: [{ role: 'user', content: task }], mode: 'review', context: 'iterate' };
+  }
+
+  function extractJSON(text) {
+    text = String(text || '');
+    var fence = text.match(/```(?:json)?\s*([\s\S]*?)```/);
+    if (fence) text = fence[1];
+    var s = text.indexOf('{'), e = text.lastIndexOf('}');
+    if (s < 0 || e <= s) throw new Error('The review came back in an unexpected shape. Try again.');
+    return JSON.parse(text.slice(s, e + 1));
+  }
+
+  function reviewRecord(d, a, text) {
+    var j;
+    try { j = extractJSON(text); } catch (err) { throw new Error('The review came back in an unexpected shape. Try again.'); }
+    var elementNames = ELEMENTS.map(function (e) { return e.element; });
+    var trace = (j.trace || []).slice(0, 12).map(function (t) {
+      return { item: clip(t.item, 160), element: elementNames.indexOf(t.element) >= 0 ? t.element : 'Key Activities',
+        tracesTo: (Array.isArray(t.tracesTo) ? t.tracesTo : [t.tracesTo]).filter(Boolean).map(String).slice(0, 4),
+        status: ['traced', 'weak', 'untraced'].indexOf(t.status) >= 0 ? t.status : 'weak', note: clip(t.note, 200) };
+    });
+    var orphans = (j.orphans || []).slice(0, 3).map(function (o) { return { element: String(o.element || ''), text: clip(o.text, 200), note: clip(o.note, 200) }; });
+    var traced = trace.filter(function (t) { return t.status === 'traced'; }).length;
+    var review = { ReviewID: uid(), UserID: a.userId, CreatedAt: now(), Summary: clip(j.summary, 900), TraceJSON: JSON.stringify({ trace: trace, orphans: orphans }), Traced: String(traced), Total: String(trace.length) };
+    d.insert('Reviews', review);
+    var counts = { Why: 0, How: 0, What: 0 };
+    (j.cards || []).forEach(function (c) {
+      var layer = LAYERS.indexOf(c.layer) >= 0 ? c.layer : null;
+      if (!layer || counts[layer] >= CAPS[layer]) return;
+      var kind = KINDS[layer].indexOf(c.kind) >= 0 ? c.kind : KINDS[layer][0];
+      var act = c.action || {};
+      var type = ACTIONS_OK.indexOf(act.type) >= 0 ? act.type : 'none';
+      if (layer === 'Why') type = 'journal';
+      if (kind === 'community') type = 'community';
+      var el = elementNames.indexOf(act.element) >= 0 ? act.element : (type === 'revise' ? (layer === 'How' ? 'Strategy' : 'Key Activities') : '');
+      if (type === 'revise' && elementDef(el) && elementDef(el).layer === 'Why') el = 'Strategy';
+      counts[layer]++;
+      d.insert('Recommendations', {
+        RecID: uid(), UserID: a.userId, ReviewID: review.ReviewID, CreatedAt: now(), Layer: layer, Kind: kind,
+        Title: clip(c.title, 140), Body: clip(c.body, 700), TracesTo: clip(c.tracesTo, 80), ActionType: type,
+        ActionElement: el, ActionText: clip(act.text || (type === 'journal' ? c.title : ''), 400) + (type === 'learn' && act.kind === 'Skill' ? ' ⟨Skill⟩' : ''),
+        SearchQuery: clip(c.search || '', 80), Status: 'New', RespondedAt: '', UserNote: ''
+      });
+    });
+    updateUser(d, { userId: a.userId, patch: { Stage: 'living', CurrentFocus: 'Iteration' } });
+    return { review: review };
+  }
+
+  function respondRec(d, a) {
+    var rec = mine(d, 'Recommendations', a.userId).filter(function (r) { return r.RecID === a.recId; })[0];
+    if (!rec) throw new Error('That card is no longer here.');
+    var status = a.status === 'Declined' ? 'Declined' : 'Accepted';
+    var text = a.actionText !== undefined && String(a.actionText).trim() ? String(a.actionText).trim() : rec.ActionText;
+    var adapted = status === 'Accepted' && a.actionText !== undefined && text !== rec.ActionText;
+    d.update('Recommendations', function (r) { return r.RecID === rec.RecID; },
+      { Status: status, RespondedAt: now(), UserNote: a.note || (adapted ? 'Adapted' : ''), ActionText: text });
+    var result = { state: null, next: null };
+    if (status === 'Accepted') {
+      var clean = text.replace(' ⟨Skill⟩', '');
+      if (rec.ActionType === 'revise' && rec.ActionElement) {
+        note(d, { userId: a.userId, sessionId: a.sessionId, context: 'element:' + rec.ActionElement },
+          'The person accepted guidance to work into ' + rec.ActionElement + ': "' + clean + '"');
+        result.next = { open: 'element:' + rec.ActionElement };
+      } else if (rec.ActionType === 'journal') {
+        result.next = { journal: clean };
+      } else if (rec.ActionType === 'learn') {
+        addGrowth(d, { userId: a.userId, kind: /⟨Skill⟩/.test(text) ? 'Skill' : 'Knowledge', title: clean, status: 'Planned', source: 'Congruence review', linkedElement: rec.TracesTo, silent: true });
+        result.next = { growth: true };
+      }
+    }
+    result.state = getState(d, a);
+    return result;
+  }
+
+  /* ---------- nudges (pure) ---------- */
+  function daysSince(iso, nowMs) { var t = new Date(iso).getTime(); return isNaN(t) ? 9999 : (nowMs - t) / 86400000; }
+  function computeNudges(state, nowMs) {
+    nowMs = nowMs || Date.now();
+    var prefs = getPrefs(state.user);
+    if (!prefs.nudges) return [];
+    var p = progress(state), out = [];
+    var on = function (k) { return prefs.types[k]; };
+    var lastJournal = state.journal[state.journal.length - 1];
+    var age = daysSince(state.user.CreatedAt, nowMs);
+    if (on('recommendations')) {
+      var open = state.recs.filter(function (r) { return r.Status === 'New'; });
+      if (open.length) out.push({ type: 'recommendations', text: open.length + ' piece' + (open.length === 1 ? '' : 's') + ' of guidance waiting for your yes, no or own version.', action: 'iterate', cta: 'Review guidance' });
+    }
+    if (on('review') && p.allDrafted) {
+      var lr = latestReview(state);
+      if (!lr) out.push({ type: 'review', text: 'Your v1 design is complete. Time for its first congruence review.', action: 'iterate', cta: 'Run a review' });
+      else if (daysSince(lr.CreatedAt, nowMs) > 14) out.push({ type: 'review', text: 'It has been ' + Math.floor(daysSince(lr.CreatedAt, nowMs)) + ' days since your last congruence review.', action: 'iterate', cta: 'Run a review' });
+      var whyTimes = state.history.filter(function (h) { var e = elementDef(h.Element); return e && e.layer === 'Why'; }).map(function (h) { return new Date(h.ChangedAt).getTime(); });
+      var lastWhy = whyTimes.length ? Math.max.apply(null, whyTimes) : 0;
+      if (lastWhy && (nowMs - lastWhy) / 86400000 > 90) out.push({ type: 'review', text: 'A season has passed since your Why last changed. Does it still hold?', action: 'design', cta: 'Revisit your Why' });
+    }
+    if (on('reflection') && age > 2 && (!lastJournal || daysSince(lastJournal.CreatedAt, nowMs) > 7)) {
+      out.push({ type: 'reflection', text: lastJournal ? 'A week since your last journal entry. A few lines is plenty.' : 'Try the journal: a few honest lines between sessions give your coach more to work with.', action: 'journal', cta: 'Write' });
+    }
+    if (on('commitments')) {
+      var stale = state.commitments.filter(function (c) { return c.Status === 'Open' && daysSince(c.CreatedAt, nowMs) > 7; });
+      if (stale.length) out.push({ type: 'commitments', text: 'Did you get to "' + clip(stale[0].Commitment, 70) + '"?', action: 'journey', cta: 'Update' });
+    }
+    if (on('inputs')) {
+      var have = state.assessments.filter(function (r) { return r.Summary; }).length;
+      if (p.whatOpen && !have) out.push({ type: 'inputs', text: 'Your design has reached the What. Strengths results will sharpen Resources and your coach\'s suggestions.', action: 'tests', cta: 'Add results' });
+      else if (p.allDrafted && !state.growth.length) out.push({ type: 'inputs', text: 'Log something you\'ve learned or a skill you\'re building. It feeds Resources and future suggestions.', action: 'growth', cta: 'Log it' });
+    }
+    return out;
+  }
+
+  /* ---------- context for the coach ---------- */
+  function inputsBlock(state) {
+    var L = [];
+    var tests = state.assessments.filter(function (r) { return r.Summary; });
+    var growth = state.growth.filter(function (g) { return g.Title; });
+    var journal = state.journal.filter(function (j) { return j.Entry && truthy(j.CoachCanRead); }).slice(-3);
+    var accepted = state.recs.filter(function (r) { return r.Status === 'Accepted'; }).slice(-6);
+    var declined = state.recs.filter(function (r) { return r.Status === 'Declined'; }).slice(-4);
+    var lr = latestReview(state);
+    if (!(tests.length || growth.length || journal.length || accepted.length || declined.length || lr)) return '';
+    L.push('## Supplementary inputs (aids to guidance; the framework stays at the core. Never let a test result define the person; their own words lead.)');
+    if (tests.length) { L.push('Strengths & personality results (self-reported):'); tests.forEach(function (r) { var t = testDef(r.Test); L.push('- ' + (t ? t.name : r.Test) + ': ' + r.Summary + (r.Notes ? ' — their note: "' + clip(r.Notes, 160) + '"' : '')); }); }
+    if (growth.length) { L.push('Learning & skills log:'); growth.slice(-10).forEach(function (g) { L.push('- ' + g.Kind + (g.Status === 'Planned' ? ' (planned)' : '') + ': ' + clip(g.Title, 120) + (g.Detail ? ' — ' + clip(g.Detail, 160) : '')); }); }
+    if (journal.length) { L.push('Recent journal entries they chose to share with you (refer to them gently; never quote at length):'); journal.forEach(function (j) { L.push('- ' + String(j.CreatedAt).slice(0, 10) + (j.Prompt ? ' [prompt: ' + clip(j.Prompt, 100) + ']' : '') + ': ' + clip(j.Entry, 500)); }); }
+    if (accepted.length) { L.push('Guidance they accepted (now part of their inputs):'); accepted.forEach(function (r) { L.push('- ' + r.Layer + ' · ' + clip(r.Title, 100) + (r.ActionText ? ': ' + clip(r.ActionText.replace(' ⟨Skill⟩', ''), 160) : '') + (r.UserNote === 'Adapted' ? ' (adapted in their words)' : '')); }); }
+    if (declined.length) { L.push('Guidance they declined:'); declined.forEach(function (r) { L.push('- ' + clip(r.Title, 100) + (r.UserNote ? ' — reason: ' + clip(r.UserNote, 140) : '')); }); }
+    if (lr) L.push('Latest congruence review (' + String(lr.CreatedAt).slice(0, 10) + '): ' + lr.Traced + ' of ' + lr.Total + ' What items trace clearly to the How and Why. ' + clip(lr.Summary, 400));
+    return L.join('\n');
+  }
+
+  function iterateFocus(state) {
+    var open = state.recs.filter(function (r) { return r.Status === 'New'; });
+    return [
+      'FOCUS: Life Design Iteration. The person has formulated a v1 design; the work now is continual iteration toward greater congruence of Why, How and What.',
+      'Act as an objective evaluator of congruence: provocative, challenging and guiding, never shaming. Honor the depth gradient: the Why changes rarely and deeply (provoke contemplation with questions; never supply beliefs), the How a little more often (challenge whether the What is accomplishing the Why through the How), the What lightest and most often (concrete suggestions from their strengths, resources, learning and skills, and communities that fit).',
+      'Name the implications of drifting from the current design plainly, and let the person decide whether to change the design or the drift. Guidance they accept becomes a new input: they work it into the element, and it is saved only when they approve a new version.',
+      open.length ? 'Cards still open: ' + open.map(function (r) { return r.Layer + ' · "' + clip(r.Title, 90) + '"'; }).join('; ') : ''
+    ].filter(Boolean).join('\n');
+  }
+
+  var WRITES = { createUser: 1, updateUser: 1, saveElement: 1, startArea: 1, advanceLens: 1, saveChosenBelief: 1, parkProblem: 1, updateProblem: 1, addCommitment: 1, updateCommitment: 1, startSession: 1,
+    savePrefs: 1, saveAssessment: 1, clearAssessment: 1, addJournal: 1, updateJournal: 1, addGrowth: 1, updateGrowth: 1, respondRec: 1 };
+  var ACTIONS = {
+    getState: getState, getMessages: getMessages, createUser: createUser, updateUser: updateUser, saveElement: saveElement,
+    startArea: startArea, advanceLens: advanceLens, saveChosenBelief: saveChosenBelief, parkProblem: parkProblem,
+    updateProblem: updateProblem, addCommitment: addCommitment, updateCommitment: updateCommitment, startSession: startSession,
+    savePrefs: savePrefs, saveAssessment: saveAssessment, clearAssessment: clearAssessment, addJournal: addJournal, updateJournal: updateJournal,
+    addGrowth: addGrowth, updateGrowth: updateGrowth, respondRec: respondRec
+  };
+
+  return {
+    FW: FW, STEPS: STEPS, ELEMENTS: ELEMENTS, ACTIONS: ACTIONS, WRITES: WRITES,
+    uid: uid, now: now, truthy: truthy, elementDef: elementDef, areaDef: areaDef,
+    progress: progress, areaState: areaState, allAreas: allAreas, chosenByArea: chosenByArea, designMap: designMap,
+    coachPrepare: coachPrepare, coachRecord: coachRecord, contextBlock: contextBlock,
+    TESTS: TESTS, testDef: testDef, summarizeAssessment: summarizeAssessment, validateAssessment: validateAssessment, parseJSON: parseJSON,
+    NUDGE_TYPES: NUDGE_TYPES, getPrefs: getPrefs, computeNudges: computeNudges, latestReview: latestReview
+  };
+})();

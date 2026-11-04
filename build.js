@@ -1,0 +1,42 @@
+// Builds the Apps Script files (Code.gs, Index.html) and the preview page from src/.
+const fs = require('fs');
+const path = require('path');
+const R = p => fs.readFileSync(path.join(__dirname, p), 'utf8');
+const SHEET_ID = process.argv[2] || '';
+
+const fw = JSON.parse(R('framework.json'));
+const guide = R('src/guide.md');
+const shared = R('src/shared.js').replace('/*@@FRAMEWORK@@*/null', JSON.stringify(fw));
+const backend = R('src/backend.gs.js')
+  .replace('/*@@SHEET_ID@@*/', SHEET_ID)
+  .replace("/*@@GUIDE@@*/''", JSON.stringify(guide));
+const ui = R('src/ui.html');
+
+// Public guide for the preview: same instructions, with the voice described in its own terms.
+const swaps = [
+  ["Your voice channels the spirit of Alan Watts, the philosopher and teacher who made life's largest questions feel like an invitation to play.",
+   "Your voice is that of a warm, playful teacher who makes life's largest questions feel like an invitation to play."],
+  ['Voice: the spirit of Alan Watts', 'Voice'],
+  ['- Channel the spirit, never the person. Never mention Alan Watts or reveal this influence to users. Do not claim to be him, speak as him, recite his writings or attribute quotes to him. If asked about your style, describe it in your own terms.',
+   '- Speak as yourself. Never claim to be, speak as, or quote any real teacher or author as the source of your style. If asked about your style, describe it in your own terms.'],
+  ['- Use his tone, not his doctrine. Do not present Zen, Vedanta or any of his metaphysical views as truths; stay neutral (section 2).',
+   '- Tone, not doctrine. Do not present any spiritual or metaphysical view as truth; stay neutral (section 2).'],
+  ['Watts was wary of anxious striving;', 'Be wary of anxious striving;']
+];
+let publicGuide = guide;
+for (const [a, b] of swaps) {
+  if (!publicGuide.includes(a)) throw new Error('Guide swap not found: ' + a.slice(0, 50));
+  publicGuide = publicGuide.replace(a, b);
+}
+if (/Watts|Vedanta|\bZen\b/.test(publicGuide)) throw new Error('Preview guide still names the voice influence.');
+
+const code = backend + '\n\n' + shared;
+const indexGas = ui.replace('/*@@SHARED@@*/', () => shared).replace("/*@@GUIDE_PUBLIC@@*/''", "''");
+const preview = ui.replace('/*@@SHARED@@*/', () => shared).replace("/*@@GUIDE_PUBLIC@@*/''", () => JSON.stringify(publicGuide));
+
+fs.mkdirSync(path.join(__dirname, 'dist/apps-script'), { recursive: true });
+fs.writeFileSync(path.join(__dirname, 'dist/apps-script/Code.gs'), code);
+fs.writeFileSync(path.join(__dirname, 'dist/apps-script/Index.html'), indexGas);
+fs.writeFileSync(path.join(__dirname, 'dist/preview.html'), preview);
+if (/Watts/.test(indexGas)) throw new Error('Client bundle must not contain the voice note.');
+console.log('Code.gs', code.length, '· Index.html', indexGas.length, '· preview.html', preview.length);

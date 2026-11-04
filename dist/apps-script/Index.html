@@ -1,0 +1,2127 @@
+<title>Life in Design</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..600,0..100,0..1;1,9..144,300..600,0..100,0..1&family=Nunito+Sans:ital,wght@0,300..800;1,300..600&family=Caveat:wght@400..600&display=swap">
+<style>
+/* Layout: a cairn on a riverbank. Stones are stacked from the ground up (Why, How, What); the page is linen under drifting fog,
+   with wide margins to breathe, and nothing snaps: it settles. */
+:root{
+  /* Mist & Stone · the ground */
+  --paper:#F5F2EB; --sheet:rgba(250,248,245,.80); --sheet-solid:#FAF8F5; --ink:#2C302E; --muted:#65675F; --rule:#D4CDC3; --line:rgba(196,187,174,.62);
+  /* Forest Floor · the hand */
+  --accent:#525B44; --accent-ink:#F5F2EB; --sand:#C5A880; --driftwood:#9C8470; --oat:#EAE3D2;
+  /* the cairn: stone (Why), wood (How), leaf (What) */
+  --why:#708090; --why-ink:#52616F; --why-soft:#E3EBF0;
+  --how:#9C8470; --how-ink:#6E5B4A; --how-soft:#EAE3D2;
+  --what:#8A9A86; --what-ink:#56664F; --what-soft:#E1E6DA;
+  --me:#E5E9DE; --danger:#9B4A36; --glow:rgba(138,154,134,.38);
+  /* Horizon · the sky (shifts with the hour) */
+  --s1:#E3EBF0; --s2:#D6C7BD; --s3:#EAE3D2; --s4:#DCE2D5; --sky-o:.78;
+  --shadow:5px 12px 32px -18px rgba(82,70,52,.30), 1px 2px 5px rgba(82,70,52,.05);
+  --shadow-lift:9px 22px 44px -20px rgba(82,70,52,.38), 2px 4px 8px rgba(82,70,52,.06);
+  --grain-o:.42; --grain-blend:multiply;
+  --display:'Fraunces', 'Iowan Old Style', Georgia, serif;
+  --body:'Nunito Sans', 'Avenir Next', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --hand:'Caveat', 'Bradley Hand', 'Segoe Print', cursive;
+  --mono:var(--body);
+  --r:28px; --r-sm:18px;
+  --spring:cubic-bezier(.34,1.56,.64,1); --ease:cubic-bezier(.22,.8,.3,1);
+}
+:root[data-tod="dawn"]{ --s1:#F0E1D5; --s2:#E3EBF0; --s3:#EBDCCB; --s4:#E4E8DD }
+:root[data-tod="dusk"]{ --s1:#D6C7BD; --s2:#CDD3DA; --s3:#E6D4C1; --s4:#D8DCD0 }
+:root[data-tod="night"]{ --s1:#D2DAE2; --s2:#CCC5BE; --s3:#DDD6CA; --s4:#CDD5CB }
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --paper:#1B1E1C; --sheet:rgba(37,41,38,.82); --sheet-solid:#252926; --ink:#ECE7DD; --muted:#A9A69C; --rule:#3E433E; --line:rgba(96,102,94,.5);
+  --accent:#AAB78F; --accent-ink:#1B1E1C; --sand:#C5A880; --driftwood:#B59C86; --oat:#2E2B25;
+  --why:#93A3B3; --why-ink:#B0BECB; --why-soft:#26313A; --how:#B59C86; --how-ink:#CFB8A2; --how-soft:#342E27; --what:#A3B39E; --what-ink:#BECCB8; --what-soft:#29322A;
+  --me:#2C382D; --danger:#E3967F; --glow:rgba(170,183,143,.30);
+  --s1:#22303A; --s2:#3A3029; --s3:#26302A; --s4:#2F2C31; --sky-o:.9;
+  --shadow:5px 12px 32px -18px rgba(0,0,0,.65), 1px 2px 5px rgba(0,0,0,.25); --shadow-lift:9px 22px 44px -20px rgba(0,0,0,.75), 2px 4px 8px rgba(0,0,0,.3);
+  --grain-o:.32; --grain-blend:overlay; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --paper:#1B1E1C; --sheet:rgba(37,41,38,.82); --sheet-solid:#252926; --ink:#ECE7DD; --muted:#A9A69C; --rule:#3E433E; --line:rgba(96,102,94,.5);
+  --accent:#AAB78F; --accent-ink:#1B1E1C; --sand:#C5A880; --driftwood:#B59C86; --oat:#2E2B25;
+  --why:#93A3B3; --why-ink:#B0BECB; --why-soft:#26313A; --how:#B59C86; --how-ink:#CFB8A2; --how-soft:#342E27; --what:#A3B39E; --what-ink:#BECCB8; --what-soft:#29322A;
+  --me:#2C382D; --danger:#E3967F; --glow:rgba(170,183,143,.30);
+  --s1:#22303A; --s2:#3A3029; --s3:#26302A; --s4:#2F2C31; --sky-o:.9;
+  --shadow:5px 12px 32px -18px rgba(0,0,0,.65), 1px 2px 5px rgba(0,0,0,.25); --shadow-lift:9px 22px 44px -20px rgba(0,0,0,.75), 2px 4px 8px rgba(0,0,0,.3);
+  --grain-o:.32; --grain-blend:overlay; color-scheme:dark }
+
+*{box-sizing:border-box}
+html,body{min-height:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.65;-webkit-font-smoothing:antialiased;font-optical-sizing:auto}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--paper)}
+button,input,textarea,select{font:inherit;color:inherit}
+a{color:var(--accent);text-decoration-thickness:1px;text-underline-offset:3px}
+h1,h2,h3{font-family:var(--display);font-weight:360;line-height:1.08;text-wrap:balance;margin:0;font-variation-settings:"SOFT" 100,"WONK" 0;letter-spacing:-.012em}
+h1{font-size:clamp(2.5rem,5.6vw,4.3rem);font-weight:320}
+h2{font-size:clamp(1.65rem,3.2vw,2.35rem)}
+h3{font-size:1.3rem;font-weight:420}
+h1 em,h2 em{font-style:italic;font-variation-settings:"SOFT" 100,"WONK" 1}
+p{margin:0}
+.mono{font-family:var(--body);font-size:.74rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+.muted{color:var(--muted)}
+.hand{font-family:var(--hand);font-weight:500;letter-spacing:.01em}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:12px}
+
+/* atmosphere: fog that drifts, paper that breathes */
+.sky{position:fixed;inset:-12vmax;z-index:-2;pointer-events:none;overflow:hidden;opacity:var(--sky-o);transform:rotate(var(--phase,0deg));transition:transform 9s var(--ease)}
+.sky i{position:absolute;display:block;width:56vmax;height:48vmax;filter:blur(64px);border-radius:46% 54% 60% 40%/50% 42% 58% 50%;
+  animation:drift 80s ease-in-out infinite alternate, morph 26s ease-in-out infinite alternate;will-change:transform}
+.sky .b1{background:var(--s1);top:0;left:4vmax}
+.sky .b2{background:var(--s2);top:16vmax;right:0;animation-duration:96s,31s;animation-delay:-30s,-9s}
+.sky .b3{background:var(--s3);bottom:0;left:36vmax;animation-duration:88s,29s;animation-delay:-50s,-14s}
+.sky .b4{background:var(--s4);top:42vmax;left:0;width:42vmax;height:38vmax;animation-duration:110s,37s;animation-delay:-70s,-4s}
+.sky.exhale{animation:exhale 6s var(--ease)}
+@keyframes drift{0%{transform:translate(0,0) scale(1)}50%{transform:translate(7vmax,5vmax) scale(1.09)}100%{transform:translate(-5vmax,8vmax) scale(.94)}}
+@keyframes morph{0%{border-radius:46% 54% 60% 40%/50% 42% 58% 50%}100%{border-radius:60% 40% 36% 64%/42% 60% 40% 58%}}
+@keyframes exhale{0%{filter:none}35%{filter:saturate(1.35) brightness(1.05)}100%{filter:none}}
+.grain{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:var(--grain-o);mix-blend-mode:var(--grain-blend);
+  background-image:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .32 0 0 0 0 .27 0 0 0 0 .21 0 0 0 .5 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.ripple{position:fixed;width:14px;height:14px;margin:-7px 0 0 -7px;border:1.5px solid var(--what);border-radius:47% 53% 50% 50%/52% 48% 52% 48%;pointer-events:none;z-index:45;opacity:.55;animation:ripple 2.8s var(--ease) forwards}
+.ripple.r2{animation-delay:.35s;border-color:var(--sand);opacity:0}
+@keyframes ripple{0%{transform:scale(1);opacity:.6}100%{transform:scale(46);opacity:0}}
+
+/* shell */
+header.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;padding-top:12px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header .bar-in{max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding:8px 10px 8px 18px;border-radius:999px;
+  background:var(--sheet);-webkit-backdrop-filter:blur(18px) saturate(1.1);backdrop-filter:blur(18px) saturate(1.1);border:1px solid var(--line);box-shadow:var(--shadow)}
+.brand{display:flex;align-items:center;gap:10px;background:none;border:0;padding:0;cursor:pointer;color:var(--ink)}
+.brand b{font-family:var(--display);font-weight:400;font-size:1.32rem;letter-spacing:-.01em;font-variation-settings:"SOFT" 100}
+.brand svg{width:30px;height:30px;flex:none;transition:transform .9s var(--spring)}
+.brand:hover svg{transform:rotate(-6deg) translateY(-1px)}
+.nav{display:flex;gap:2px;margin-left:auto;flex-wrap:wrap}
+.nav button{background:none;border:0;padding:8px 14px;border-radius:999px;cursor:pointer;color:var(--muted);font-weight:600;font-size:.93rem;transition:background .5s var(--ease),color .4s,transform .5s var(--spring)}
+.nav button:hover{color:var(--ink);transform:translateY(-1px)}
+.nav button[aria-current="page"]{background:var(--what-soft);color:var(--ink)}
+.preview-tag{font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--how-ink);background:var(--how-soft);border-radius:999px;padding:3px 10px}
+main{max-width:1180px;margin:0 auto;padding-block:52px 96px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+main.enter>*{animation:rise .9s var(--ease) both}
+main.enter>*:nth-child(2){animation-delay:.08s}main.enter>*:nth-child(3){animation-delay:.16s}main.enter>*:nth-child(4){animation-delay:.24s}
+@keyframes rise{from{opacity:.25;transform:translateY(14px)}to{opacity:1;transform:none}}
+footer{max-width:1180px;margin:0 auto;display:flex;flex-wrap:wrap;gap:8px 28px;justify-content:space-between;color:var(--muted);font-size:.86rem;position:relative;
+  padding-block:34px 36px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wave{position:absolute;left:max(16px,env(safe-area-inset-left,0px));right:max(16px,env(safe-area-inset-right,0px));top:0;height:14px;background:var(--rule);opacity:.9;
+  -webkit-mask:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='14'%3E%3Cpath d='M0 7 C 22 2, 38 12, 60 7 S 98 3, 120 8 S 158 11, 180 7' fill='none' stroke='black' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E") repeat-x center/180px 14px;
+  mask:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='14'%3E%3Cpath d='M0 7 C 22 2, 38 12, 60 7 S 98 3, 120 8 S 158 11, 180 7' fill='none' stroke='black' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E") repeat-x center/180px 14px}
+
+/* controls: everything gives a little, then settles */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--line);background:var(--sheet-solid);color:var(--ink);
+  padding:11px 20px;border-radius:999px;cursor:pointer;font-weight:700;font-size:.95rem;text-decoration:none;white-space:nowrap;
+  transition:transform .6s var(--spring),box-shadow .6s var(--ease),background .4s,border-color .4s}
+.btn:hover{transform:translateY(-2px) scale(1.02);box-shadow:var(--shadow);border-color:var(--rule)}
+.btn:active{transform:scale(.97);transition-duration:.12s}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);box-shadow:0 8px 20px -12px var(--accent)}
+.btn.primary:hover{box-shadow:0 14px 28px -14px var(--accent)}
+.btn.ghost{background:transparent;border-color:transparent;color:var(--muted);padding-inline:12px;box-shadow:none}
+.btn.ghost:hover{color:var(--ink);background:var(--sheet);box-shadow:none}
+.btn.small{padding:7px 14px;font-size:.86rem}
+.btn[disabled]{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none}
+label{display:block;font-weight:700;font-size:.93rem;margin-bottom:6px}
+.hint{font-weight:400;color:var(--muted);font-size:.87rem}
+input[type=text],input[type=email],textarea{width:100%;border:1px solid var(--line);background:var(--sheet-solid);border-radius:var(--r-sm);padding:12px 16px;line-height:1.5;
+  transition:box-shadow .5s var(--ease),border-color .4s}
+textarea{resize:vertical;min-height:90px}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--what);box-shadow:0 0 0 5px var(--glow)}
+.field{display:grid;gap:2px}
+.choice{display:flex;gap:10px;align-items:flex-start;font-weight:600;margin:0;cursor:pointer}
+.choice input{margin-top:6px;accent-color:var(--accent);width:18px;height:18px}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:.76rem;font-weight:700;letter-spacing:.02em;border-radius:999px;padding:3px 11px;white-space:nowrap;
+  background:color-mix(in srgb,currentColor 13%,transparent)}
+.chip.approved{color:var(--what-ink)}
+.chip.draft{color:var(--how-ink)}
+.chip.gap{color:var(--muted);background:transparent;border:1px dashed var(--rule)}
+.chip.locked{color:var(--muted);opacity:.75}
+.chip.next{background:var(--accent);color:var(--accent-ink)}
+.err{color:var(--danger);font-size:.92rem}
+.panel{background:var(--sheet);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+.eyebrow{font-family:var(--body);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.lede{font-size:1.16rem;color:var(--muted);max-width:56ch;line-height:1.6}
+.stack{display:grid;gap:16px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--paper);
+  padding:12px 22px;border-radius:999px;font-weight:600;z-index:40;max-width:calc(100% - 32px);box-shadow:var(--shadow-lift);animation:float-in .7s var(--spring)}
+@keyframes float-in{from{opacity:0;transform:translate(-50%,16px) scale(.96)}to{opacity:1;transform:translate(-50%,0)}}
+
+/* welcome */
+.welcome{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:56px;align-items:start}
+.welcome .intro{display:grid;gap:22px;padding-top:12px;padding-left:clamp(0px,3vw,40px)}
+.welcome .intro p{max-width:54ch}
+.welcome form{padding:30px;display:grid;gap:20px;border-radius:36px 28px 34px 30px/30px 34px 28px 36px}
+.pyr-art{width:100%;max-width:440px;height:auto;overflow:visible}
+.pyr-art .float{animation:settle 7s ease-in-out infinite alternate;transform-origin:50% 100%}
+@keyframes settle{from{transform:translateY(0) rotate(0)}to{transform:translateY(-3px) rotate(-1.2deg)}}
+.tiny-legend{display:grid;gap:8px;font-size:.95rem}
+.tiny-legend span{display:inline-block;width:14px;height:11px;border-radius:55% 45% 50% 50%/60% 55% 45% 40%;margin-right:10px;vertical-align:middle}
+
+/* journey: the cairn */
+.hero{display:grid;gap:12px;margin-bottom:44px;padding-left:clamp(0px,4vw,56px)}
+.hero h1{max-width:18ch}
+.journey{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:32px;align-items:start}
+.plan{padding:28px 24px 22px;display:grid;gap:12px;justify-items:center;position:relative;border-radius:40px 32px 44px 34px/34px 40px 32px 42px}
+.plan-head{width:100%;display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+.tier{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;width:100%}
+.tier.what{width:68%}.tier.how{width:86%}.tier.why{width:100%}
+.tier-label{width:100%;display:flex;align-items:center;gap:12px;font-family:var(--hand);font-size:1.22rem;color:var(--muted);line-height:1}
+.tier-label::after{content:"";flex:1;height:8px;background:var(--rule);opacity:.8;
+  -webkit-mask:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='8'%3E%3Cpath d='M0 4 C 18 1, 32 7, 50 4 S 86 2, 120 5' fill='none' stroke='black' stroke-width='1.2'/%3E%3C/svg%3E") repeat-x center/120px 8px;
+  mask:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='8'%3E%3Cpath d='M0 4 C 18 1, 32 7, 50 4 S 86 2, 120 5' fill='none' stroke='black' stroke-width='1.2'/%3E%3C/svg%3E") repeat-x center/120px 8px}
+.tier.what+.tier-label,.tier.how+.tier-label{margin-top:6px}
+.cell{position:relative;text-align:left;border:1px solid var(--line);padding:12px 14px 12px;cursor:pointer;min-height:96px;display:flex;flex-direction:column;gap:6px;
+  background:var(--sheet-solid);border-radius:28px 22px 30px 20px/24px 30px 20px 28px;box-shadow:var(--shadow);
+  transition:transform .7s var(--spring),box-shadow .6s var(--ease),border-color .4s}
+.tier .cell:nth-child(2){border-radius:22px 30px 24px 30px/30px 22px 28px 22px}
+.tier .cell:nth-child(3){border-radius:30px 24px 22px 32px/22px 28px 30px 24px}
+.cell:hover{transform:translateY(-3px) rotate(-.4deg);box-shadow:var(--shadow-lift)}
+.cell .n{font-family:var(--hand);font-size:1rem;color:var(--muted);line-height:1}
+.cell .t{font-weight:700;line-height:1.25;font-size:.98rem;overflow-wrap:anywhere}
+.cell .s{margin-top:auto}
+.cell.done.L-Why{background:var(--why-soft);border-color:color-mix(in srgb,var(--why) 35%,transparent)}
+.cell.done.L-How{background:var(--how-soft);border-color:color-mix(in srgb,var(--how) 35%,transparent)}
+.cell.done.L-What{background:var(--what-soft);border-color:color-mix(in srgb,var(--what) 40%,transparent)}
+.cell.locked{opacity:.5;border-style:dashed;cursor:default;box-shadow:none;background:transparent}
+.cell.locked:hover{transform:none;box-shadow:none}
+.cell.is-next,.slab.is-next{animation:breathe 5.5s ease-in-out infinite}
+@keyframes breathe{0%,100%{box-shadow:var(--shadow),0 0 0 0 var(--glow)}50%{box-shadow:var(--shadow),0 0 0 9px var(--glow)}}
+.slab{width:100%;border:1px solid color-mix(in srgb,var(--why) 30%,transparent);padding:16px 20px;display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap;cursor:pointer;text-align:left;
+  background:radial-gradient(120% 140% at 15% 0%,color-mix(in srgb,var(--sheet-solid) 55%,transparent),transparent 60%),var(--why-soft);
+  border-radius:46px 38px 50px 34px/30px 36px 26px 32px;box-shadow:var(--shadow);transition:transform .7s var(--spring),box-shadow .6s var(--ease)}
+.slab:hover{transform:translateY(-2px);box-shadow:var(--shadow-lift)}
+.slab .t{font-weight:700;font-family:var(--display);font-size:1.15rem;font-weight:450}
+.ground{width:100%;text-align:center;font-family:var(--hand);font-size:1.1rem;color:var(--muted);padding-top:2px}
+.side{display:grid;gap:18px}
+.card{padding:24px;display:grid;gap:12px}
+.card h3{font-size:1.2rem}
+.list{display:grid;gap:10px;margin:0;padding:0;list-style:none}
+.list li{display:grid;gap:6px;padding:12px 0;border-top:1px solid var(--line)}
+.list li:first-child{border-top:0;padding-top:0}
+
+/* explore */
+.areas{display:grid;grid-template-columns:repeat(auto-fill,minmax(236px,1fr));gap:14px}
+.area{padding:18px;display:grid;gap:10px;text-align:left;cursor:pointer;border-radius:26px 20px 28px 22px/22px 28px 20px 26px;border:1px solid var(--line);background:var(--sheet);box-shadow:var(--shadow);
+  transition:transform .7s var(--spring),box-shadow .6s var(--ease)}
+.area:nth-child(3n+2){border-radius:20px 28px 22px 26px/28px 20px 26px 22px}
+.area:hover{transform:translateY(-3px);box-shadow:var(--shadow-lift)}
+.area .t{font-weight:700;font-size:1.04rem}
+.ticks{display:flex;gap:5px}
+.ticks i{width:16px;height:7px;border-radius:60% 40% 55% 45%/50% 60% 40% 50%;background:var(--rule)}
+.ticks i.on{background:var(--why)}
+.ticks i.skip{background:transparent;border:1px dashed var(--rule)}
+.ticks i.cur{background:var(--accent)}
+.area .belief{font-family:var(--display);font-size:.98rem;color:var(--muted);font-style:italic;font-variation-settings:"SOFT" 100,"WONK" 1}
+.add-area{display:flex;gap:10px;flex-wrap:wrap;align-items:end}
+.add-area .field{flex:1;min-width:200px}
+
+/* studio: a quiet room for one conversation */
+.studio{display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:28px;align-items:start}
+.brief{padding:24px;display:grid;gap:16px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 92px);max-height:calc(100vh - 120px);overflow:auto;border-radius:32px 26px 30px 28px}
+.brief .q{font-family:var(--display);font-size:1.2rem;line-height:1.35;font-weight:380;font-variation-settings:"SOFT" 100}
+.brief .block{display:grid;gap:6px}
+.statement{white-space:pre-wrap;background:color-mix(in srgb,var(--paper) 70%,transparent);border-radius:18px 14px 18px 12px;padding:12px 16px;border-left:3px solid var(--what);font-size:.96rem}
+.lenses{display:grid;gap:2px;margin:0;padding:0;list-style:none;counter-reset:l}
+.lenses li{display:grid;grid-template-columns:24px 1fr auto;gap:10px;align-items:center;padding:6px 0;font-size:.93rem;color:var(--muted)}
+.lenses li .dot{width:15px;height:13px;border-radius:58% 42% 52% 48%/55% 50% 50% 45%;border:1.5px solid var(--rule);justify-self:center;transition:transform .8s var(--spring)}
+.lenses li.done .dot{background:var(--why);border-color:var(--why)}
+.lenses li.skip .dot{border-style:dashed}
+.lenses li.cur{color:var(--ink);font-weight:700}
+.lenses li.cur .dot{border-color:var(--accent);background:var(--glow);transform:scale(1.25)}
+.layer-tag{font-family:var(--body);font-size:.72rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
+.layer-tag.Why{color:var(--why-ink)}.layer-tag.How{color:var(--how-ink)}.layer-tag.What{color:var(--what-ink)}
+.chat{display:grid;grid-template-rows:auto 1fr auto;min-height:calc(100vh - 190px);border-radius:34px 30px 32px 28px;overflow:hidden}
+.chat-head{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:14px 22px;border-bottom:1px solid var(--line)}
+.stream{padding:26px 24px;display:flex;flex-direction:column;gap:18px;overflow-y:auto;max-height:calc(100vh - 350px);min-height:280px;scroll-behavior:smooth}
+.msg{max-width:68ch;padding:14px 20px;line-height:1.7;overflow-wrap:anywhere;animation:rise .8s var(--ease) both}
+.msg p+p{margin-top:.75em}
+.msg ul{margin:.5em 0 0;padding-left:1.2em}
+.msg.coach{align-self:flex-start;background:var(--sheet-solid);border:1px solid var(--line);border-radius:6px 26px 24px 22px/6px 24px 26px 22px;font-size:1.02rem}
+.msg.me{align-self:flex-end;background:var(--me);border-radius:26px 6px 22px 24px/24px 6px 26px 22px;white-space:pre-wrap}
+.divider{align-self:center;text-align:center;font-family:var(--hand);font-size:1.08rem;color:var(--muted);max-width:60ch;padding:0 12px;line-height:1.3}
+.typing{display:inline-flex;gap:6px;padding:6px 2px;align-items:center}
+.typing i{width:9px;height:8px;border-radius:58% 42% 52% 48%/55% 50% 50% 45%;background:var(--what);animation:bob 2.4s ease-in-out infinite}
+.typing i:nth-child(2){animation-delay:.3s;background:var(--sand)}.typing i:nth-child(3){animation-delay:.6s;background:var(--why)}
+@keyframes bob{0%,100%{transform:translateY(0) scale(.9);opacity:.5}50%{transform:translateY(-4px) scale(1.1);opacity:1}}
+.compose{border-top:1px solid var(--line);padding:14px 18px;display:grid;gap:12px}
+.compose .actions{display:flex;gap:8px;flex-wrap:wrap}
+.compose .send{display:flex;gap:10px;align-items:flex-end}
+.compose textarea{min-height:56px;max-height:220px;flex:1;border-radius:22px}
+.coach-err{align-self:stretch;display:flex;gap:10px;align-items:center;flex-wrap:wrap;color:var(--danger);font-size:.92rem}
+
+/* design */
+.layer{display:grid;gap:14px;margin-top:36px}
+.layer-head{display:flex;align-items:baseline;gap:14px;padding-bottom:8px;position:relative}
+.layer-head::after{content:"";position:absolute;left:0;right:0;bottom:0;height:8px;background:var(--rule);
+  -webkit-mask:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='8'%3E%3Cpath d='M0 4 C 18 1, 32 7, 50 4 S 86 2, 120 5' fill='none' stroke='black' stroke-width='1.6'/%3E%3C/svg%3E") repeat-x center/120px 8px;
+  mask:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='8'%3E%3Cpath d='M0 4 C 18 1, 32 7, 50 4 S 86 2, 120 5' fill='none' stroke='black' stroke-width='1.6'/%3E%3C/svg%3E") repeat-x center/120px 8px}
+.layer-head.Why::after{background:var(--why)}.layer-head.How::after{background:var(--how)}.layer-head.What::after{background:var(--what)}
+.el{padding:20px 24px;display:grid;gap:12px}
+.el-top{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.el-top h3{margin-right:auto}
+.el .gap{color:var(--muted);font-style:italic}
+details summary{cursor:pointer;color:var(--muted);font-size:.92rem}
+.hist{margin:10px 0 0;padding:0;list-style:none;display:grid;gap:12px}
+.hist li{border-left:2px solid var(--rule);padding-left:14px;font-size:.93rem}
+.hist .when{font-size:.78rem;font-weight:700;color:var(--muted);letter-spacing:.04em}
+.map details{padding:18px 22px}
+.map summary{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;color:var(--ink)}
+.map dl{display:grid;gap:12px;margin:14px 0 0}
+.map dt{font-weight:700;font-size:.92rem}
+.map dd{margin:0;white-space:pre-wrap;color:var(--muted);font-size:.95rem}
+
+/* dialog: a held breath */
+.scrim{position:fixed;inset:0;background:color-mix(in srgb,var(--ink) 30%,transparent);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);z-index:30;display:grid;place-items:center;animation:fade .5s var(--ease);
+  padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.dialog{width:min(640px,100%);max-height:calc(100vh - 40px);overflow:auto;padding:30px;display:grid;gap:18px;background:var(--sheet-solid);border-radius:36px 30px 34px 32px/32px 36px 30px 34px;animation:bloom .7s var(--spring)}
+@keyframes bloom{from{opacity:0;transform:translateY(14px) scale(.97)}to{opacity:1;transform:none}}
+
+/* inputs */
+.tabs{display:flex;gap:6px;margin-bottom:26px;overflow-x:auto;padding:4px;background:var(--sheet);border:1px solid var(--line);border-radius:999px;width:max-content;max-width:100%}
+.tabs button{background:none;border:0;padding:9px 18px;border-radius:999px;cursor:pointer;font-weight:700;color:var(--muted);white-space:nowrap;transition:background .5s var(--ease),color .3s}
+.tabs button[aria-selected="true"]{color:var(--ink);background:var(--what-soft)}
+.tests{display:grid;grid-template-columns:repeat(auto-fill,minmax(264px,1fr));gap:14px}
+.test{padding:20px;display:grid;gap:10px;align-content:start;text-align:left;border-radius:26px 20px 28px 22px/22px 28px 20px 26px;border:1px solid var(--line);background:var(--sheet);cursor:pointer;box-shadow:var(--shadow);
+  transition:transform .7s var(--spring),box-shadow .6s var(--ease)}
+.test:nth-child(even){border-radius:20px 28px 22px 26px/28px 20px 26px 22px}
+.test:hover{transform:translateY(-3px);box-shadow:var(--shadow-lift)}
+.test.has{background:linear-gradient(160deg,var(--what-soft),var(--sheet) 70%)}
+.test .t{font-weight:800;font-size:1.04rem}
+.test .sum{font-size:.94rem;line-height:1.5}
+.test .feeds{display:flex;gap:6px;flex-wrap:wrap}
+.dialog.wide{width:min(800px,100%)}
+.ed-sec{display:grid;gap:12px;padding-top:4px}
+.ed-sec+.ed-sec{border-top:1px solid var(--line);padding-top:16px}
+.picked{list-style:none;margin:0;padding:0;display:grid;gap:6px;counter-reset:pk}
+.picked li{display:grid;grid-template-columns:30px minmax(0,1fr) auto;align-items:center;gap:8px;background:var(--what-soft);border-radius:16px 20px 18px 14px;padding:6px 8px;animation:rise .6s var(--spring)}
+.picked li::before{counter-increment:pk;content:counter(pk);font-family:var(--hand);font-size:1.15rem;color:var(--what-ink);text-align:center}
+.picked .g{font-size:.68rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-left:8px}
+.picked .ctl{display:flex;gap:2px}
+.icon{border:0;background:transparent;width:32px;height:32px;border-radius:50% 46% 52% 48%;cursor:pointer;color:var(--muted);font-size:1rem;line-height:1;transition:transform .5s var(--spring),background .3s}
+.icon:hover{background:var(--sheet-solid);color:var(--ink);transform:scale(1.1)}
+.icon[disabled]{opacity:.3;cursor:default;transform:none}
+.optgroup{display:grid;gap:8px}
+.optgroup .gl{font-family:var(--hand);font-size:1.12rem;color:var(--muted);line-height:1}
+.opts{display:flex;flex-wrap:wrap;gap:7px}
+.opt{border:1px solid var(--line);background:var(--sheet-solid);border-radius:999px;padding:6px 14px;cursor:pointer;font-size:.9rem;transition:transform .55s var(--spring),background .35s,color .35s}
+.opt:hover{transform:translateY(-2px)}
+.opt[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);transform:scale(1.04)}
+.opt[disabled]{opacity:.4;cursor:default;transform:none}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;flex-wrap:wrap;background:var(--sheet-solid);padding:3px;gap:2px}
+.seg button{border:0;background:transparent;padding:7px 14px;cursor:pointer;font-size:.9rem;border-radius:999px;transition:background .45s var(--ease),color .3s}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.pairrow{display:grid;grid-template-columns:minmax(0,1fr) 120px;gap:10px;align-items:center}
+.pairrow .seg{width:100%}
+.pairrow .seg button{flex:1}
+.pct{display:flex;align-items:center;gap:6px;font-size:.9rem;color:var(--muted)}
+.pct input{width:76px}
+.scorerow{display:grid;grid-template-columns:minmax(120px,190px) minmax(0,1fr) 70px;gap:14px;align-items:center}
+.scorerow input[type=range]{width:100%;accent-color:var(--accent)}
+.scorerow input[type=number]{width:70px;padding:7px 10px}
+.bkrow{display:grid;grid-template-columns:minmax(110px,160px) minmax(0,1fr);gap:10px;align-items:center}
+.bkrow .seg{width:100%}.bkrow .seg button{flex:1}
+.chip.L-Why{color:var(--why-ink)}.chip.L-How{color:var(--how-ink)}.chip.L-What{color:var(--what-ink)}
+.bkcount{display:flex;gap:16px;flex-wrap:wrap;font-size:.8rem;font-weight:700;color:var(--muted)}
+.bkcount .ok{color:var(--what-ink)}
+input[type=number],input[type=date],select{border:1px solid var(--line);background:var(--sheet-solid);border-radius:14px;padding:9px 12px}
+.entries{display:grid;gap:14px;margin-top:22px}
+.entry{padding:20px 24px;display:grid;gap:10px}
+.entries .entry:nth-child(even){border-radius:24px 32px 26px 30px}
+.entry .meta{display:flex;gap:10px;flex-wrap:wrap;align-items:center;font-size:.86rem;color:var(--muted)}
+.entry .body{white-space:pre-wrap;font-family:var(--display);font-size:1.08rem;line-height:1.6;font-weight:360;font-variation-settings:"SOFT" 100}
+.entry .prompt{font-family:var(--hand);color:var(--muted);font-size:1.15rem;line-height:1.3}
+.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px}
+.growthcol{display:grid;gap:14px;align-content:start}
+/* iterate */
+.meter{display:grid;gap:10px}
+.meter .bar{height:12px;border-radius:999px;background:color-mix(in srgb,var(--rule) 60%,transparent);overflow:hidden;display:flex}
+.meter .bar i{display:block;height:100%;transition:width 1.6s var(--ease)}
+.meter .bar .tr{background:var(--what);border-radius:999px}.meter .bar .wk{background:var(--sand)}
+.score{font-family:var(--display);font-size:2.8rem;line-height:1;font-weight:320;font-variation-settings:"SOFT" 100}
+.trace{width:100%;border-collapse:collapse;font-size:.93rem;min-width:520px}
+.trace th{text-align:left;font-size:.72rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding:8px;border-bottom:1px solid var(--line)}
+.trace td{padding:10px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+.chip.traced{color:var(--what-ink)}.chip.weak{color:var(--how-ink)}.chip.untraced{color:var(--danger)}
+.scroll-x{overflow-x:auto}
+.gcards{display:grid;gap:16px}
+.gcard{padding:22px 26px;display:grid;gap:12px;position:relative;overflow:hidden}
+.gcard::before{content:"";position:absolute;width:140px;height:120px;left:-50px;top:-50px;border-radius:46% 54% 60% 40%/50% 42% 58% 50%;opacity:.55;filter:blur(2px);pointer-events:none}
+.gcard.Why::before{background:var(--why-soft)}.gcard.How::before{background:var(--how-soft)}.gcard.What::before{background:var(--what-soft)}
+.gcard>*{position:relative}
+.gcard h3{font-family:var(--display);font-weight:420;font-size:1.3rem;line-height:1.3}
+.gcard .act{font-size:.93rem;background:color-mix(in srgb,var(--paper) 75%,transparent);border-radius:16px 20px 18px 14px;padding:10px 14px}
+.depth{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-top:10px}
+.depth .d{font-family:var(--hand);font-size:1.12rem;color:var(--muted)}
+.nudges{display:grid;gap:10px;margin:0;padding:0;list-style:none}
+.nudges li{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:12px 0;border-top:1px solid var(--line)}
+.nudges li:first-child{border-top:0;padding-top:0}
+.toggle{display:flex;gap:12px;align-items:flex-start;justify-content:space-between;padding:12px 0;border-top:1px solid var(--line)}
+.toggle:first-of-type{border-top:0}
+.toggle .tx{display:grid;gap:2px}
+.toggle input{width:20px;height:20px;accent-color:var(--accent);flex:none;margin-top:3px}
+.loading{display:flex;gap:14px;align-items:center;padding:22px 26px;margin-bottom:22px}
+@media (max-width:640px){ .split{grid-template-columns:minmax(0,1fr)} .scorerow{grid-template-columns:minmax(0,1fr) 70px} .scorerow input[type=range]{grid-column:1/-1;grid-row:2} .bkrow{grid-template-columns:minmax(0,1fr)} .pairrow{grid-template-columns:minmax(0,1fr)} }
+
+@media (max-width:900px){
+  .welcome,.journey{grid-template-columns:minmax(0,1fr)}
+  .welcome{gap:36px}
+  .studio{grid-template-columns:minmax(0,1fr)}
+  .brief{position:static;max-height:none}
+  .chat{min-height:0}
+  .stream{max-height:none;min-height:240px}
+  main{padding-block:36px 72px}
+  .hero{margin-bottom:32px}
+}
+@media (max-width:560px){
+  body{font-size:16px}
+  .tier.what,.tier.how,.tier.why{width:100%}
+  .tier{grid-template-columns:minmax(0,1fr)}
+  .cell{min-height:0;flex-direction:row;align-items:center;flex-wrap:wrap}
+  .cell .s{margin-top:0;margin-left:auto}
+  header .bar-in{gap:6px;border-radius:26px;padding:8px 10px}
+  .nav{width:100%;margin-left:0;justify-content:space-between}
+  .nav button{padding:6px 9px;font-size:.88rem}
+  .plan,.card,.welcome form,.dialog{padding:20px}
+  .tabs{width:100%}
+}
+@media (prefers-reduced-motion:reduce){
+  .sky i,.pyr-art .float,.cell.is-next,.slab.is-next,.typing i{animation:none}
+  .sky{transition:none}.sky.exhale{animation:none}.ripple{display:none}
+  main.enter>*,.msg,.picked li,.dialog,.scrim,.toast{animation:none}
+  *{transition-duration:.01ms!important}
+}
+</style>
+
+<div class="sky" aria-hidden="true"><i class="b1"></i><i class="b2"></i><i class="b3"></i><i class="b4"></i></div>
+<div class="grain" aria-hidden="true"></div>
+
+<header class="bar"><div class="bar-in">
+  <button class="brand" data-act="nav" data-view="journey" aria-label="Life in Design home">
+    <svg viewBox="0 0 32 32" aria-hidden="true">
+      <path d="M4 25 C 4 21, 10 19.6, 16 19.6 C 23 19.6, 28 21.1, 28 24.6 C 28 27.6, 22 28.6, 16 28.6 C 9 28.6, 4 27.6, 4 25 Z" fill="var(--why)"/>
+      <path d="M8.2 16.4 C 8 13.8, 12 12.5, 16.3 12.6 C 20.6 12.7, 24 13.9, 23.8 16.6 C 23.6 18.8, 20 19.8, 16 19.7 C 11.7 19.6, 8.4 18.7, 8.2 16.4 Z" fill="var(--how)"/>
+      <path d="M11.6 8.9 C 11.5 6.7, 13.7 5.3, 16.1 5.4 C 18.7 5.5, 20.5 6.9, 20.3 9.1 C 20.1 11.1, 18.3 12.4, 15.9 12.4 C 13.4 12.3, 11.7 11, 11.6 8.9 Z" fill="var(--what)"/>
+    </svg>
+    <b>Life in Design</b>
+  </button>
+  <span id="modeTag" class="preview-tag" hidden>Preview</span>
+  <nav class="nav" id="nav" hidden>
+    <button data-act="nav" data-view="journey">Journey</button>
+    <button data-act="nav" data-view="design">My Design</button>
+    <button data-act="nav" data-view="inputs">Inputs</button>
+    <button data-act="nav" data-view="iterate">Iterate</button>
+    <button data-act="nav" data-view="you">You</button>
+  </nav>
+</div></header>
+
+<main id="view" aria-live="polite"><p class="muted">Opening your design…</p></main>
+
+<footer>
+  <span class="wave" aria-hidden="true"></span>
+  <span>Built on Nate Gardner's Life in Design Framework. A coach, not a therapist.</span>
+  <span>In crisis? In the US, call or text <strong>988</strong>.</span>
+</footer>
+
+<div id="layer"></div>
+
+<script>/* Life in Design · shared engine (runs in Apps Script and in the browser) */
+var LID = (function () {
+  var FW = {"version":"1.0","elements":[{"order":1,"layer":"Why","element":"Core Beliefs","oneLine":"The beliefs you accept as true about yourself, others and the cosmos","definingQuestion":"What do I choose to believe is fundamentally true about myself, others and the universe?","strongDraft":"3–7 short statements covering self, others and the universe, each one the person would act on."},{"order":2,"layer":"Why","element":"Vision","oneLine":"A future state you envision for you and others","definingQuestion":"What is the grandest possible future, emerging from my beliefs, that I can see for me and others?","strongDraft":"A vivid, energizing picture that includes other people, not only the self, and that clearly grows out of the Core Beliefs."},{"order":3,"layer":"Why","element":"Purpose","oneLine":"Your role in bringing about the vision you see","definingQuestion":"What is my central role in bringing about my Vision of the future?","strongDraft":"One or two sentences naming the person's distinct role in the Vision. Memorable enough to recall in a hard moment."},{"order":4,"layer":"How","element":"Governing Principles","oneLine":"The fundamental ethos that governs and motivates your attitudes and actions","definingQuestion":"What governing principles naturally emerge as necessarily connected to my Core Beliefs, Vision and Purpose?","strongDraft":"3–7 principles phrased as usable decision rules, each traceable to the Why."},{"order":5,"layer":"How","element":"Strategy","oneLine":"Your action plan, aligning vision and purpose with time, energy and resources","definingQuestion":"With finite time and finite resources, what trade-offs (say yes, say no) will I make to accomplish my Purpose?","strongDraft":"A short list of focus areas and goals for a defined period, plus an explicit list of what the person is saying no to."},{"order":6,"layer":"How","element":"Relationships","oneLine":"The people you choose to work with to achieve your purpose","definingQuestion":"Who will I walk with to enrich my Purpose and bring about my Vision?","strongDraft":"Named people or groups in roles (multipliers, complements, fellow travelers), plus energizing and draining influences to adjust."},{"order":7,"layer":"What","element":"Key Activities","oneLine":"Your priorities, daily habits and where you spend your time","definingQuestion":"How will I spend my time to accomplish my Purpose, and what activities will I say no to?","strongDraft":"A realistic picture of a typical week, with specific activities added and removed to match the Strategy."},{"order":8,"layer":"What","element":"Resources","oneLine":"Your strengths: what you are good at and passionate about","definingQuestion":"What strengths, tools, resources and advantages are at my disposal to help me achieve my Purpose?","strongDraft":"An honest inventory of strengths, skills, assets and access, each linked to where it serves the Strategy."},{"order":9,"layer":"What","element":"Methods","oneLine":"The style, habits, systems and processes that govern your actions","definingQuestion":"What systems, tools and metrics do I use to achieve and measure progress toward my Purpose?","strongDraft":"A few habits or routines, one to three measures of progress, and the mindset practices that keep the person on course."}],"areas":[{"order":1,"area":"Success in Life","weight":"Gentle start"},{"order":2,"area":"Career","weight":"Gentle start"},{"order":3,"area":"Money","weight":"Gentle start"},{"order":4,"area":"The Nature of Themselves","weight":""},{"order":5,"area":"The Future","weight":""},{"order":6,"area":"Leadership","weight":""},{"order":7,"area":"Relationships","weight":""},{"order":8,"area":"Belief","weight":""},{"order":9,"area":"Doubt","weight":""},{"order":10,"area":"God","weight":"Tender"},{"order":11,"area":"Parenting","weight":"Tender"},{"order":12,"area":"Failure","weight":"Tender"},{"order":13,"area":"Love","weight":"Tender"},{"order":14,"area":"Sex","weight":"Tender"}],"lenses":[{"order":1,"key":"father","lens":"Father figure","kind":"Inherited","questions":"What do you believe your father figure holds as true about this? What explicit and implicit messages led you to that conclusion? Where do you think their belief came from?","alt":"If a father figure was absent, unknown or painful, explore another caregiver or early influence instead, or skip this lens."},{"order":2,"key":"mother","lens":"Mother figure","kind":"Inherited","questions":"What do you believe your mother figure holds as true about this? What explicit and implicit messages led you to that conclusion? Where do you think their belief came from?","alt":"If a mother figure was absent, unknown or painful, explore another caregiver or early influence instead, or skip this lens."},{"order":3,"key":"admired","lens":"Admired figure","kind":"Inherited","questions":"What do you believe someone you admire holds as true about this? What explicit and implicit messages led you to that conclusion? Where do you think their belief came from?","alt":""},{"order":4,"key":"society","lens":"Society","kind":"Inherited","questions":"What does general society hold as true about this? What messages tell you so? Where does that belief come from?","alt":""},{"order":5,"key":"own","lens":"My own","kind":"Own","questions":"What do I hold as true about this?","alt":""},{"order":6,"key":"vis","lens":"Me vis-à-vis others","kind":"Own","questions":"What am I carrying forward from my father, mother, admired figure and society? How well does this belief serve me in becoming the grandest version of myself I can imagine? Is there a belief that could expand my possibilities beyond what I believe now?","alt":""},{"order":7,"key":"truth","lens":"Belief vs. verifiable truth","kind":"Own","questions":"What here is truth and what is belief? Why do I choose to believe it, and what is really motivating that choice?","alt":""}],"tables":{"Users":["UserID","Name","Email","CreatedAt","LastActiveAt","Stage","CurrentFocus","WhatBroughtYou","HopedChange","Is18OrOlder","PlainStyle","Prefs"],"DesignRecord":["UserID","Layer","Element","ElementOrder","Statement","Status","Version","UpdatedAt"],"ElementHistory":["HistoryID","UserID","Element","Version","Statement","Status","ChangedAt","ChangeNote"],"BeliefExploration":["EntryID","UserID","Area","IsCustomArea","LensOrder","Lens","Response","Skipped","UpdatedAt","LensStatus"],"ChosenBeliefs":["ChoiceID","UserID","Area","ChosenBelief","Why","ApprovedAt"],"ParkedProblems":["ProblemID","UserID","Description","ParkedAt","Status","ResolvedAt","ResolutionNote"],"Commitments":["CommitmentID","UserID","SessionID","Focus","Commitment","Status","CreatedAt","CompletedAt","Reflection"],"Sessions":["SessionID","UserID","StartedAt","EndedAt","Focus","Summary"],"Messages":["MessageID","UserID","SessionID","Timestamp","Context","Role","Content"],"Assessments":["AssessmentID","UserID","Test","TakenOn","Results","Summary","Notes","UpdatedAt"],"Journal":["EntryID","UserID","CreatedAt","Prompt","Entry","CoachCanRead","Tag"],"Growth":["ItemID","UserID","Kind","Title","Detail","Source","Status","AcquiredOn","LinkedElement","CreatedAt"],"Recommendations":["RecID","UserID","ReviewID","CreatedAt","Layer","Kind","Title","Body","TracesTo","ActionType","ActionElement","ActionText","SearchQuery","Status","RespondedAt","UserNote"],"Reviews":["ReviewID","UserID","CreatedAt","Summary","TraceJSON","Traced","Total"]},"tests":[{"key":"clifton","name":"CliftonStrengths","publisher":"Gallup","url":"https://www.gallup.com/cliftonstrengths/","what":"Your top talent themes out of 34, grouped in four domains.","feeds":["Resources","Key Activities"],"fields":[{"key":"top","label":"Your themes, in order","type":"rank","min":5,"max":34,"hint":"Add your top 5 at least. Add all 34 if you have the full report.","options":[{"v":"Achiever","g":"Executing"},{"v":"Arranger","g":"Executing"},{"v":"Belief","g":"Executing"},{"v":"Consistency","g":"Executing"},{"v":"Deliberative","g":"Executing"},{"v":"Discipline","g":"Executing"},{"v":"Focus","g":"Executing"},{"v":"Responsibility","g":"Executing"},{"v":"Restorative","g":"Executing"},{"v":"Activator","g":"Influencing"},{"v":"Command","g":"Influencing"},{"v":"Communication","g":"Influencing"},{"v":"Competition","g":"Influencing"},{"v":"Maximizer","g":"Influencing"},{"v":"Self-Assurance","g":"Influencing"},{"v":"Significance","g":"Influencing"},{"v":"Woo","g":"Influencing"},{"v":"Adaptability","g":"Relationship Building"},{"v":"Connectedness","g":"Relationship Building"},{"v":"Developer","g":"Relationship Building"},{"v":"Empathy","g":"Relationship Building"},{"v":"Harmony","g":"Relationship Building"},{"v":"Includer","g":"Relationship Building"},{"v":"Individualization","g":"Relationship Building"},{"v":"Positivity","g":"Relationship Building"},{"v":"Relator","g":"Relationship Building"},{"v":"Analytical","g":"Strategic Thinking"},{"v":"Context","g":"Strategic Thinking"},{"v":"Futuristic","g":"Strategic Thinking"},{"v":"Ideation","g":"Strategic Thinking"},{"v":"Input","g":"Strategic Thinking"},{"v":"Intellection","g":"Strategic Thinking"},{"v":"Learner","g":"Strategic Thinking"},{"v":"Strategic","g":"Strategic Thinking"}]}]},{"key":"via","name":"VIA Character Strengths","publisher":"VIA Institute on Character","url":"https://www.viacharacter.org/","what":"Your 24 character strengths, ranked, across six virtues.","feeds":["Resources","Governing Principles"],"fields":[{"key":"rank","label":"Your strengths, in order","type":"rank","min":5,"max":24,"hint":"Your top 5 are your signature strengths. Add more if you like.","options":[{"v":"Creativity","g":"Wisdom"},{"v":"Curiosity","g":"Wisdom"},{"v":"Judgment","g":"Wisdom"},{"v":"Love of Learning","g":"Wisdom"},{"v":"Perspective","g":"Wisdom"},{"v":"Bravery","g":"Courage"},{"v":"Perseverance","g":"Courage"},{"v":"Honesty","g":"Courage"},{"v":"Zest","g":"Courage"},{"v":"Love","g":"Humanity"},{"v":"Kindness","g":"Humanity"},{"v":"Social Intelligence","g":"Humanity"},{"v":"Teamwork","g":"Justice"},{"v":"Fairness","g":"Justice"},{"v":"Leadership","g":"Justice"},{"v":"Forgiveness","g":"Temperance"},{"v":"Humility","g":"Temperance"},{"v":"Prudence","g":"Temperance"},{"v":"Self-Regulation","g":"Temperance"},{"v":"Appreciation of Beauty & Excellence","g":"Transcendence"},{"v":"Gratitude","g":"Transcendence"},{"v":"Hope","g":"Transcendence"},{"v":"Humor","g":"Transcendence"},{"v":"Spirituality","g":"Transcendence"}]}]},{"key":"mbti","name":"Myers-Briggs / 16Personalities","publisher":"The Myers-Briggs Company · 16Personalities","url":"https://www.16personalities.com/","what":"Your four-letter type, with how clear each preference is.","feeds":["Methods","Relationships"],"fields":[{"key":"pairs","label":"Your preferences","type":"pairs","pairs":[["E","Extraversion","I","Introversion"],["S","Sensing","N","Intuition"],["T","Thinking","F","Feeling"],["J","Judging","P","Perceiving"]],"hint":"Percentages are optional."},{"key":"identity","label":"Identity (16Personalities only)","type":"select","optional":true,"options":[{"v":"A","label":"Assertive (-A)"},{"v":"T","label":"Turbulent (-T)"}]}]},{"key":"enneagram","name":"Enneagram","publisher":"Various (e.g. The Enneagram Institute)","url":"https://www.enneagraminstitute.com/","what":"Your core type, wing and instinct.","feeds":["Core Beliefs","Governing Principles"],"fields":[{"key":"type","label":"Core type","type":"select","options":[{"v":"1","label":"1 · Reformer"},{"v":"2","label":"2 · Helper"},{"v":"3","label":"3 · Achiever"},{"v":"4","label":"4 · Individualist"},{"v":"5","label":"5 · Investigator"},{"v":"6","label":"6 · Loyalist"},{"v":"7","label":"7 · Enthusiast"},{"v":"8","label":"8 · Challenger"},{"v":"9","label":"9 · Peacemaker"}]},{"key":"wing","label":"Wing","type":"wing","of":"type","optional":true},{"key":"instinct","label":"Dominant instinct","type":"select","optional":true,"options":[{"v":"sp","label":"Self-preservation (sp)"},{"v":"so","label":"Social (so)"},{"v":"sx","label":"One-to-one (sx)"}]},{"key":"tritype","label":"Tritype","type":"text","optional":true,"placeholder":"e.g. 513"}]},{"key":"bigfive","name":"Big Five (OCEAN)","publisher":"Various (e.g. IPIP-NEO)","url":"https://bigfive-test.com/","what":"Five broad traits, as percentiles.","feeds":["Methods","Relationships"],"fields":[{"key":"scores","label":"Percentile for each trait","type":"scores","min":0,"max":100,"unit":"th pct","items":["Openness","Conscientiousness","Extraversion","Agreeableness","Neuroticism"]}]},{"key":"disc","name":"DISC","publisher":"Various (e.g. Everything DiSC)","url":"https://www.discprofile.com/","what":"Your behavioral style across four dimensions.","feeds":["Relationships","Methods"],"fields":[{"key":"primary","label":"Primary style","type":"select","options":[{"v":"D","label":"D · Dominance"},{"v":"I","label":"I · Influence"},{"v":"S","label":"S · Steadiness"},{"v":"C","label":"C · Conscientiousness"}]},{"key":"secondary","label":"Secondary style","type":"select","optional":true,"options":[{"v":"D","label":"D · Dominance"},{"v":"I","label":"I · Influence"},{"v":"S","label":"S · Steadiness"},{"v":"C","label":"C · Conscientiousness"}]},{"key":"scores","label":"Scores","type":"scores","min":0,"max":100,"optional":true,"items":["Dominance","Influence","Steadiness","Conscientiousness"]}]},{"key":"genius","name":"Working Genius","publisher":"The Table Group","url":"https://www.workinggenius.com/","what":"Which kinds of work give you energy and which drain it.","feeds":["Key Activities","Relationships"],"fields":[{"key":"buckets","label":"Sort the six types","type":"buckets","items":["Wonder","Invention","Discernment","Galvanizing","Enablement","Tenacity"],"buckets":[{"v":"genius","label":"Genius","count":2},{"v":"competency","label":"Competency","count":2},{"v":"frustration","label":"Frustration","count":2}]}]},{"key":"kolbe","name":"Kolbe A Index","publisher":"Kolbe Corp","url":"https://www.kolbe.com/","what":"How you naturally take action, in four modes.","feeds":["Methods","Key Activities"],"fields":[{"key":"modes","label":"Your score in each Action Mode","type":"scores","min":1,"max":10,"items":["Fact Finder","Follow Thru","Quick Start","Implementor"]}]},{"key":"holland","name":"Holland Code (RIASEC)","publisher":"e.g. O*NET Interest Profiler, Strong Interest Inventory","url":"https://www.mynextmove.org/explore/ip","what":"Your three strongest interest areas, in order.","feeds":["Strategy","Key Activities"],"fields":[{"key":"code","label":"Your three-letter code, in order","type":"rank","min":3,"max":3,"options":[{"v":"Realistic","code":"R"},{"v":"Investigative","code":"I"},{"v":"Artistic","code":"A"},{"v":"Social","code":"S"},{"v":"Enterprising","code":"E"},{"v":"Conventional","code":"C"}]}]},{"key":"love","name":"5 Love Languages","publisher":"Gary Chapman","url":"https://5lovelanguages.com/quizzes","what":"How you most give and receive care.","feeds":["Relationships"],"fields":[{"key":"scores","label":"Your score for each language","type":"scores","min":0,"max":12,"items":["Words of Affirmation","Quality Time","Receiving Gifts","Acts of Service","Physical Touch"]}]}]};
+  var ELEMENTS = FW.elements;
+  var STEPS = [{ key: 'exploration', name: 'Core Beliefs Exploration', layer: 'Why', order: 0 }]
+    .concat(ELEMENTS.map(function (e) { return { key: e.element, name: e.element, layer: e.layer, order: e.order, el: e }; }));
+
+  function uid() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+      var r = Math.random() * 16 | 0; return (c === 'x' ? r : (r & 3 | 8)).toString(16);
+    });
+  }
+  function now() { return new Date().toISOString(); }
+  function truthy(v) { return v === true || v === 'true' || v === 'TRUE'; }
+  function clip(s, n) { s = String(s || ''); return s.length > n ? s.slice(0, n) + '…' : s; }
+  function elementDef(name) { return ELEMENTS.filter(function (e) { return e.element === name; })[0]; }
+  function areaDef(name) { return FW.areas.filter(function (a) { return a.area === name; })[0]; }
+  function mine(d, table, userId) { return d.rows(table).filter(function (r) { return r.UserID === userId; }); }
+  function need(v, what) { if (v === undefined || v === null || String(v).trim() === '') throw new Error(what + ' is required.'); return v; }
+
+  /* ---------- reads ---------- */
+  function getState(d, a) {
+    var userId = need(a.userId, 'userId');
+    var user = mine(d, 'Users', userId)[0];
+    if (!user) throw new Error('No design found for that key.');
+    var commitments = mine(d, 'Commitments', userId);
+    return {
+      user: user,
+      design: mine(d, 'DesignRecord', userId),
+      history: mine(d, 'ElementHistory', userId),
+      exploration: mine(d, 'BeliefExploration', userId),
+      chosen: mine(d, 'ChosenBeliefs', userId),
+      parked: mine(d, 'ParkedProblems', userId),
+      commitments: commitments.slice(-30),
+      assessments: mine(d, 'Assessments', userId),
+      journal: mine(d, 'Journal', userId).filter(function (j) { return j.Entry; }).slice(-60),
+      growth: mine(d, 'Growth', userId).filter(function (g) { return g.Title; }),
+      recs: mine(d, 'Recommendations', userId).slice(-80),
+      reviews: mine(d, 'Reviews', userId)
+    };
+  }
+
+  function getMessages(d, a) {
+    var rows = mine(d, 'Messages', a.userId).filter(function (m) { return m.Context === a.context; });
+    return a.limit ? rows.slice(-a.limit) : rows;
+  }
+
+  /* ---------- progress & exploration state (pure) ---------- */
+  function latestChosen(state, area) {
+    var rows = state.chosen.filter(function (c) { return c.Area === area; });
+    return rows[rows.length - 1] || null;
+  }
+  function chosenByArea(state) {
+    var out = {}; state.chosen.forEach(function (c) { out[c.Area] = c; }); return out;
+  }
+  function designMap(state) {
+    var m = {}; state.design.forEach(function (r) { m[r.Element] = r; }); return m;
+  }
+  function progress(state) {
+    var dm = designMap(state);
+    var hasChosen = state.chosen.length > 0;
+    var steps = STEPS.map(function (s) {
+      var row = dm[s.key];
+      return {
+        key: s.key, name: s.name, layer: s.layer, order: s.order, el: s.el,
+        done: s.key === 'exploration' ? hasChosen : !!(row && String(row.Statement).trim()),
+        status: row ? row.Status : '', version: row ? Number(row.Version) || 0 : 0, statement: row ? row.Statement : ''
+      };
+    });
+    steps.forEach(function (s, i) { s.unlocked = i === 0 || steps[i - 1].done; });
+    var next = steps.filter(function (s) { return s.unlocked && !s.done; })[0] || null;
+    var allDrafted = steps.slice(1).every(function (s) { return s.done; });
+    var ka = steps.filter(function (s) { return s.key === 'Key Activities'; })[0];
+    return { steps: steps, next: next, allDrafted: allDrafted, whatOpen: ka.unlocked };
+  }
+  function areaState(state, area) {
+    var rows = state.exploration.filter(function (r) { return r.Area === area; });
+    var lenses = FW.lenses.map(function (l) {
+      var r = rows.filter(function (x) { return Number(x.LensOrder) === l.order; })[0];
+      var response = r ? String(r.Response || '') : '';
+      var skipped = r ? (truthy(r.Skipped) || r.LensStatus === 'Skipped') : false;
+      var explored = r ? r.LensStatus === 'Explored' : false;
+      return { order: l.order, lens: l.lens, kind: l.kind, questions: l.questions, alt: l.alt, response: response, skipped: skipped, explored: explored, covered: explored || skipped };
+    });
+    var current = lenses.filter(function (l) { return !l.covered; })[0] || null;
+    var started = rows.length > 0;
+    return {
+      area: area, lenses: lenses, current: current, started: started,
+      complete: !current, coveredCount: lenses.filter(function (l) { return l.covered; }).length,
+      chosen: latestChosen(state, area), isCustom: rows.some(function (r) { return truthy(r.IsCustomArea); }) || !areaDef(area)
+    };
+  }
+  function allAreas(state) {
+    var names = FW.areas.map(function (a) { return a.area; });
+    state.exploration.concat(state.chosen).forEach(function (r) { if (names.indexOf(r.Area) < 0) names.push(r.Area); });
+    return names;
+  }
+
+  /* ---------- writes ---------- */
+  function createUser(d, a) {
+    if (!truthy(a.is18)) throw new Error('This coach is designed for adults aged 18 and over.');
+    var u = {
+      UserID: uid(), Name: need(a.name, 'Name').trim(), Email: (a.email || '').trim(), CreatedAt: now(), LastActiveAt: now(),
+      Stage: 'design', CurrentFocus: 'Core Beliefs Exploration', WhatBroughtYou: a.whatBrought || '', HopedChange: a.hopedChange || '',
+      Is18OrOlder: 'TRUE', PlainStyle: truthy(a.plain) ? 'TRUE' : 'FALSE'
+    };
+    d.insert('Users', u);
+    if (a.pressing && String(a.pressing).trim()) parkProblem(d, { userId: u.UserID, description: a.pressing });
+    return u;
+  }
+  function updateUser(d, a) {
+    var allowed = ['Name', 'Email', 'Stage', 'CurrentFocus', 'PlainStyle', 'WhatBroughtYou', 'HopedChange'];
+    var patch = { LastActiveAt: now() };
+    Object.keys(a.patch || {}).forEach(function (k) { if (allowed.indexOf(k) >= 0) patch[k] = a.patch[k]; });
+    d.update('Users', function (r) { return r.UserID === a.userId; }, patch);
+    return mine(d, 'Users', a.userId)[0];
+  }
+  function addMessage(d, userId, sessionId, context, role, content) {
+    var m = { MessageID: uid(), UserID: userId, SessionID: sessionId || '', Timestamp: now(), Context: context, Role: role, Content: content };
+    d.insert('Messages', m); return m;
+  }
+  function note(d, a, text) { return addMessage(d, a.userId, a.sessionId, a.context, 'user', '[note] ' + text); }
+
+  function saveElement(d, a) {
+    var el = elementDef(need(a.element, 'Element'));
+    if (!el) throw new Error('Unknown element: ' + a.element);
+    var statement = need(a.statement, 'Statement');
+    var status = a.status === 'Approved' ? 'Approved' : 'Draft';
+    var state = getState(d, a);
+    var p = progress(state);
+    var step = p.steps.filter(function (s) { return s.key === el.element; })[0];
+    if (!step.unlocked) throw new Error(el.element + ' opens once the element beneath it has a first draft.');
+    var cur = designMap(state)[el.element];
+    var version = cur ? (Number(cur.Version) || 0) + 1 : 1;
+    var ts = now();
+    var noteText = a.changeNote || (cur ? '' : 'First draft');
+    if (cur) {
+      d.update('DesignRecord', function (r) { return r.UserID === a.userId && r.Element === el.element; },
+        { Statement: statement, Status: status, Version: String(version), UpdatedAt: ts });
+    } else {
+      d.insert('DesignRecord', { UserID: a.userId, Layer: el.layer, Element: el.element, ElementOrder: String(el.order), Statement: statement, Status: status, Version: String(version), UpdatedAt: ts });
+    }
+    d.insert('ElementHistory', { HistoryID: uid(), UserID: a.userId, Element: el.element, Version: String(version), Statement: statement, Status: status, ChangedAt: ts, ChangeNote: noteText });
+    note(d, { userId: a.userId, sessionId: a.sessionId, context: 'element:' + el.element },
+      'The person saved ' + el.element + ' v' + version + ' as ' + status + (noteText ? ' (' + noteText + ')' : '') + ': "' + statement + '"');
+    updateUser(d, { userId: a.userId, patch: { CurrentFocus: el.element } });
+    return getState(d, a);
+  }
+
+  function lensRow(d, userId, area, order) {
+    return d.rows('BeliefExploration').filter(function (r) { return r.UserID === userId && r.Area === area && Number(r.LensOrder) === order; })[0];
+  }
+  function writeLens(d, a) {
+    var lens = FW.lenses.filter(function (l) { return l.order === a.lensOrder; })[0];
+    var row = lensRow(d, a.userId, a.area, a.lensOrder);
+    var isCustom = areaDef(a.area) ? 'FALSE' : 'TRUE';
+    if (row) {
+      var patch = { UpdatedAt: now() };
+      if (a.append) patch.Response = (row.Response ? row.Response + '\n\n' : '') + a.append;
+      if (a.response !== undefined) patch.Response = a.response;
+      if (a.skipped !== undefined) patch.Skipped = a.skipped ? 'TRUE' : 'FALSE';
+      if (a.status) patch.LensStatus = a.status;
+      d.update('BeliefExploration', function (r) { return r.EntryID === row.EntryID; }, patch);
+    } else {
+      d.insert('BeliefExploration', {
+        EntryID: uid(), UserID: a.userId, Area: a.area, IsCustomArea: isCustom, LensOrder: String(lens.order), Lens: lens.lens,
+        Response: a.append || a.response || '', Skipped: a.skipped ? 'TRUE' : 'FALSE', UpdatedAt: now(), LensStatus: a.status || 'Open'
+      });
+    }
+  }
+  function startArea(d, a) {
+    var area = need(a.area, 'Area').trim();
+    var st = areaState(getState(d, a), area);
+    var ctx = 'explore:' + area;
+    if (!getMessages(d, { userId: a.userId, context: ctx }).length) {
+      var first = st.current || st.lenses[0];
+      note(d, { userId: a.userId, sessionId: a.sessionId, context: ctx },
+        'Area: ' + area + '. Lens ' + first.order + ' of 7 · ' + first.lens + '.');
+    }
+    updateUser(d, { userId: a.userId, patch: { CurrentFocus: 'Exploration · ' + area } });
+    return { context: ctx };
+  }
+  function advanceLens(d, a) {
+    var state = getState(d, a);
+    var st = areaState(state, a.area);
+    if (!st.current) throw new Error('Every lens in this area is already explored.');
+    if (a.skip) writeLens(d, { userId: a.userId, area: a.area, lensOrder: st.current.order, skipped: true, status: 'Skipped' });
+    else if (!st.current.response.trim()) throw new Error('Share something on this lens first, or skip it.');
+    else writeLens(d, { userId: a.userId, area: a.area, lensOrder: st.current.order, skipped: false, status: 'Explored' });
+    var after = areaState(getState(d, a), a.area);
+    var ctx = 'explore:' + a.area;
+    var text = (a.skip ? 'The person chose to skip the ' + st.current.lens + ' lens. ' : 'The person is ready to move on from the ' + st.current.lens + ' lens. ') +
+      (after.current ? 'Now: lens ' + after.current.order + ' of 7 · ' + after.current.lens + '.' : 'All seven lenses are explored. Time to close the area with a choice.');
+    note(d, { userId: a.userId, sessionId: a.sessionId, context: ctx }, text);
+    return getState(d, a);
+  }
+  function saveChosenBelief(d, a) {
+    var row = { ChoiceID: uid(), UserID: a.userId, Area: need(a.area, 'Area'), ChosenBelief: need(a.belief, 'Belief'), Why: a.why || '', ApprovedAt: now() };
+    d.insert('ChosenBeliefs', row);
+    note(d, { userId: a.userId, sessionId: a.sessionId, context: 'explore:' + a.area },
+      'The person closed this area and saved their chosen belief: "' + row.ChosenBelief + '"' + (row.Why ? ' Why: "' + row.Why + '"' : ''));
+    return getState(d, a);
+  }
+  function parkProblem(d, a) {
+    d.insert('ParkedProblems', { ProblemID: uid(), UserID: a.userId, Description: need(a.description, 'Description').trim(), ParkedAt: now(), Status: 'Parked', ResolvedAt: '', ResolutionNote: '' });
+    return a.returnState ? getState(d, a) : true;
+  }
+  function updateProblem(d, a) {
+    var patch = { Status: a.status };
+    if (a.status === 'Resolved') patch.ResolvedAt = now();
+    if (a.note !== undefined) patch.ResolutionNote = a.note;
+    d.update('ParkedProblems', function (r) { return r.ProblemID === a.problemId && r.UserID === a.userId; }, patch);
+    return getState(d, a);
+  }
+  function addCommitment(d, a) {
+    d.insert('Commitments', { CommitmentID: uid(), UserID: a.userId, SessionID: a.sessionId || '', Focus: a.focus || '', Commitment: need(a.text, 'Commitment').trim(), Status: 'Open', CreatedAt: now(), CompletedAt: '', Reflection: '' });
+    if (a.context) note(d, a, 'The person ended the session committing to: "' + a.text.trim() + '"');
+    if (a.sessionId) d.update('Sessions', function (r) { return r.SessionID === a.sessionId; }, { EndedAt: now(), Focus: a.focus || '', Summary: 'Committed: ' + a.text.trim() });
+    return getState(d, a);
+  }
+  function updateCommitment(d, a) {
+    var patch = { Status: a.status };
+    if (a.status !== 'Open') patch.CompletedAt = now();
+    if (a.reflection !== undefined) patch.Reflection = a.reflection;
+    d.update('Commitments', function (r) { return r.CommitmentID === a.commitmentId && r.UserID === a.userId; }, patch);
+    return getState(d, a);
+  }
+  function startSession(d, a) {
+    var s = { SessionID: uid(), UserID: need(a.userId, 'userId'), StartedAt: now(), EndedAt: '', Focus: '', Summary: '' };
+    d.insert('Sessions', s);
+    d.update('Users', function (r) { return r.UserID === a.userId; }, { LastActiveAt: now() });
+    return s;
+  }
+
+  /* ---------- the coach's context ---------- */
+  function lensPrompt(l) { return 'Lens ' + l.order + ' of 7 · ' + l.lens + ' (' + l.kind.toLowerCase() + '). Explore: ' + l.questions + (l.alt ? ' Care note: ' + l.alt : ''); }
+
+  function focusBlock(state, ctx) {
+    var p = progress(state);
+    var parts = [];
+    if (ctx.indexOf('explore:') === 0) {
+      var area = ctx.slice(8);
+      var st = areaState(state, area);
+      var def = areaDef(area);
+      var firstEver = state.exploration.filter(function (r) { return r.Area !== area; }).length === 0 && state.chosen.length === 0;
+      parts.push('FOCUS: the Core Beliefs Exploration, area "' + area + '"' + (def ? '' : ' (an area the person named themselves)') + '.');
+      if (def && def.weight === 'Tender') parts.push('This is a tender area. Slow down, check in, and make skipping easy.');
+      if (area === 'God') parts.push('Every answer is welcome here, including none, doubt and searching. Explore origins and coherence; never evaluate the belief itself.');
+      if (firstEver) parts.push('This is the person\'s first area. Briefly share the premise of the exploration in your own words before the first lens.');
+      st.lenses.forEach(function (l) {
+        if (l.skipped) parts.push('- ' + l.lens + ': skipped by choice.');
+        else if (l.response) parts.push('- ' + l.lens + ' (their words so far): ' + clip(l.response, 700));
+      });
+      if (st.current) {
+        parts.push('CURRENT ' + lensPrompt(st.current));
+        parts.push('Stay with this lens only, one or two questions at a time. The app records the person\'s replies under this lens. When it feels explored, invite them to tap "Next lens" (or "Skip this lens" if it is hard). Do not move to the next lens yourself.');
+      } else {
+        parts.push('All seven lenses are explored. Reflect the patterns you notice (echoes, contrasts, inherited beliefs that shrink them) as observations, then invite the person to close the area: one sentence on what they now choose to believe about ' + area + ' and why. They save it with the "Close this area" button, which saves only what they approve.');
+      }
+      if (st.chosen) parts.push('They already closed this area once with: "' + st.chosen.ChosenBelief + '". They may be revisiting it.');
+    } else if (ctx.indexOf('element:') === 0) {
+      var name = ctx.slice(8);
+      var e = elementDef(name);
+      var step = p.steps.filter(function (s) { return s.key === name; })[0];
+      parts.push('FOCUS: designing ' + e.layer + ' · ' + e.element + '. In one line: ' + e.oneLine + '.');
+      parts.push('Defining question: ' + e.definingQuestion);
+      parts.push('A strong draft: ' + e.strongDraft);
+      parts.push(step.statement ? 'Their current statement (v' + step.version + ', ' + step.status + '): "' + step.statement + '"' : 'Nothing saved yet for this element.');
+      if (name === 'Core Beliefs') parts.push('Synthesize from the chosen beliefs of the Exploration: look across them for themes about self, others and the universe, and help the person distill 3–7 Core Belief statements in their own words.');
+      if (name === 'Resources') parts.push('Draw on their strengths and personality results and their learning & skills log (below, if any) to help them take an immodest, honest inventory. Results are self-reported lenses, not verdicts.');
+      if (name === 'Relationships' || name === 'Methods' || name === 'Key Activities') parts.push('Where their test results illuminate this element (how they give and receive care, how they take action, which work energizes or drains them), bring them in as observations to test against their experience.');
+      var dmRow = designMap(state)[name];
+      var pending = state.recs.filter(function (r) { return r.Status === 'Accepted' && r.ActionType === 'revise' && r.ActionElement === name && (!dmRow || r.RespondedAt > dmRow.UpdatedAt); });
+      if (pending.length) parts.push('Guidance the person accepted from a congruence review, to work into this element now (it is a new input; start from what they accepted, and remember it is saved only when they capture and approve a new version): ' +
+        pending.map(function (r) { return '"' + r.ActionText.replace(' ⟨Skill⟩', '') + '"' + (r.UserNote === 'Adapted' ? ' (adapted in their own words)' : '') + ' — from the card "' + r.Title + ': ' + clip(r.Body, 300) + '", serving their ' + (r.TracesTo || 'Why'); }).join('; '));
+      if (e.layer === 'What') {
+        var open = state.parked.filter(function (x) { return x.Status !== 'Resolved'; });
+        if (open.length) parts.push('The What layer has arrived. Bring back the parked problems listed above when it fits, and work them through the design they have built.');
+      }
+      parts.push('When the person has material for a draft, invite them to tap "Capture a draft": the app proposes wording from their own words for them to edit and approve. Never say you have saved anything yourself.');
+    } else if (ctx === 'iterate') {
+      parts.push(iterateFocus(state));
+    } else if (ctx === 'alignment') {
+      parts.push('FOCUS: the Alignment check. A first draft of all nine elements exists. Review the stack together, top-down and bottom-up, one break at a time: an activity that serves no strategy, a Governing Principle with no root in the Why, a goal that does not advance the Purpose, a part of the foundation with nothing built on it. Name each break plainly and kindly and ask what the person makes of it. Changes are saved by revisiting the element.');
+    } else if (ctx === 'checkin') {
+      parts.push('FOCUS: Living with the design. A short check-in: what did they do, what did they learn, what will they change? Use their design as the lens for any decision they bring. Ask about their open commitments.');
+    } else if (ctx === 'remodel') {
+      parts.push('FOCUS: a Remodel. Life has shifted or the design no longer fits. Name this as normal and good: deconstructing and rebuilding is part of the framework. Revisit from the top (the Why), asking what still holds and what has changed. Changes are saved by revisiting each element.');
+    }
+    return parts.join('\n');
+  }
+
+  function contextBlock(state, ctx) {
+    var u = state.user;
+    var p = progress(state);
+    var L = [];
+    L.push('# Live context from the app (private; use it, do not recite it)');
+    L.push('Today: ' + new Date().toDateString() + '.');
+    L.push('Person: ' + u.Name + '.' + (truthy(u.PlainStyle) ? ' They asked for plain, simple language: keep the play light and the clarity high.' : ''));
+    if (u.WhatBroughtYou) L.push('What brought them here: "' + clip(u.WhatBroughtYou, 600) + '"');
+    if (u.HopedChange) L.push('What they hope will be different: "' + clip(u.HopedChange, 600) + '"');
+    L.push('Journey (strict order; ✓ = has a first draft): ' + p.steps.map(function (s) { return (s.done ? '✓ ' : (s.unlocked ? '→ ' : '· ')) + s.name; }).join(' | '));
+    L.push('## Their design record');
+    ['Why', 'How', 'What'].forEach(function (layer) {
+      p.steps.filter(function (s) { return s.layer === layer && s.key !== 'exploration'; }).forEach(function (s) {
+        L.push('- ' + layer + ' · ' + s.name + ': ' + (s.statement ? '"' + clip(s.statement, 900) + '" (v' + s.version + ', ' + s.status + ')' : '(gap)'));
+      });
+    });
+    var cb = chosenByArea(state);
+    var areas = Object.keys(cb);
+    if (areas.length) {
+      L.push('## Chosen beliefs from the Exploration');
+      areas.forEach(function (a) { L.push('- ' + a + ': "' + cb[a].ChosenBelief + '"' + (cb[a].Why ? ' — why: "' + clip(cb[a].Why, 300) + '"' : '')); });
+    }
+    var parked = state.parked.filter(function (x) { return x.Status !== 'Resolved'; });
+    if (parked.length) {
+      L.push('## Parked What problems (held until the What layer; offer no fixes before then)');
+      parked.forEach(function (x) { L.push('- ' + clip(x.Description, 300)); });
+    }
+    var openC = state.commitments.filter(function (c) { return c.Status === 'Open'; }).slice(-3);
+    if (openC.length) {
+      L.push('## Open commitments');
+      openC.forEach(function (c) { L.push('- ' + clip(c.Commitment, 200) + ' (from ' + String(c.CreatedAt).slice(0, 10) + ')'); });
+    }
+    var inp = inputsBlock(state);
+    if (inp) L.push(inp);
+    L.push('');
+    L.push(focusBlock(state, ctx));
+    L.push('');
+    L.push('Messages that begin with "[note]" are written by the app, not the person: they mark lens changes and saves. Never quote them back.');
+    L.push('Format: plain conversational text, short paragraphs, no headings. Light emphasis with *italics* is fine.');
+    return L.join('\n');
+  }
+
+  function toModelMessages(history) {
+    var out = [];
+    history.forEach(function (m) {
+      var role = m.Role === 'assistant' ? 'assistant' : 'user';
+      var content = String(m.Content || '');
+      if (out.length && out[out.length - 1].role === role) out[out.length - 1].content += '\n\n' + content;
+      else out.push({ role: role, content: content });
+    });
+    if (!out.length || out[0].role !== 'user') out.unshift({ role: 'user', content: '[note] The person opened this session.' });
+    if (out[out.length - 1].role !== 'user') out.push({ role: 'user', content: '[note] The person has returned to this conversation. Reconnect briefly: recall where you left off and ask what has changed.' });
+    return out;
+  }
+
+  /* Prepare one coaching turn. mode: 'chat' (with message), 'open' (no message), 'draft' (propose wording). */
+  function coachPrepare(d, a) {
+    var ctx = need(a.context, 'context');
+    var state = getState(d, a);
+    var mode = a.mode || 'chat';
+    if (mode === 'review') return reviewPrepare(d, a);
+    if (ctx === 'iterate' && !progress(state).allDrafted) throw new Error('Iteration begins once all nine elements have a first draft.');
+    if (ctx.indexOf('element:') === 0) {
+      var step = progress(state).steps.filter(function (s) { return s.key === ctx.slice(8); })[0];
+      if (!step || !step.unlocked) throw new Error('That element opens once the one beneath it has a first draft.');
+    }
+    if (mode === 'chat') {
+      var msg = need(a.message, 'Message');
+      if (ctx.indexOf('explore:') === 0) {
+        var st = areaState(state, ctx.slice(8));
+        if (st.current) writeLens(d, { userId: a.userId, area: st.area, lensOrder: st.current.order, append: msg });
+        state = getState(d, a);
+      }
+      addMessage(d, a.userId, a.sessionId, ctx, 'user', msg);
+    }
+    var history = getMessages(d, { userId: a.userId, context: ctx, limit: 40 });
+    var messages = toModelMessages(history);
+    if (mode === 'draft') {
+      var task;
+      if (ctx.indexOf('explore:') === 0) {
+        task = 'TASK FOR THE APP (not a chat reply): From this conversation, propose the one-sentence belief the person seems to be choosing about "' + ctx.slice(8) + '", and the reason they gave, using their own words as much as possible. Reply with exactly two lines:\nBelief: <one sentence>\nWhy: <one sentence>\nIf they have not yet said enough to do this honestly, reply with exactly: NOT_ENOUGH';
+      } else {
+        var e = elementDef(ctx.slice(8));
+        task = 'TASK FOR THE APP (not a chat reply): Propose a draft of ' + e.element + ' for the person to edit, built from their own words in this conversation and their design record. Aim for: ' + e.strongDraft + ' Keep their phrasing; do not add beliefs, values or goals they did not express. Output only the draft text, with no preamble, quotes or commentary. Use short lines or "- " bullets if the element has several statements. If they have not yet said enough to draft honestly, reply with exactly: NOT_ENOUGH';
+      }
+      messages[messages.length - 1].content += '\n\n' + task;
+    }
+    return { system: contextBlock(state, ctx), messages: messages, mode: mode, context: ctx };
+  }
+
+  function coachRecord(d, a, prepared, text) {
+    text = String(text || '').trim();
+    if (prepared.mode === 'review') return reviewRecord(d, a, text);
+    if (prepared.mode === 'draft') {
+      if (/^NOT_ENOUGH/.test(text)) return { draft: null, notEnough: true };
+      if (prepared.context.indexOf('explore:') === 0) {
+        var b = (text.match(/Belief:\s*(.+)/i) || [])[1] || text;
+        var w = (text.match(/Why:\s*(.+)/i) || [])[1] || '';
+        return { draft: { belief: b.trim(), why: w.trim() } };
+      }
+      return { draft: text };
+    }
+    var m = addMessage(d, a.userId, a.sessionId, prepared.context, 'assistant', text);
+    return { reply: m };
+  }
+
+  /* =====================================================================
+     Phase A · supplementary inputs, iteration loop, nudges
+     ===================================================================== */
+  var TESTS = FW.tests;
+  function testDef(key) { return TESTS.filter(function (t) { return t.key === key; })[0]; }
+  function parseJSON(s, fallback) { try { return s ? JSON.parse(s) : fallback; } catch (e) { return fallback; } }
+
+  /* ---------- preferences ---------- */
+  var NUDGE_TYPES = [
+    { key: 'reflection', label: 'Reflection prompts', hint: 'A nudge to journal when it has been a while.' },
+    { key: 'recommendations', label: 'Guidance waiting', hint: 'When a review has left cards for you to accept or decline.' },
+    { key: 'review', label: 'Review reminders', hint: 'A congruence review every two weeks, and a deeper look at your Why each quarter.' },
+    { key: 'commitments', label: 'Small steps', hint: 'A check on steps you committed to more than a week ago.' },
+    { key: 'inputs', label: 'Inputs', hint: 'Suggestions to add strengths results or log what you are learning.' }
+  ];
+  function getPrefs(user) {
+    var p = parseJSON(user && user.Prefs, {}) || {};
+    var types = {};
+    NUDGE_TYPES.forEach(function (t) { types[t.key] = !(p.types && p.types[t.key] === false); });
+    return { nudges: p.nudges !== false, email: p.email !== false, types: types, lastEmailAt: p.lastEmailAt || '' };
+  }
+  function savePrefs(d, a) {
+    var cur = getPrefs(mine(d, 'Users', a.userId)[0]);
+    var next = a.prefs || {};
+    var merged = {
+      nudges: next.nudges !== undefined ? !!next.nudges : cur.nudges,
+      email: next.email !== undefined ? !!next.email : cur.email,
+      types: Object.assign({}, cur.types, next.types || {}),
+      lastEmailAt: next.lastEmailAt !== undefined ? next.lastEmailAt : cur.lastEmailAt
+    };
+    d.update('Users', function (r) { return r.UserID === a.userId; }, { Prefs: JSON.stringify(merged) });
+    return a.silent ? merged : getState(d, a);
+  }
+
+  /* ---------- assessments ---------- */
+  function summarizeAssessment(key, v) {
+    var t = testDef(key); if (!t || !v) return '';
+    function groupOf(field, name) { var o = (field.options || []).filter(function (x) { return x.v === name; })[0]; return o ? (o.g || o.code || '') : ''; }
+    switch (key) {
+      case 'clifton': case 'via': {
+        var f = t.fields[0], list = v[f.key] || [];
+        if (!list.length) return '';
+        var top = list.slice(0, 5);
+        var counts = {}; top.forEach(function (n) { var g = groupOf(f, n); counts[g] = (counts[g] || 0) + 1; });
+        var lead = Object.keys(counts).sort(function (a, b) { return counts[b] - counts[a]; })[0];
+        return (key === 'via' ? 'Signature strengths: ' : 'Top 5: ') + top.join(', ') + (lead && counts[lead] > 1 ? ' (mostly ' + lead + ')' : '') + (list.length > 5 ? ' · ' + list.length + ' ranked' : '');
+      }
+      case 'mbti': {
+        var pairs = v.pairs || {}; var letters = t.fields[0].pairs.map(function (p, i) { return (pairs[i] && pairs[i].pick) || '?'; }).join('');
+        if (letters.indexOf('?') >= 0) return '';
+        var pct = t.fields[0].pairs.map(function (p, i) { return pairs[i] && pairs[i].pct ? pairs[i].pick + ' ' + pairs[i].pct + '%' : ''; }).filter(Boolean);
+        return letters + (v.identity ? '-' + v.identity : '') + (pct.length ? ' (' + pct.join(', ') + ')' : '');
+      }
+      case 'enneagram': {
+        if (!v.type) return '';
+        var nm = (t.fields[0].options.filter(function (o) { return o.v === v.type; })[0] || {}).label || v.type;
+        return 'Type ' + nm.replace(/^\d · /, v.type + ' · ') + (v.wing ? ', wing ' + v.type + 'w' + v.wing : '') + (v.instinct ? ', ' + v.instinct + ' instinct' : '') + (v.tritype ? ', tritype ' + v.tritype : '');
+      }
+      case 'bigfive': case 'kolbe': case 'love': {
+        var f2 = t.fields[0], sc = v[f2.key] || {};
+        var items = f2.items.filter(function (n) { return sc[n] !== undefined && sc[n] !== ''; });
+        if (!items.length) return '';
+        if (key === 'love') { items.sort(function (a, b) { return Number(sc[b]) - Number(sc[a]); }); return 'Primary: ' + items[0] + ' · ' + items.map(function (n) { return n + ' ' + sc[n]; }).join(', '); }
+        return items.map(function (n) { return n + ' ' + sc[n]; }).join(', ');
+      }
+      case 'disc': {
+        if (!v.primary) return '';
+        var sc2 = v.scores || {}; var s = Object.keys(sc2).filter(function (k) { return sc2[k] !== ''; }).map(function (k) { return k.charAt(0) + ' ' + sc2[k]; });
+        return 'Style ' + v.primary + (v.secondary ? v.secondary : '') + (s.length ? ' (' + s.join(', ') + ')' : '');
+      }
+      case 'genius': {
+        var b = v.buckets || {}; function of(k) { return t.fields[0].items.filter(function (n) { return b[n] === k; }); }
+        if (!of('genius').length) return '';
+        return 'Genius: ' + of('genius').join(' & ') + ' · Competency: ' + of('competency').join(' & ') + ' · Frustration: ' + of('frustration').join(' & ');
+      }
+      case 'holland': {
+        var c = v.code || []; if (!c.length) return '';
+        return c.map(function (n) { return groupOf(t.fields[0], n); }).join('') + ' · ' + c.join(', ');
+      }
+    }
+    return '';
+  }
+  function validateAssessment(key, v) {
+    var t = testDef(key); if (!t) throw new Error('Unknown test.');
+    t.fields.forEach(function (f) {
+      var val = v[f.key];
+      if (f.type === 'rank') {
+        var n = (val || []).length;
+        if (n < f.min) throw new Error(f.min === f.max ? 'Add exactly ' + f.min + ' for ' + t.name + '.' : 'Add at least ' + f.min + ' for ' + t.name + '.');
+        if (n > f.max) throw new Error('Too many entries for ' + t.name + '.');
+      }
+      if (f.type === 'pairs' && t.fields[0].pairs.some(function (p, i) { return !(val && val[i] && val[i].pick); })) throw new Error('Choose one letter in each pair.');
+      if (f.type === 'select' && !f.optional && !val) throw new Error('Choose your ' + f.label.toLowerCase() + '.');
+      if (f.type === 'scores' && !f.optional) {
+        var missing = f.items.filter(function (n) { return !val || val[n] === undefined || val[n] === ''; });
+        if (missing.length) throw new Error('Add a score for ' + missing.join(', ') + '.');
+      }
+      if (f.type === 'buckets') {
+        f.buckets.forEach(function (bk) {
+          var n2 = f.items.filter(function (it) { return val && val[it] === bk.v; }).length;
+          if (n2 !== bk.count) throw new Error('Place exactly ' + bk.count + ' in ' + bk.label + '.');
+        });
+      }
+    });
+  }
+  function saveAssessment(d, a) {
+    var t = testDef(need(a.test, 'Test'));
+    var values = a.values || {};
+    validateAssessment(t.key, values);
+    var summary = summarizeAssessment(t.key, values);
+    var row = { Test: t.key, TakenOn: a.takenOn || '', Results: JSON.stringify(values), Summary: summary, Notes: a.notes || '', UpdatedAt: now() };
+    var existing = mine(d, 'Assessments', a.userId).filter(function (r) { return r.Test === t.key; })[0];
+    if (existing) d.update('Assessments', function (r) { return r.AssessmentID === existing.AssessmentID; }, row);
+    else d.insert('Assessments', Object.assign({ AssessmentID: uid(), UserID: a.userId }, row));
+    return getState(d, a);
+  }
+  function clearAssessment(d, a) {
+    d.update('Assessments', function (r) { return r.UserID === a.userId && r.Test === a.test; }, { Results: '', Summary: '', Notes: '', TakenOn: '', UpdatedAt: now() });
+    return getState(d, a);
+  }
+
+  /* ---------- journal & growth ---------- */
+  function addJournal(d, a) {
+    d.insert('Journal', { EntryID: uid(), UserID: a.userId, CreatedAt: now(), Prompt: a.prompt || '', Entry: need(a.entry, 'Entry').trim(), CoachCanRead: a.coachCanRead === false ? 'FALSE' : 'TRUE', Tag: a.tag || '' });
+    return getState(d, a);
+  }
+  function updateJournal(d, a) {
+    var patch = {};
+    if (a.coachCanRead !== undefined) patch.CoachCanRead = a.coachCanRead ? 'TRUE' : 'FALSE';
+    if (a.erase) { patch.Entry = ''; patch.Prompt = ''; patch.CoachCanRead = 'FALSE'; }
+    d.update('Journal', function (r) { return r.EntryID === a.entryId && r.UserID === a.userId; }, patch);
+    return getState(d, a);
+  }
+  function addGrowth(d, a) {
+    var kind = a.kind === 'Skill' ? 'Skill' : 'Knowledge';
+    d.insert('Growth', { ItemID: uid(), UserID: a.userId, Kind: kind, Title: need(a.title, 'Title').trim(), Detail: a.detail || '', Source: a.source || '',
+      Status: a.status === 'Planned' ? 'Planned' : 'Acquired', AcquiredOn: a.status === 'Planned' ? '' : (a.acquiredOn || now().slice(0, 10)), LinkedElement: a.linkedElement || '', CreatedAt: now() });
+    return a.silent ? true : getState(d, a);
+  }
+  function updateGrowth(d, a) {
+    var patch = {};
+    if (a.status) { patch.Status = a.status; patch.AcquiredOn = a.status === 'Acquired' ? now().slice(0, 10) : ''; }
+    if (a.erase) patch.Title = '';
+    d.update('Growth', function (r) { return r.ItemID === a.itemId && r.UserID === a.userId; }, patch);
+    return getState(d, a);
+  }
+
+  /* ---------- congruence review ---------- */
+  var LAYERS = ['Why', 'How', 'What'];
+  var KINDS = { Why: ['contemplate'], How: ['challenge'], What: ['suggest', 'community'] };
+  var CAPS = { Why: 1, How: 2, What: 3 };
+  var ACTIONS_OK = ['revise', 'journal', 'learn', 'community', 'none'];
+
+  function latestReview(state) { return state.reviews[state.reviews.length - 1] || null; }
+
+  function reviewPrepare(d, a) {
+    var state = getState(d, a);
+    if (!progress(state).allDrafted) throw new Error('Iteration begins once all nine elements have a first draft.');
+    var declined = state.recs.filter(function (r) { return r.Status === 'Declined'; }).slice(-6);
+    var open = state.recs.filter(function (r) { return r.Status === 'New'; });
+    var task = [
+      'TASK FOR THE APP (not a chat reply): run a congruence review of this person\'s Life Design as an objective evaluator. Be provocative, challenging and guiding, and kind. Ground every point in their own words from the design record and inputs above.',
+      '',
+      '1. TRACE. For each distinct item in Key Activities, Methods and Resources (up to 12 items, their wording, shortened), say which How and Why elements it serves. status: "traced" (clearly serves Strategy/Principles and through them the Purpose), "weak" (a loose or assumed link) or "untraced" (no visible link to the How or Why).',
+      '2. ORPHANS. Up to 3 parts of the Why or How that nothing above them carries out (a vision part with no strategy, a principle no activity expresses).',
+      '3. CARDS. Up to 6 guidance cards, honoring the depth gradient:',
+      '   - Why: at most 1, kind "contemplate". A question that provokes contemplation and elevates the Why. Never propose a belief, vision or purpose for them. action.type "journal" with the question as action.text.',
+      '   - How: at most 2, kind "challenge". Is the What accomplishing the Why through the How? Name the gap and its implication plainly. action.type "revise" with action.element a How or What element, action.text a short description of what to reconsider (not wording for them).',
+      '   - What: at most 3, kind "suggest" or "community". Concrete Whats drawing on their strengths and resources, new learning, and skills to attain; or, for "community", a kind of group to look for that fits the design (action.type "community", plus "search": a short web search phrase such as "crossfit gym near me"). For learning, use action.type "learn" with action.kind "Knowledge" or "Skill" and action.text the thing to learn. For a change to their week, action.type "revise" with action.element "Key Activities".',
+      '   - Every card: "tracesTo" names the Why or How element it serves. Do not repeat guidance that is still open or that they declined (listed below) unless the evidence has clearly changed.',
+      '4. SUMMARY. Two or three sentences: an honest overall read of their congruence and the single most important tension.',
+      '',
+      open.length ? 'Still open from earlier reviews: ' + open.map(function (r) { return '"' + clip(r.Title, 80) + '"'; }).join('; ') : '',
+      declined.length ? 'Declined earlier: ' + declined.map(function (r) { return '"' + clip(r.Title, 80) + '"' + (r.UserNote ? ' (their reason: ' + clip(r.UserNote, 120) + ')' : ''); }).join('; ') : '',
+      '',
+      'Reply with only one JSON object, no prose before or after, in this shape:',
+      '{"summary": "...", "trace": [{"item": "...", "element": "Key Activities", "tracesTo": ["Strategy", "Purpose"], "status": "traced", "note": "one short clause"}], "orphans": [{"element": "Vision", "text": "...", "note": "..."}], "cards": [{"layer": "How", "kind": "challenge", "title": "short, specific", "body": "two or three sentences in the coach voice", "tracesTo": "Purpose", "action": {"type": "revise", "element": "Strategy", "text": "...", "kind": ""}, "search": ""}]}',
+      'Keep notes short. Use the element names exactly.'
+    ].filter(function (x) { return x !== null; }).join('\n');
+    return { system: contextBlock(state, 'iterate'), messages: [{ role: 'user', content: task }], mode: 'review', context: 'iterate' };
+  }
+
+  function extractJSON(text) {
+    text = String(text || '');
+    var fence = text.match(/```(?:json)?\s*([\s\S]*?)```/);
+    if (fence) text = fence[1];
+    var s = text.indexOf('{'), e = text.lastIndexOf('}');
+    if (s < 0 || e <= s) throw new Error('The review came back in an unexpected shape. Try again.');
+    return JSON.parse(text.slice(s, e + 1));
+  }
+
+  function reviewRecord(d, a, text) {
+    var j;
+    try { j = extractJSON(text); } catch (err) { throw new Error('The review came back in an unexpected shape. Try again.'); }
+    var elementNames = ELEMENTS.map(function (e) { return e.element; });
+    var trace = (j.trace || []).slice(0, 12).map(function (t) {
+      return { item: clip(t.item, 160), element: elementNames.indexOf(t.element) >= 0 ? t.element : 'Key Activities',
+        tracesTo: (Array.isArray(t.tracesTo) ? t.tracesTo : [t.tracesTo]).filter(Boolean).map(String).slice(0, 4),
+        status: ['traced', 'weak', 'untraced'].indexOf(t.status) >= 0 ? t.status : 'weak', note: clip(t.note, 200) };
+    });
+    var orphans = (j.orphans || []).slice(0, 3).map(function (o) { return { element: String(o.element || ''), text: clip(o.text, 200), note: clip(o.note, 200) }; });
+    var traced = trace.filter(function (t) { return t.status === 'traced'; }).length;
+    var review = { ReviewID: uid(), UserID: a.userId, CreatedAt: now(), Summary: clip(j.summary, 900), TraceJSON: JSON.stringify({ trace: trace, orphans: orphans }), Traced: String(traced), Total: String(trace.length) };
+    d.insert('Reviews', review);
+    var counts = { Why: 0, How: 0, What: 0 };
+    (j.cards || []).forEach(function (c) {
+      var layer = LAYERS.indexOf(c.layer) >= 0 ? c.layer : null;
+      if (!layer || counts[layer] >= CAPS[layer]) return;
+      var kind = KINDS[layer].indexOf(c.kind) >= 0 ? c.kind : KINDS[layer][0];
+      var act = c.action || {};
+      var type = ACTIONS_OK.indexOf(act.type) >= 0 ? act.type : 'none';
+      if (layer === 'Why') type = 'journal';
+      if (kind === 'community') type = 'community';
+      var el = elementNames.indexOf(act.element) >= 0 ? act.element : (type === 'revise' ? (layer === 'How' ? 'Strategy' : 'Key Activities') : '');
+      if (type === 'revise' && elementDef(el) && elementDef(el).layer === 'Why') el = 'Strategy';
+      counts[layer]++;
+      d.insert('Recommendations', {
+        RecID: uid(), UserID: a.userId, ReviewID: review.ReviewID, CreatedAt: now(), Layer: layer, Kind: kind,
+        Title: clip(c.title, 140), Body: clip(c.body, 700), TracesTo: clip(c.tracesTo, 80), ActionType: type,
+        ActionElement: el, ActionText: clip(act.text || (type === 'journal' ? c.title : ''), 400) + (type === 'learn' && act.kind === 'Skill' ? ' ⟨Skill⟩' : ''),
+        SearchQuery: clip(c.search || '', 80), Status: 'New', RespondedAt: '', UserNote: ''
+      });
+    });
+    updateUser(d, { userId: a.userId, patch: { Stage: 'living', CurrentFocus: 'Iteration' } });
+    return { review: review };
+  }
+
+  function respondRec(d, a) {
+    var rec = mine(d, 'Recommendations', a.userId).filter(function (r) { return r.RecID === a.recId; })[0];
+    if (!rec) throw new Error('That card is no longer here.');
+    var status = a.status === 'Declined' ? 'Declined' : 'Accepted';
+    var text = a.actionText !== undefined && String(a.actionText).trim() ? String(a.actionText).trim() : rec.ActionText;
+    var adapted = status === 'Accepted' && a.actionText !== undefined && text !== rec.ActionText;
+    d.update('Recommendations', function (r) { return r.RecID === rec.RecID; },
+      { Status: status, RespondedAt: now(), UserNote: a.note || (adapted ? 'Adapted' : ''), ActionText: text });
+    var result = { state: null, next: null };
+    if (status === 'Accepted') {
+      var clean = text.replace(' ⟨Skill⟩', '');
+      if (rec.ActionType === 'revise' && rec.ActionElement) {
+        note(d, { userId: a.userId, sessionId: a.sessionId, context: 'element:' + rec.ActionElement },
+          'The person accepted guidance to work into ' + rec.ActionElement + ': "' + clean + '"');
+        result.next = { open: 'element:' + rec.ActionElement };
+      } else if (rec.ActionType === 'journal') {
+        result.next = { journal: clean };
+      } else if (rec.ActionType === 'learn') {
+        addGrowth(d, { userId: a.userId, kind: /⟨Skill⟩/.test(text) ? 'Skill' : 'Knowledge', title: clean, status: 'Planned', source: 'Congruence review', linkedElement: rec.TracesTo, silent: true });
+        result.next = { growth: true };
+      }
+    }
+    result.state = getState(d, a);
+    return result;
+  }
+
+  /* ---------- nudges (pure) ---------- */
+  function daysSince(iso, nowMs) { var t = new Date(iso).getTime(); return isNaN(t) ? 9999 : (nowMs - t) / 86400000; }
+  function computeNudges(state, nowMs) {
+    nowMs = nowMs || Date.now();
+    var prefs = getPrefs(state.user);
+    if (!prefs.nudges) return [];
+    var p = progress(state), out = [];
+    var on = function (k) { return prefs.types[k]; };
+    var lastJournal = state.journal[state.journal.length - 1];
+    var age = daysSince(state.user.CreatedAt, nowMs);
+    if (on('recommendations')) {
+      var open = state.recs.filter(function (r) { return r.Status === 'New'; });
+      if (open.length) out.push({ type: 'recommendations', text: open.length + ' piece' + (open.length === 1 ? '' : 's') + ' of guidance waiting for your yes, no or own version.', action: 'iterate', cta: 'Review guidance' });
+    }
+    if (on('review') && p.allDrafted) {
+      var lr = latestReview(state);
+      if (!lr) out.push({ type: 'review', text: 'Your v1 design is complete. Time for its first congruence review.', action: 'iterate', cta: 'Run a review' });
+      else if (daysSince(lr.CreatedAt, nowMs) > 14) out.push({ type: 'review', text: 'It has been ' + Math.floor(daysSince(lr.CreatedAt, nowMs)) + ' days since your last congruence review.', action: 'iterate', cta: 'Run a review' });
+      var whyTimes = state.history.filter(function (h) { var e = elementDef(h.Element); return e && e.layer === 'Why'; }).map(function (h) { return new Date(h.ChangedAt).getTime(); });
+      var lastWhy = whyTimes.length ? Math.max.apply(null, whyTimes) : 0;
+      if (lastWhy && (nowMs - lastWhy) / 86400000 > 90) out.push({ type: 'review', text: 'A season has passed since your Why last changed. Does it still hold?', action: 'design', cta: 'Revisit your Why' });
+    }
+    if (on('reflection') && age > 2 && (!lastJournal || daysSince(lastJournal.CreatedAt, nowMs) > 7)) {
+      out.push({ type: 'reflection', text: lastJournal ? 'A week since your last journal entry. A few lines is plenty.' : 'Try the journal: a few honest lines between sessions give your coach more to work with.', action: 'journal', cta: 'Write' });
+    }
+    if (on('commitments')) {
+      var stale = state.commitments.filter(function (c) { return c.Status === 'Open' && daysSince(c.CreatedAt, nowMs) > 7; });
+      if (stale.length) out.push({ type: 'commitments', text: 'Did you get to "' + clip(stale[0].Commitment, 70) + '"?', action: 'journey', cta: 'Update' });
+    }
+    if (on('inputs')) {
+      var have = state.assessments.filter(function (r) { return r.Summary; }).length;
+      if (p.whatOpen && !have) out.push({ type: 'inputs', text: 'Your design has reached the What. Strengths results will sharpen Resources and your coach\'s suggestions.', action: 'tests', cta: 'Add results' });
+      else if (p.allDrafted && !state.growth.length) out.push({ type: 'inputs', text: 'Log something you\'ve learned or a skill you\'re building. It feeds Resources and future suggestions.', action: 'growth', cta: 'Log it' });
+    }
+    return out;
+  }
+
+  /* ---------- context for the coach ---------- */
+  function inputsBlock(state) {
+    var L = [];
+    var tests = state.assessments.filter(function (r) { return r.Summary; });
+    var growth = state.growth.filter(function (g) { return g.Title; });
+    var journal = state.journal.filter(function (j) { return j.Entry && truthy(j.CoachCanRead); }).slice(-3);
+    var accepted = state.recs.filter(function (r) { return r.Status === 'Accepted'; }).slice(-6);
+    var declined = state.recs.filter(function (r) { return r.Status === 'Declined'; }).slice(-4);
+    var lr = latestReview(state);
+    if (!(tests.length || growth.length || journal.length || accepted.length || declined.length || lr)) return '';
+    L.push('## Supplementary inputs (aids to guidance; the framework stays at the core. Never let a test result define the person; their own words lead.)');
+    if (tests.length) { L.push('Strengths & personality results (self-reported):'); tests.forEach(function (r) { var t = testDef(r.Test); L.push('- ' + (t ? t.name : r.Test) + ': ' + r.Summary + (r.Notes ? ' — their note: "' + clip(r.Notes, 160) + '"' : '')); }); }
+    if (growth.length) { L.push('Learning & skills log:'); growth.slice(-10).forEach(function (g) { L.push('- ' + g.Kind + (g.Status === 'Planned' ? ' (planned)' : '') + ': ' + clip(g.Title, 120) + (g.Detail ? ' — ' + clip(g.Detail, 160) : '')); }); }
+    if (journal.length) { L.push('Recent journal entries they chose to share with you (refer to them gently; never quote at length):'); journal.forEach(function (j) { L.push('- ' + String(j.CreatedAt).slice(0, 10) + (j.Prompt ? ' [prompt: ' + clip(j.Prompt, 100) + ']' : '') + ': ' + clip(j.Entry, 500)); }); }
+    if (accepted.length) { L.push('Guidance they accepted (now part of their inputs):'); accepted.forEach(function (r) { L.push('- ' + r.Layer + ' · ' + clip(r.Title, 100) + (r.ActionText ? ': ' + clip(r.ActionText.replace(' ⟨Skill⟩', ''), 160) : '') + (r.UserNote === 'Adapted' ? ' (adapted in their words)' : '')); }); }
+    if (declined.length) { L.push('Guidance they declined:'); declined.forEach(function (r) { L.push('- ' + clip(r.Title, 100) + (r.UserNote ? ' — reason: ' + clip(r.UserNote, 140) : '')); }); }
+    if (lr) L.push('Latest congruence review (' + String(lr.CreatedAt).slice(0, 10) + '): ' + lr.Traced + ' of ' + lr.Total + ' What items trace clearly to the How and Why. ' + clip(lr.Summary, 400));
+    return L.join('\n');
+  }
+
+  function iterateFocus(state) {
+    var open = state.recs.filter(function (r) { return r.Status === 'New'; });
+    return [
+      'FOCUS: Life Design Iteration. The person has formulated a v1 design; the work now is continual iteration toward greater congruence of Why, How and What.',
+      'Act as an objective evaluator of congruence: provocative, challenging and guiding, never shaming. Honor the depth gradient: the Why changes rarely and deeply (provoke contemplation with questions; never supply beliefs), the How a little more often (challenge whether the What is accomplishing the Why through the How), the What lightest and most often (concrete suggestions from their strengths, resources, learning and skills, and communities that fit).',
+      'Name the implications of drifting from the current design plainly, and let the person decide whether to change the design or the drift. Guidance they accept becomes a new input: they work it into the element, and it is saved only when they approve a new version.',
+      open.length ? 'Cards still open: ' + open.map(function (r) { return r.Layer + ' · "' + clip(r.Title, 90) + '"'; }).join('; ') : ''
+    ].filter(Boolean).join('\n');
+  }
+
+  var WRITES = { createUser: 1, updateUser: 1, saveElement: 1, startArea: 1, advanceLens: 1, saveChosenBelief: 1, parkProblem: 1, updateProblem: 1, addCommitment: 1, updateCommitment: 1, startSession: 1,
+    savePrefs: 1, saveAssessment: 1, clearAssessment: 1, addJournal: 1, updateJournal: 1, addGrowth: 1, updateGrowth: 1, respondRec: 1 };
+  var ACTIONS = {
+    getState: getState, getMessages: getMessages, createUser: createUser, updateUser: updateUser, saveElement: saveElement,
+    startArea: startArea, advanceLens: advanceLens, saveChosenBelief: saveChosenBelief, parkProblem: parkProblem,
+    updateProblem: updateProblem, addCommitment: addCommitment, updateCommitment: updateCommitment, startSession: startSession,
+    savePrefs: savePrefs, saveAssessment: saveAssessment, clearAssessment: clearAssessment, addJournal: addJournal, updateJournal: updateJournal,
+    addGrowth: addGrowth, updateGrowth: updateGrowth, respondRec: respondRec
+  };
+
+  return {
+    FW: FW, STEPS: STEPS, ELEMENTS: ELEMENTS, ACTIONS: ACTIONS, WRITES: WRITES,
+    uid: uid, now: now, truthy: truthy, elementDef: elementDef, areaDef: areaDef,
+    progress: progress, areaState: areaState, allAreas: allAreas, chosenByArea: chosenByArea, designMap: designMap,
+    coachPrepare: coachPrepare, coachRecord: coachRecord, contextBlock: contextBlock,
+    TESTS: TESTS, testDef: testDef, summarizeAssessment: summarizeAssessment, validateAssessment: validateAssessment, parseJSON: parseJSON,
+    NUDGE_TYPES: NUDGE_TYPES, getPrefs: getPrefs, computeNudges: computeNudges, latestReview: latestReview
+  };
+})();
+</script>
+<script>
+var GUIDE_PUBLIC = '';
+(function(){
+'use strict';
+var IS_GAS = typeof google !== 'undefined' && google.script && google.script.run;
+var FW = LID.FW;
+var $ = function(s, r){ return (r||document).querySelector(s); };
+var store = {
+  get:function(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } },
+  set:function(k,v){ try{ localStorage.setItem(k,v); }catch(e){} },
+  del:function(k){ try{ localStorage.removeItem(k); }catch(e){} }
+};
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+function md(s){
+  var blocks = String(s||'').trim().split(/\n{2,}/);
+  return blocks.map(function(b){
+    var lines = b.split('\n');
+    if (lines.every(function(l){ return /^\s*[-•*]\s+/.test(l); })) return '<ul>'+lines.map(function(l){ return '<li>'+inline(l.replace(/^\s*[-•*]\s+/,''))+'</li>'; }).join('')+'</ul>';
+    return '<p>'+inline(b).replace(/\n/g,'<br>')+'</p>';
+  }).join('');
+  function inline(t){ return esc(t).replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/(^|[^*])\*([^*\n]+)\*/g,'$1<em>$2</em>'); }
+}
+function fmtDate(iso){ var d=new Date(iso); return isNaN(d)?'':d.toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'}); }
+
+/* ---------- preview backend: same engine, browser storage, Claude via the artifact runtime ---------- */
+var Local = (function(){
+  var KEY='lid.db.v1', db=null;
+  try{ db = JSON.parse(store.get(KEY)||'null'); }catch(e){}
+  function fresh(){ var o={}; Object.keys(FW.tables).forEach(function(t){ o[t]=[]; }); return o; }
+  if(!db) db = fresh();
+  Object.keys(FW.tables).forEach(function(t){ if(!db[t]) db[t]=[]; });
+  function save(){ store.set(KEY, JSON.stringify(db)); }
+  function s(v){ return v==null?'':String(v); }
+  var d = {
+    rows:function(t){ return db[t]; },
+    insert:function(t,o){ var c={}; Object.keys(o).forEach(function(k){ c[k]=s(o[k]); }); db[t].push(c); save(); return c; },
+    update:function(t,p,patch){ var n=0; db[t].forEach(function(o){ if(p(o)){ Object.keys(patch).forEach(function(k){ o[k]=s(patch[k]); }); n++; } }); save(); return n; }
+  };
+  var sampleP=null;
+  function getSample(){
+    if(!sampleP) sampleP = (window.claude && typeof window.claude.use==='function') ? window.claude.use('sample').catch(function(){ return null; }) : Promise.resolve(null);
+    return sampleP;
+  }
+  var SAMPLE_MSG = {
+    not_granted:'Allow this page to use Claude to hear from the coach.', sampling_disabled:'Claude is not available for this account.',
+    rate_limited:'The coach needs a short pause. Try again in a minute.', session_expired:'Sign in to Claude again, then retry.',
+    refused:'The coach could not answer that. Try rephrasing.', prompt_too_large:'This conversation has grown long. Start a fresh session.'
+  };
+  function coach(a, onText){
+    var prepared = LID.coachPrepare(d, a);
+    return getSample().then(function(sample){
+      if(!sample) throw new Error('The coach answers inside Claude. Open this preview in Claude, or use the live app.');
+      var msgs = prepared.messages.map(function(m){ return {role:m.role, content:m.content}; });
+      msgs[0].content = 'You are acting as the coach inside the Life in Design app. Follow these instructions throughout.\n\n' + GUIDE_PUBLIC + '\n\n' + prepared.system + '\n\n---\n\n' + msgs[0].content;
+      return sample(msgs, { cache:false, onText: onText ? function(u){ onText(u.text); } : undefined })
+        .catch(function(e){ throw new Error(SAMPLE_MSG[e && e.code] || 'The coach could not answer just now. Try again.'); });
+    }).then(function(r){ return LID.coachRecord(d, a, prepared, r.text); });
+  }
+  return {
+    api:function(action,args,onText){
+      if(action==='coach') return coach(args,onText);
+      var fn = LID.ACTIONS[action]; if(!fn) throw new Error('Unknown action: '+action);
+      return JSON.parse(JSON.stringify(fn(d,args)));
+    },
+    reset:function(){ db = fresh(); save(); }
+  };
+})();
+
+function api(action, args, onText){
+  args = Object.assign({ userId:S.userId, sessionId:S.sessionId }, args||{});
+  if (IS_GAS) return new Promise(function(res, rej){
+    google.script.run.withSuccessHandler(function(r){ if(r && r.error) rej(new Error(r.error)); else res(r); })
+      .withFailureHandler(function(e){ rej(e instanceof Error ? e : new Error(String(e && e.message || e))); }).api(action, args);
+  });
+  return Promise.resolve().then(function(){ return Local.api(action, args, onText); });
+}
+
+/* ---------- state ---------- */
+var S = { userId:store.get('lid.userId'), sessionId:null, state:null, view:'loading', ctx:null, messages:[], busy:false, coachErr:null };
+
+function toast(t){
+  Array.prototype.forEach.call(document.querySelectorAll('.toast'), function(x){ x.remove(); });
+  var el = document.createElement('div'); el.className='toast'; el.setAttribute('role','status'); el.textContent=t;
+  document.body.appendChild(el); setTimeout(function(){ el.remove(); }, 2800);
+}
+function fail(e){ toast(e && e.message ? e.message : String(e)); }
+
+function setState(st){ if(st && st.user) S.state = st; }
+
+function go(view){
+  S.view = view; closeDialog(); render(); window.scrollTo(0,0);
+  var m = $('#view'); m.classList.remove('enter'); void m.offsetWidth; m.classList.add('enter');
+}
+
+/* ---------- atmosphere: the time of day, and a breath after each reflection ---------- */
+var lastPt = null;
+document.addEventListener('pointerdown', function(e){ lastPt = { x:e.clientX, y:e.clientY }; }, true);
+function setTimeOfDay(){
+  var h = new Date().getHours();
+  document.documentElement.setAttribute('data-tod', h>=5&&h<10 ? 'dawn' : h>=10&&h<17 ? 'day' : h>=17&&h<21 ? 'dusk' : 'night');
+}
+var phase = 0;
+try { phase = Number(localStorage.getItem('lid.phase')) || 0; } catch(e){}
+function applyPhase(){ var sky = $('.sky'); if (sky) sky.style.setProperty('--phase', phase+'deg'); }
+function breathe(){
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  phase = (phase + 28) % 360; applyPhase();
+  try { localStorage.setItem('lid.phase', String(phase)); } catch(e){}
+  if (reduce) return;
+  var sky = $('.sky'); if (sky){ sky.classList.remove('exhale'); void sky.offsetWidth; sky.classList.add('exhale'); }
+  var pt = lastPt || { x: window.innerWidth/2, y: window.innerHeight/2 };
+  ['r1','r2'].forEach(function(c){
+    var r = document.createElement('span'); r.className = 'ripple '+c; r.setAttribute('aria-hidden','true');
+    r.style.left = pt.x+'px'; r.style.top = pt.y+'px'; document.body.appendChild(r);
+    setTimeout(function(){ r.remove(); }, 3400);
+  });
+}
+setTimeOfDay(); applyPhase(); setInterval(setTimeOfDay, 15*60*1000);
+
+/* ---------- rendering ---------- */
+function render(){
+  $('#modeTag').hidden = IS_GAS;
+  var signedIn = !!(S.state && S.state.user);
+  $('#nav').hidden = !signedIn;
+  Array.prototype.forEach.call(document.querySelectorAll('#nav button'), function(b){
+    var map = { studio: S.ctx==='iterate' ? 'iterate' : 'journey', explore:'journey', map:'design', parked:'journey' };
+    if (b.dataset.view === S.view || map[S.view] === b.dataset.view) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current');
+  });
+  var v = $('#view');
+  var keep = $('#msg') ? $('#msg').value : '';
+  var fns = { welcome:vWelcome, journey:vJourney, explore:vExplore, studio:vStudio, design:vDesign, map:vMap, parked:vParked, you:vYou, under18:vUnder18, inputs:vInputs, iterate:vIterate };
+  v.innerHTML = (fns[S.view] || function(){ return '<p class="muted">Opening your design…</p>'; })();
+  if (S.view==='studio') { paintStream(); var ta=$('#msg'); if(ta){ if(keep && !S.busy) ta.value=keep; autoGrow(ta); } }
+}
+
+function pyramidArt(){
+  /* a cairn: the pyramid of the framework, stacked from the ground up */
+  return '<svg class="pyr-art" viewBox="0 0 420 300" role="img" aria-label="A cairn of three stones built from the ground up: Why at the base, How in the middle, What at the top">'+
+    '<path d="M6 270 C 60 265, 112 274, 172 269 S 300 265, 414 272" fill="none" stroke="var(--rule)" stroke-width="1.6" stroke-linecap="round"/>'+
+    '<path d="M28 285 C 58 281, 88 287, 120 283" fill="none" stroke="var(--rule)" stroke-width="1.2" stroke-linecap="round" opacity=".7"/>'+
+    '<path d="M298 286 C 330 282, 360 288, 394 284" fill="none" stroke="var(--rule)" stroke-width="1.2" stroke-linecap="round" opacity=".7"/>'+
+    '<path d="M70 233 C 64 206, 122 188, 207 186 C 300 184, 354 201, 352 228 C 350 254, 298 267, 208 267 C 118 267, 76 256, 70 233 Z" fill="var(--why-soft)" stroke="var(--why)" stroke-width="1.6"/>'+
+    '<path d="M112 207 C 142 197, 178 194, 214 194" fill="none" stroke="var(--sheet-solid)" stroke-width="3" stroke-linecap="round" opacity=".8"/>'+
+    '<text x="210" y="240" text-anchor="middle" font-family="Caveat, cursive" font-size="27" fill="var(--why-ink)">Why</text>'+
+    '<g class="float">'+
+      '<path d="M118 168 C 115 146, 160 132, 214 133 C 270 134, 305 149, 302 169 C 299 189, 262 196, 210 195 C 157 194, 121 188, 118 168 Z" fill="var(--how-soft)" stroke="var(--how)" stroke-width="1.6"/>'+
+      '<path d="M146 150 C 168 143, 192 141, 216 141" fill="none" stroke="var(--sheet-solid)" stroke-width="3" stroke-linecap="round" opacity=".8"/>'+
+      '<text x="210" y="176" text-anchor="middle" font-family="Caveat, cursive" font-size="25" fill="var(--how-ink)">How</text>'+
+      '<g class="float">'+
+        '<path d="M162 112 C 160 91, 186 79, 212 79 C 242 79, 263 94, 261 113 C 259 131, 236 138, 210 137 C 181 136, 164 128, 162 112 Z" fill="var(--what-soft)" stroke="var(--what)" stroke-width="1.6"/>'+
+        '<path d="M180 96 C 192 90, 205 88, 218 88" fill="none" stroke="var(--sheet-solid)" stroke-width="3" stroke-linecap="round" opacity=".8"/>'+
+        '<text x="211" y="119" text-anchor="middle" font-family="Caveat, cursive" font-size="23" fill="var(--what-ink)">What</text>'+
+      '</g>'+
+    '</g>'+
+    '</svg>';
+}
+
+function vWelcome(){
+  return '<div class="welcome">'+
+   '<section class="intro">'+
+    '<p class="eyebrow">Life in Design · a coaching practice</p>'+
+    '<h1>Consider yourself an iterative design.</h1>'+
+    '<p class="lede">Life in Design is a pyramid you build from the ground up. Your <strong>Why</strong> is the foundation, your <strong>How</strong> is the structure raised on it, and your <strong>What</strong> is the living part people see.</p>'+
+    pyramidArt()+'<p class="hand" style="font-size:1.3rem;color:var(--muted);margin-top:-6px">built from the ground up, one stone at a time</p>'+
+    '<div class="tiny-legend">'+
+      '<div><span style="background:var(--why)"></span><strong>Why</strong> · Core Beliefs, Vision, Purpose</div>'+
+      '<div><span style="background:var(--how)"></span><strong>How</strong> · Governing Principles, Strategy, Relationships</div>'+
+      '<div><span style="background:var(--what)"></span><strong>What</strong> · Key Activities, Resources, Methods</div>'+
+    '</div>'+
+    '<p class="muted">This is a practice you return to, not a quiz you finish. We begin with the Why, because nothing higher can stand without what lies beneath it.</p>'+
+   '</section>'+
+   '<form class="panel" id="onboard" autocomplete="on">'+
+    '<h2>Begin your design</h2>'+
+    '<div class="field"><label for="ob-name">What should your coach call you?</label><input id="ob-name" type="text" required maxlength="60" autocomplete="given-name"></div>'+
+    '<div class="field"><label for="ob-brought">What brought you here?</label><textarea id="ob-brought" rows="3"></textarea></div>'+
+    '<div class="field"><label for="ob-hope">What do you hope will be different?</label><textarea id="ob-hope" rows="3"></textarea></div>'+
+    '<div class="field"><label for="ob-pressing">Is something pressing on you right now? <span class="hint">Optional. We\'ll park it safely and return to it when your design reaches the What, where it can be solved properly.</span></label><textarea id="ob-pressing" rows="2"></textarea></div>'+
+    '<fieldset class="stack" style="border:0;padding:0;margin:0;gap:8px"><legend class="eyebrow" style="margin-bottom:6px">Age</legend>'+
+      '<label class="choice"><input type="radio" name="age" value="adult" id="ob-adult" required> I\'m 18 or older</label>'+
+      '<label class="choice"><input type="radio" name="age" value="minor" id="ob-minor"> I\'m under 18</label>'+
+    '</fieldset>'+
+    '<label class="choice"><input type="checkbox" id="ob-plain"> I prefer plain, simple language</label>'+
+    '<p class="err" id="ob-err" hidden></p>'+
+    '<div class="row"><button class="btn primary" type="submit">Begin with the Why</button></div>'+
+    '<details><summary>Started on another device? Use your personal key</summary>'+
+      '<div class="add-area" style="margin-top:10px"><div class="field"><label for="ob-key">Personal key</label><input id="ob-key" type="text" spellcheck="false"></div><button class="btn" type="button" data-act="useKey">Continue</button></div>'+
+    '</details>'+
+   '</form>'+
+  '</div>';
+}
+
+function vUnder18(){
+  return '<section class="panel card" style="max-width:640px">'+
+    '<h2>Thank you for being honest.</h2>'+
+    '<p>Life in Design is built for adults aged 18 and over, so the coach can\'t begin a design with you yet. The questions it asks are worth asking at any age, and they are best explored with people who know you: a parent, teacher, mentor or counselor you trust.</p>'+
+    '<p>If things feel heavy right now, please talk to a trusted adult. In the US you can call or text <strong>988</strong> any time to reach someone who will listen.</p>'+
+    '<div class="row"><button class="btn" data-act="nav" data-view="welcome">Back</button></div>'+
+  '</section>';
+}
+
+function stepCell(s, p){
+  var isNext = p.next && p.next.key===s.key;
+  var cls = 'cell L-'+s.layer+(s.done?' done':'')+(!s.unlocked?' locked':'')+(isNext?' is-next':'');
+  var chip = !s.unlocked ? '<span class="chip locked">Locked</span>' : s.done ? '<span class="chip '+(s.status==='Approved'?'approved':'draft')+'">'+esc(s.status||'Draft')+' · v'+s.version+'</span>' : '<span class="chip next">Next</span>';
+  return '<button class="'+cls+'" data-act="step" data-key="'+esc(s.key)+'" aria-label="'+esc(s.name+(s.unlocked?'':' (locked)'))+'">'+
+    '<span class="n">'+String(s.order).padStart(2,'0')+'</span><span class="t">'+esc(s.name)+'</span><span class="s">'+chip+'</span></button>';
+}
+
+function vJourney(){
+  var st=S.state, u=st.user, p=LID.progress(st);
+  var steps = p.steps;
+  var by = function(layer){ return steps.filter(function(s){ return s.layer===layer && s.key!=='exploration'; }); };
+  var ex = steps[0];
+  var areasStarted = LID.allAreas(st).filter(function(a){ return LID.areaState(st,a).started; }).length;
+  var nextLine, nextBtn;
+  if (!p.next) { nextLine = st.reviews.length ? 'Your v1 design is formulated. Keep iterating toward congruence.' : 'Your v1 design is formulated. Now it gets tested: run its first congruence review.'; nextBtn = '<button class="btn primary" data-act="nav" data-view="iterate">Open Iterate</button>'; }
+  else if (p.next.key==='exploration') { nextLine = areasStarted ? 'You\'re in the Core Beliefs Exploration. Close an area with a chosen belief to lay the first stone.' : 'Every design begins underground, with the Core Beliefs Exploration.'; nextBtn='<button class="btn primary" data-act="nav" data-view="explore">'+(areasStarted?'Continue exploring':'Start the Exploration')+'</button>'; }
+  else { nextLine = 'Next on the drawing board: '+p.next.name+'. '+p.next.el.oneLine+'.'; nextBtn='<button class="btn primary" data-act="step" data-key="'+esc(p.next.key)+'">Design '+esc(p.next.name)+'</button>'; }
+
+  var openParked = st.parked.filter(function(x){ return x.Status!=='Resolved'; });
+  var openC = st.commitments.filter(function(c){ return c.Status==='Open'; }).slice(-4).reverse();
+
+  var plan = '<section class="panel plan" aria-label="Your pyramid">'+
+    '<div class="plan-head"><span class="eyebrow">Your pyramid</span><span class="muted" style="font-size:.88rem">Built from the ground up. Each element opens when the one beneath it has a first draft.</span></div>'+
+    '<div class="tier-label">What · the living part</div><div class="tier what">'+by('What').map(function(s){ return stepCell(s,p); }).join('')+'</div>'+
+    '<div class="tier-label">How · the structure</div><div class="tier how">'+by('How').map(function(s){ return stepCell(s,p); }).join('')+'</div>'+
+    '<div class="tier-label">Why · the foundation</div><div class="tier why">'+by('Why').map(function(s){ return stepCell(s,p); }).join('')+'</div>'+
+    '<button class="slab'+(p.next&&p.next.key==='exploration'?' is-next':'')+'" data-act="nav" data-view="explore">'+
+      '<span><span class="n mono muted">00 · Groundwork</span><br><span class="t">Core Beliefs Exploration</span></span>'+
+      '<span class="muted" style="font-size:.9rem">'+areasStarted+' area'+(areasStarted===1?'':'s')+' explored · '+Object.keys(LID.chosenByArea(st)).length+' belief'+(Object.keys(LID.chosenByArea(st)).length===1?'':'s')+' chosen</span>'+
+      '<span>'+(ex.done?'<span class="chip approved">Laid</span>':'<span class="chip next">Start here</span>')+'</span></button>'+
+    '<div class="ground">ground level</div>'+
+  '</section>';
+
+  var nudges = LID.computeNudges(st);
+  var side = '<aside class="side">'+
+    (nudges.length ? '<section class="panel card" aria-label="Nudges"><span class="eyebrow">For you now</span><ul class="nudges">'+nudges.map(function(n){ return '<li><span>'+esc(n.text)+'</span><button class="btn small" data-act="nudge" data-to="'+esc(n.action)+'">'+esc(n.cta)+'</button></li>'; }).join('')+'</ul></section>' : '')+
+    '<section class="panel card"><span class="eyebrow">Next step</span><p>'+esc(nextLine)+'</p><div class="row">'+nextBtn+'</div></section>'+
+    (p.allDrafted ? '<section class="panel card"><span class="eyebrow">Living with the design</span><p>Short check-ins on what you did, what you learned and what you\'ll change.</p><div class="row"><button class="btn" data-act="ctx" data-ctx="checkin">Check in</button><button class="btn ghost" data-act="nav" data-view="inputs">Journal</button></div></section>' : '')+
+    (openParked.length ? '<section class="panel card"><span class="eyebrow">Parked for the What</span>'+
+      (p.whatOpen ? '<p>Your design has reached the What. Bring these into Key Activities and solve them through what you\'ve built.</p>' : '<p>Held safely until your design reaches the What. The clearest answers come from a clear Why.</p>')+
+      '<ul class="list">'+openParked.slice(0,3).map(function(x){ return '<li>'+esc(x.Description)+'</li>'; }).join('')+'</ul>'+
+      '<div class="row"><button class="btn small" data-act="nav" data-view="parked">See all</button></div></section>' : '')+
+    '<section class="panel card"><span class="eyebrow">Small steps</span>'+
+      (openC.length ? '<ul class="list">'+openC.map(function(c){ return '<li><span>'+esc(c.Commitment)+'</span><span class="row"><span class="muted" style="font-size:.82rem">'+esc(c.Focus)+' · '+fmtDate(c.CreatedAt)+'</span><button class="btn small" data-act="commit" data-id="'+esc(c.CommitmentID)+'" data-status="Done">Done</button><button class="btn small ghost" data-act="commit" data-id="'+esc(c.CommitmentID)+'" data-status="Let go">Let go</button></span></li>'; }).join('')+'</ul>'
+        : '<p class="muted">Each session ends with one small, specific step. Yours will gather here.</p>')+
+    '</section>'+
+  '</aside>';
+
+  return '<section class="hero"><p class="eyebrow">'+esc(u.Stage||'design')+' · '+esc(u.CurrentFocus||'')+'</p><h1>Welcome back, '+esc(u.Name)+'.</h1><p class="lede">The design is never finished, and that is the joy.</p></section>'+
+    '<div class="journey">'+plan+side+'</div>';
+}
+
+function vExplore(){
+  var st=S.state;
+  var names = LID.allAreas(st);
+  return '<section class="hero"><p class="eyebrow">00 · Groundwork</p><h1>Core Beliefs Exploration</h1>'+
+    '<p class="lede">Very little in life is verifiably certain, so most of what we hold as true is belief, acted on in faith. This is where you look at where yours came from, and then choose. One area at a time, through seven lenses, at your own pace.</p>'+
+    '<div class="row"><button class="btn small ghost" data-act="nav" data-view="journey">← Journey</button><button class="btn small" data-act="nav" data-view="map">See the whole map</button></div></section>'+
+    '<p class="eyebrow" style="margin-bottom:10px">Suggested areas · Success in Life, Career and Money are gentle places to begin</p>'+
+    '<div class="areas">'+names.map(function(a){
+      var as = LID.areaState(st,a), def = LID.areaDef(a);
+      var status = as.chosen ? '<span class="chip approved">Belief chosen</span>' : as.complete ? '<span class="chip draft">Ready to close</span>' : as.started ? '<span class="chip draft">Lens '+(as.current?as.current.order:7)+' of 7</span>' : '<span class="chip gap">Not started</span>';
+      return '<button class="area" data-act="area" data-area="'+esc(a)+'">'+
+        '<span class="row" style="justify-content:space-between"><span class="t">'+esc(a)+'</span>'+(def&&def.weight?'<span class="mono muted">'+esc(def.weight)+'</span>':(!def?'<span class="mono muted">Your area</span>':''))+'</span>'+
+        '<span class="ticks" aria-hidden="true">'+as.lenses.map(function(l){ return '<i class="'+(l.skipped?'skip':l.covered?'on':(as.started&&as.current&&as.current.order===l.order?'cur':''))+'"></i>'; }).join('')+'</span>'+
+        status+(as.chosen?'<span class="belief">"'+esc(as.chosen.ChosenBelief)+'"</span>':'')+
+      '</button>';
+    }).join('')+'</div>'+
+    '<form class="panel card" id="addArea" style="margin-top:18px"><span class="eyebrow">Something else shapes your life?</span>'+
+      '<div class="add-area"><div class="field"><label for="newArea">Name your own area</label><input id="newArea" type="text" maxlength="40" placeholder="e.g. Health, Home, Creativity"></div><button class="btn" type="submit">Explore it</button></div></form>';
+}
+
+function briefFor(ctx){
+  var st=S.state, p=LID.progress(st);
+  if (ctx.indexOf('explore:')===0){
+    var as = LID.areaState(st, ctx.slice(8));
+    return '<span class="eyebrow">Exploration · area</span><h2>'+esc(as.area)+'</h2>'+
+      '<ol class="lenses">'+as.lenses.map(function(l){
+        var cls = l.skipped?'skip':l.covered?'done':(as.current&&as.current.order===l.order?'cur':'');
+        return '<li class="'+cls+'"><span class="dot"></span><span>'+esc(l.lens)+'</span><span class="mono">'+(l.skipped?'skipped':l.kind==='Own'?'yours':'inherited')+'</span></li>';
+      }).join('')+'</ol>'+
+      (as.current ? '<div class="block"><span class="eyebrow">Now · '+esc(as.current.lens)+'</span><p class="q">'+esc(as.current.questions)+'</p>'+(as.current.alt?'<p class="muted" style="font-size:.88rem">'+esc(as.current.alt)+'</p>':'')+'</div>'
+        : '<div class="block"><span class="eyebrow">All seven lenses explored</span><p>Close the area with a choice: one sentence on what you now choose to believe, and why.</p></div>')+
+      (as.chosen ? '<div class="block"><span class="eyebrow">Your chosen belief</span><div class="statement">'+esc(as.chosen.ChosenBelief)+(as.chosen.Why?'\n\nWhy: '+esc(as.chosen.Why):'')+'</div></div>':'');
+  }
+  if (ctx.indexOf('element:')===0){
+    var name=ctx.slice(8), e=LID.elementDef(name), s=p.steps.filter(function(x){ return x.key===name; })[0];
+    var hist = st.history.filter(function(h){ return h.Element===name; }).slice().reverse();
+    var extra='';
+    if (name==='Core Beliefs'){ var cb=LID.chosenByArea(st); extra='<div class="block"><span class="eyebrow">From your Exploration</span>'+(Object.keys(cb).length?'<ul class="list">'+Object.keys(cb).map(function(a){ return '<li><span class="mono muted">'+esc(a)+'</span><span>'+esc(cb[a].ChosenBelief)+'</span></li>'; }).join('')+'</ul>':'<p class="muted">No chosen beliefs yet.</p>')+'</div>'; }
+    if (['Resources','Key Activities','Methods','Relationships','Governing Principles','Strategy'].indexOf(name)>=0){
+      var rel = st.assessments.filter(function(r){ var t=LID.testDef(r.Test); return r.Summary && t && (name==='Resources' || t.feeds.indexOf(name)>=0); });
+      var gr = name==='Resources' ? st.growth : [];
+      if (rel.length || gr.length) extra+='<div class="block"><span class="eyebrow">From your inputs</span><ul class="list">'+
+        rel.map(function(r){ return '<li><span class="mono muted">'+esc(LID.testDef(r.Test).name)+'</span><span style="font-size:.92rem">'+esc(r.Summary)+'</span></li>'; }).join('')+
+        gr.slice(-6).map(function(g){ return '<li><span class="mono muted">'+esc(g.Kind)+(g.Status==='Planned'?' · planned':'')+'</span><span style="font-size:.92rem">'+esc(g.Title)+'</span></li>'; }).join('')+'</ul></div>';
+      else if (name==='Resources') extra+='<div class="block"><span class="eyebrow">From your inputs</span><p class="muted" style="font-size:.9rem">Add strengths results under Inputs and your coach will draw on them here.</p></div>';
+    }
+    if (e.layer==='What'){ var op=st.parked.filter(function(x){ return x.Status!=='Resolved'; }); if(op.length) extra+='<div class="block"><span class="eyebrow">Parked for the What</span><ul class="list">'+op.map(function(x){ return '<li>'+esc(x.Description)+'</li>'; }).join('')+'</ul></div>'; }
+    return '<span class="layer-tag '+e.layer+'">'+e.layer+' · '+String(e.order).padStart(2,'0')+'</span><h2>'+esc(e.element)+'</h2><p class="muted">'+esc(e.oneLine)+'</p>'+
+      '<div class="block"><span class="eyebrow">Defining question</span><p class="q">'+esc(e.definingQuestion)+'</p></div>'+
+      '<div class="block"><span class="eyebrow">A strong draft</span><p style="font-size:.92rem">'+esc(e.strongDraft)+'</p></div>'+
+      '<div class="block"><span class="eyebrow">Current statement</span>'+(s.statement?'<div class="statement">'+esc(s.statement)+'</div><span class="row"><span class="chip '+(s.status==='Approved'?'approved':'draft')+'">'+esc(s.status)+' · v'+s.version+'</span></span>':'<p class="muted">Nothing saved yet. Drafts are welcome; they can be revised any time.</p>')+'</div>'+
+      (hist.length>1?'<details><summary>History · '+hist.length+' versions</summary><ul class="hist">'+hist.map(function(h){ return '<li><span class="when">v'+esc(h.Version)+' · '+esc(h.Status)+' · '+fmtDate(h.ChangedAt)+(h.ChangeNote?' · '+esc(h.ChangeNote):'')+'</span><div>'+esc(h.Statement)+'</div></li>'; }).join('')+'</ul></details>':'')+
+      extra;
+  }
+  if (ctx==='iterate'){
+    var lr = LID.latestReview(st), open = st.recs.filter(function(r){ return r.Status==='New'; });
+    return '<span class="eyebrow">Life Design Iteration</span><h2>Talk it through</h2><p class="muted">Your coach as an objective evaluator: provocative, challenging, guiding. Accepted guidance becomes a new input to your design.</p>'+
+      (lr?'<div class="block"><span class="eyebrow">Latest review · '+fmtDate(lr.CreatedAt)+'</span><p><strong>'+esc(lr.Traced)+' of '+esc(lr.Total)+'</strong> What items trace clearly to your How and Why.</p><p class="muted" style="font-size:.92rem">'+esc(lr.Summary)+'</p></div>':'')+
+      (open.length?'<div class="block"><span class="eyebrow">Open guidance</span><ul class="list">'+open.map(function(r){ return '<li><span class="layer-tag '+r.Layer+'">'+r.Layer+' · '+esc(r.Kind)+'</span><span style="font-size:.92rem">'+esc(r.Title)+'</span></li>'; }).join('')+'</ul></div>':'');
+  }
+  var titles = { alignment:['Alignment check','Review the stack together, looking for breaks: an activity that serves no strategy, a principle with no root in the Why, a goal that does not advance the Purpose.'],
+    checkin:['Check-in','What did you do, what did you learn, what will you change?'], remodel:['Remodel','Life has shifted. Deconstructing and rebuilding is part of the framework. We revisit from the top.'] };
+  var t = titles[ctx]||[ctx,''];
+  return '<span class="eyebrow">Living with the design</span><h2>'+esc(t[0])+'</h2><p class="muted">'+esc(t[1])+'</p>'+
+    '<div class="block"><span class="eyebrow">Your design</span><ul class="list">'+p.steps.slice(1).map(function(s){ return '<li><span class="layer-tag '+s.layer+'">'+s.layer+' · '+esc(s.name)+'</span><span style="font-size:.92rem;white-space:pre-wrap">'+(s.statement?esc(s.statement):'<em class="muted">gap</em>')+'</span></li>'; }).join('')+'</ul></div>';
+}
+
+function ctxTitle(ctx){
+  if (ctx.indexOf('explore:')===0) return 'Exploring '+ctx.slice(8);
+  if (ctx.indexOf('element:')===0) return ctx.slice(8);
+  return {alignment:'Alignment check',checkin:'Check-in',remodel:'Remodel',iterate:'Iteration'}[ctx]||ctx;
+}
+
+function vStudio(){
+  var ctx=S.ctx, actions='';
+  if (ctx.indexOf('explore:')===0){
+    var as = LID.areaState(S.state, ctx.slice(8));
+    actions = (as.current ? '<button class="btn small" data-act="nextLens"'+(as.current.response.trim()?'':' disabled title="Share something on this lens first"')+'>Next lens →</button><button class="btn small ghost" data-act="skipLens">Skip this lens</button>' : '')+
+      '<button class="btn small'+(as.complete?' primary':'')+'" data-act="closeArea"'+(as.complete?'':' disabled title="Explore or skip each lens first"')+'>Close this area</button>';
+  } else if (ctx.indexOf('element:')===0){
+    actions = '<button class="btn small primary" data-act="capture">Capture a draft</button>';
+  } else if (ctx==='alignment' || ctx==='remodel') {
+    actions = '<button class="btn small" data-act="nav" data-view="design">Open my design</button>';
+  } else if (ctx==='iterate') {
+    actions = '<button class="btn small" data-act="nav" data-view="iterate">See the review and cards</button>';
+  }
+  actions += '<button class="btn small ghost" data-act="endSession">End session</button>';
+  return '<div class="studio">'+
+    (S.view==='studio' && window.innerWidth<=900 ? '<details class="panel brief"><summary>'+esc(ctxTitle(ctx))+' · brief</summary><div class="stack" style="margin-top:12px">'+briefFor(ctx)+'</div></details>' : '<aside class="panel brief">'+briefFor(ctx)+'</aside>')+
+    '<section class="panel chat" aria-label="Coaching conversation">'+
+      '<div class="chat-head"><button class="btn small ghost" data-act="back">← '+(ctx.indexOf('explore:')===0?'All areas':ctx==='iterate'?'Iterate':'Journey')+'</button><span class="eyebrow">'+esc(ctxTitle(ctx))+'</span></div>'+
+      '<div class="stream" id="stream"></div>'+
+      '<form class="compose" id="compose">'+
+        '<div class="actions">'+actions+'</div>'+
+        '<div class="send"><label for="msg" class="eyebrow" style="position:absolute;left:-9999px">Your reply</label><textarea id="msg" rows="2" placeholder="Take your time…"'+(S.busy?' disabled':'')+'></textarea><button class="btn primary" type="submit"'+(S.busy?' disabled':'')+'>Send</button></div>'+
+      '</form>'+
+    '</section></div>';
+}
+
+function noteText(t){
+  return t.replace(/^\[note\]\s*/,'').replace(/The person's/g,'Your').replace(/The person is/g,"You're").replace(/The person has/g,'You have').replace(/The person /g,'You ').replace(/their chosen belief/g,'your chosen belief');
+}
+function paintStream(pending){
+  var el = $('#stream'); if(!el) return;
+  var html = S.messages.map(function(m){
+    var c = String(m.Content||'');
+    if (/^\[note\]/.test(c)) return '<div class="divider">'+esc(noteText(c))+'</div>';
+    return m.Role==='assistant' ? '<div class="msg coach">'+md(c)+'</div>' : '<div class="msg me">'+esc(c)+'</div>';
+  }).join('');
+  if (S.busy) html += '<div class="msg coach" id="pending">'+(pending?md(pending):'<span class="typing" aria-label="The coach is writing"><i></i><i></i><i></i></span>')+'</div>';
+  if (S.coachErr) html += '<div class="coach-err"><span>'+esc(S.coachErr)+'</span><button class="btn small" data-act="retry">Try again</button></div>';
+  if (!S.messages.length && !S.busy && !S.coachErr) html = '<p class="muted">Opening the conversation…</p>';
+  el.innerHTML = html;
+  el.scrollTop = el.scrollHeight;
+  if (window.innerWidth<=900 && S.busy) { var pd=$('#pending'); if(pd) pd.scrollIntoView({block:'nearest'}); }
+}
+
+function vDesign(){
+  var st=S.state, p=LID.progress(st), cb=LID.chosenByArea(st);
+  var layers = [['Why','The foundation'],['How','The structure'],['What','The living part']];
+  return '<section class="hero"><p class="eyebrow">Your Life Design · '+esc(st.user.Name)+'</p><h1>The design that is you</h1><p class="lede">Organized as Why, How and What. Drafts and gaps are marked. Every change keeps its history.</p>'+
+    '<div class="row"><button class="btn small" data-act="nav" data-view="map">Belief map</button>'+(p.allDrafted?'<button class="btn small" data-act="nav" data-view="iterate">Iterate</button>':'')+'<button class="btn small ghost" data-act="remodel">Start a remodel</button></div></section>'+
+    layers.map(function(L){
+      return '<section class="layer"><div class="layer-head '+L[0]+'"><h2>'+L[0]+'</h2><span class="muted">'+L[1]+'</span></div>'+
+        p.steps.filter(function(s){ return s.layer===L[0] && s.key!=='exploration'; }).map(function(s){
+          var hist = st.history.filter(function(h){ return h.Element===s.key; }).slice().reverse();
+          return '<article class="panel el"><div class="el-top"><h3>'+esc(s.name)+'</h3>'+
+            (s.done?'<span class="chip '+(s.status==='Approved'?'approved':'draft')+'">'+esc(s.status)+' · v'+s.version+'</span>':'<span class="chip gap">Gap</span>')+
+            (s.unlocked?'<button class="btn small" data-act="step" data-key="'+esc(s.key)+'">'+(s.done?'Revisit':'Design')+'</button>':'<span class="chip locked">Locked</span>')+'</div>'+
+            (s.statement?'<div class="statement">'+esc(s.statement)+'</div>':'<p class="gap">Not yet drafted. '+esc(s.el.oneLine)+'.</p>')+
+            (hist.length?'<details><summary>History · '+hist.length+' version'+(hist.length===1?'':'s')+'</summary><ul class="hist">'+hist.map(function(h){ return '<li><span class="when">v'+esc(h.Version)+' · '+esc(h.Status)+' · '+fmtDate(h.ChangedAt)+(h.ChangeNote?' · '+esc(h.ChangeNote):'')+'</span><div style="white-space:pre-wrap">'+esc(h.Statement)+'</div></li>'; }).join('')+'</ul></details>':'')+
+          '</article>';
+        }).join('')+'</section>';
+    }).join('')+
+    '<section class="layer"><div class="layer-head Why"><h2>Chosen beliefs</h2><span class="muted">From the Exploration</span></div>'+
+      (Object.keys(cb).length?'<div class="panel el"><ul class="list">'+Object.keys(cb).map(function(a){ return '<li><span class="mono muted">'+esc(a)+'</span><strong style="font-weight:600">'+esc(cb[a].ChosenBelief)+'</strong>'+(cb[a].Why?'<span class="muted">'+esc(cb[a].Why)+'</span>':'')+'</li>'; }).join('')+'</ul></div>':'<p class="muted">None yet. Close an area in the Exploration to choose your first.</p>')+
+    '</section>';
+}
+
+function vMap(){
+  var st=S.state;
+  var names = LID.allAreas(st).filter(function(a){ var s=LID.areaState(st,a); return s.started||s.chosen; });
+  return '<section class="hero"><p class="eyebrow">Core Beliefs Exploration</p><h1>Your belief map</h1><p class="lede">Every area you\'ve explored, through each lens, in your own words.</p>'+
+    '<div class="row"><button class="btn small ghost" data-act="nav" data-view="explore">← Exploration</button></div></section>'+
+    (names.length ? '<div class="map stack">'+names.map(function(a){
+      var as=LID.areaState(st,a);
+      return '<details class="panel"><summary><strong style="font-weight:600">'+esc(a)+'</strong><span class="ticks" aria-hidden="true">'+as.lenses.map(function(l){ return '<i class="'+(l.skipped?'skip':l.covered?'on':'')+'"></i>'; }).join('')+'</span></summary>'+
+        '<dl>'+as.lenses.map(function(l){ return '<div><dt>'+esc(l.lens)+'</dt><dd>'+(l.skipped?'<em>Skipped</em>':l.response?esc(l.response):'<em>Not yet explored</em>')+'</dd></div>'; }).join('')+
+        (as.chosen?'<div><dt>Chosen belief</dt><dd style="color:var(--ink)">'+esc(as.chosen.ChosenBelief)+(as.chosen.Why?'\nWhy: '+esc(as.chosen.Why):'')+'</dd></div>':'')+'</dl>'+
+        '<div class="row" style="margin-top:12px"><button class="btn small" data-act="area" data-area="'+esc(a)+'">Open this area</button></div></details>';
+    }).join('')+'</div>' : '<p class="muted">Nothing on the map yet. Start an area in the Exploration.</p>');
+}
+
+function vParked(){
+  var st=S.state, p=LID.progress(st);
+  var rows = st.parked.slice().reverse();
+  return '<section class="hero"><p class="eyebrow">Parked for the What</p><h1>Held, not forgotten</h1><p class="lede">'+
+    (p.whatOpen?'Your design has reached the What. These are ready to be worked through Key Activities, Resources and Methods.':'Pressing problems wait here until the What layer arrives. A fix built before its foundation rarely holds.')+'</p></section>'+
+    '<form class="panel card" id="parkForm"><div class="field"><label for="parkText">Something pressing</label><textarea id="parkText" rows="2" placeholder="A hard decision, a stalled goal, the feeling of being stretched thin…"></textarea></div><div class="row"><button class="btn" type="submit">Park it</button></div></form>'+
+    (rows.length?'<ul class="list panel card" style="margin-top:16px">'+rows.map(function(x){
+      return '<li><span>'+esc(x.Description)+'</span><span class="row"><span class="chip '+(x.Status==='Resolved'?'approved':x.Status==='Revisited'?'draft':'gap')+'">'+esc(x.Status)+'</span><span class="muted" style="font-size:.82rem">Parked '+fmtDate(x.ParkedAt)+'</span>'+
+        (x.Status==='Resolved'?'<button class="btn small ghost" data-act="problem" data-id="'+esc(x.ProblemID)+'" data-status="Parked">Reopen</button>':
+          (p.whatOpen?'<button class="btn small" data-act="problem" data-id="'+esc(x.ProblemID)+'" data-status="Revisited">Mark revisited</button>':'')+'<button class="btn small ghost" data-act="problem" data-id="'+esc(x.ProblemID)+'" data-status="Resolved">Resolved</button>')+
+      '</span></li>';
+    }).join('')+'</ul>':'');
+}
+
+function vYou(){
+  var u=S.state.user;
+  return '<section class="hero"><p class="eyebrow">You</p><h1>'+esc(u.Name)+'</h1><p class="lede">Your design is personal and confidential.</p></section>'+
+    '<div class="stack" style="max-width:680px">'+
+    '<form class="panel card" id="youForm"><div class="field"><label for="you-name">Name</label><input id="you-name" type="text" value="'+esc(u.Name)+'" maxlength="60"></div>'+
+      '<div class="field"><label for="you-email">Email <span class="hint">Optional. Used only for your weekly nudge email.</span></label><input id="you-email" type="email" value="'+esc(u.Email||'')+'" maxlength="120" autocomplete="email"></div>'+
+      '<label class="choice"><input type="checkbox" id="you-plain"'+(LID.truthy(u.PlainStyle)?' checked':'')+'> I prefer plain, simple language</label>'+
+      '<div class="row"><button class="btn" type="submit">Save</button></div></form>'+
+    notifPanel()+
+    '<section class="panel card"><span class="eyebrow">Personal key</span><p>Use this key to open your design on another device. Keep it private: anyone with it can read your design.</p>'+
+      '<div class="row"><code id="keyText" class="statement" style="font-family:var(--mono);font-size:.85rem;user-select:all">'+esc(S.userId)+'</code><button class="btn small" data-act="copyKey">Copy</button></div></section>'+
+    '<section class="panel card"><span class="eyebrow">This device</span><div class="row"><button class="btn" data-act="signOut">Sign out here</button>'+(IS_GAS?'':'<button class="btn ghost" data-act="resetPreview">Erase preview data</button>')+'</div>'+
+      (IS_GAS?'':'<p class="muted" style="font-size:.9rem">This is the preview. Everything stays in this browser; the live app saves to your Google Sheet.</p>')+'</section>'+
+    '</div>';
+}
+
+/* ---------- dialogs ---------- */
+function openDialog(html, cls){ $('#layer').innerHTML = '<div class="scrim" data-act="scrim"><div class="panel dialog'+(cls?' '+cls:'')+'" role="dialog" aria-modal="true">'+html+'</div></div>'; var f=$('#layer textarea, #layer input'); if(f) f.focus(); }
+function closeDialog(){ $('#layer').innerHTML=''; S.edit=null; }
+
+/* ---------- coaching ---------- */
+function coachTurn(opts){
+  if (S.busy) return;
+  S.busy = true; S.coachErr = null; render();
+  var ctx = S.ctx;
+  api('coach', { context:ctx, mode:opts.mode, message:opts.message }, function(text){ if(S.ctx===ctx) paintStream(text); })
+    .then(function(r){ if (r.reply) S.messages.push(r.reply); })
+    .catch(function(e){ S.coachErr = e.message || String(e); })
+    .then(function(){ return ctx.indexOf('explore:')===0 ? api('getState').then(setState).catch(function(){}) : null; })
+    .then(function(){ S.busy=false; if(S.ctx===ctx && S.view==='studio'){ render(); var m=$('#msg'); if(m) m.focus(); } });
+}
+
+function openCtx(ctx){
+  S.ctx = ctx; S.messages = []; S.coachErr=null; S.view='studio'; render(); window.scrollTo(0,0);
+  var pre = ctx.indexOf('explore:')===0 ? api('startArea',{ area:ctx.slice(8) }) : Promise.resolve();
+  pre.then(function(){ return api('getState'); }).then(setState)
+    .then(function(){ return api('getMessages',{ context:ctx }); })
+    .then(function(msgs){
+      if (S.ctx!==ctx) return;
+      S.messages = msgs || [];
+      render();
+      var last = S.messages[S.messages.length-1];
+      var hasCoach = S.messages.some(function(m){ return m.Role==='assistant'; });
+      var stale = last && (Date.now() - new Date(last.Timestamp).getTime() > 8*3600*1000);
+      if (!hasCoach || (last && last.Role!=='assistant') || stale) coachTurn({ mode:'open' });
+    }).catch(fail);
+  var stage = { alignment:'alignment', checkin:'living', remodel:'remodel', iterate:'living' }[ctx];
+  if (stage) api('updateUser',{ patch:{ Stage:stage, CurrentFocus:ctxTitle(ctx) } }).then(setState).catch(function(){});
+}
+
+function refreshMessages(){ return api('getMessages',{ context:S.ctx }).then(function(m){ S.messages=m||[]; }); }
+
+/* ---------- events ---------- */
+document.addEventListener('click', function(ev){
+  var t = ev.target.closest('[data-act]'); if(!t) return;
+  var act = t.dataset.act;
+  if (act==='scrim'){ if(ev.target===t) closeDialog(); return; }
+  if (act==='nav'){ ev.preventDefault(); if(!S.state && t.dataset.view!=='welcome') return; go(t.dataset.view); return; }
+  if (act==='step'){
+    var p=LID.progress(S.state), s=p.steps.filter(function(x){ return x.key===t.dataset.key; })[0];
+    if (!s.unlocked){ var i=p.steps.indexOf(s); toast(s.name+' opens once '+p.steps[i-1].name+' has a first draft.'); return; }
+    if (s.key==='exploration') go('explore'); else openCtx('element:'+s.key); return;
+  }
+  if (act==='ctx'){ openCtx(t.dataset.ctx); return; }
+  if (act==='area'){ openCtx('explore:'+t.dataset.area); return; }
+  if (act==='back'){ if (S.ctx && S.ctx.indexOf('explore:')===0) go('explore'); else if (S.ctx==='iterate') go('iterate'); else go('journey'); return; }
+  if (phaseAClick(act, t, ev)) return;
+  if (act==='retry'){ coachTurn({ mode:'open' }); return; }
+  if (act==='nextLens' || act==='skipLens'){
+    if (S.busy) return;
+    api('advanceLens',{ area:S.ctx.slice(8), skip:act==='skipLens' }).then(setState).then(refreshMessages)
+      .then(function(){ render(); var as=LID.areaState(S.state,S.ctx.slice(8)); if(as.current || as.complete) coachTurn({ mode:'open' }); }).catch(fail);
+    return;
+  }
+  if (act==='capture'){ captureDraft(); return; }
+  if (act==='closeArea'){ closeAreaDialog(); return; }
+  if (act==='endSession'){ endSessionDialog(); return; }
+  if (act==='cancel'){ closeDialog(); return; }
+  if (act==='saveEl'){ saveElement(t.dataset.status); return; }
+  if (act==='saveBelief'){ saveBelief(); return; }
+  if (act==='saveCommit'){ saveCommit(); return; }
+  if (act==='commit'){ api('updateCommitment',{ commitmentId:t.dataset.id, status:t.dataset.status }).then(setState).then(function(){ render(); toast(t.dataset.status==='Done'?'Nicely done.':'Let go. Room for what matters.'); }).catch(fail); return; }
+  if (act==='problem'){ api('updateProblem',{ problemId:t.dataset.id, status:t.dataset.status }).then(setState).then(render).catch(fail); return; }
+  if (act==='remodel'){ openDialog('<h2>Start a remodel?</h2><p>A remodel revisits your design from the top, at a life transition or when it no longer fits. Your current design and its history stay exactly as they are; you change elements by revisiting them.</p><div class="row"><button class="btn primary" data-act="ctx" data-ctx="remodel">Begin the remodel</button><button class="btn ghost" data-act="cancel">Not now</button></div>'); return; }
+  if (act==='copyKey'){
+    try { navigator.clipboard.writeText(S.userId).then(function(){ toast('Key copied.'); }, function(){ selectKey(); }); } catch(e){ selectKey(); }
+    return;
+  }
+  if (act==='signOut'){ store.del('lid.userId'); S.userId=null; S.state=null; S.sessionId=null; go('welcome'); return; }
+  if (act==='resetPreview'){ openDialog('<h2>Erase the preview data?</h2><p>This clears every design saved in this browser\'s preview. The live app and your Google Sheet are not touched.</p><div class="row"><button class="btn primary" data-act="confirmReset">Erase</button><button class="btn ghost" data-act="cancel">Keep it</button></div>'); return; }
+  if (act==='confirmReset'){ Local.reset(); store.del('lid.userId'); S.userId=null; S.state=null; go('welcome'); toast('Preview data erased.'); return; }
+  if (act==='useKey'){ var k=($('#ob-key').value||'').trim(); if(!k) return; signIn(k); return; }
+});
+function selectKey(){ var r=document.createRange(); r.selectNodeContents($('#keyText')); var s=window.getSelection(); s.removeAllRanges(); s.addRange(r); toast('Key selected. Copy it with your keyboard.'); }
+
+document.addEventListener('submit', function(ev){
+  ev.preventDefault();
+  var f = ev.target;
+  if (f.id==='onboard') return onboard();
+  if (f.id==='compose'){ var ta=$('#msg'), v=(ta.value||'').trim(); if(!v||S.busy) return; S.messages.push({ Role:'user', Content:v, Timestamp:new Date().toISOString() }); ta.value=''; coachTurnWith(v); return; }
+  if (f.id==='addArea'){ var a=($('#newArea').value||'').trim().replace(/\s+/g,' '); if(!a) return; openCtx('explore:'+a.charAt(0).toUpperCase()+a.slice(1)); return; }
+  if (f.id==='parkForm'){ var d=($('#parkText').value||'').trim(); if(!d) return; api('parkProblem',{ description:d, returnState:true }).then(setState).then(function(){ render(); breathe(); toast('Parked.'); }).catch(fail); return; }
+  if (f.id==='youForm'){
+    var em=$('#you-email').value.trim();
+    if (em && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){ toast('That email address doesn\'t look complete.'); return; }
+    api('updateUser',{ patch:{ Name:$('#you-name').value.trim()||S.state.user.Name, Email:em, PlainStyle:$('#you-plain').checked?'TRUE':'FALSE' } }).then(function(u){ S.state.user=u; render(); toast('Saved.'); }).catch(fail); return;
+  }
+  if (phaseASubmit(f)) return;
+});
+function coachTurnWith(v){ coachTurn({ mode:'chat', message:v }); }
+document.addEventListener('keydown', function(ev){
+  if (ev.target.id==='msg' && ev.key==='Enter' && !ev.shiftKey && !ev.isComposing){ ev.preventDefault(); var f=$('#compose'); if(f) f.requestSubmit ? f.requestSubmit() : f.dispatchEvent(new Event('submit',{cancelable:true})); }
+  if (ev.key==='Escape' && $('#layer').innerHTML) closeDialog();
+});
+document.addEventListener('input', function(ev){ if(ev.target.id==='msg') autoGrow(ev.target); });
+function autoGrow(ta){ ta.style.height='auto'; ta.style.height=Math.min(ta.scrollHeight+2,220)+'px'; }
+var lastWide = window.innerWidth>900;
+window.addEventListener('resize', function(){ var w=window.innerWidth>900; if(w!==lastWide){ lastWide=w; if(S.view==='studio') render(); } });
+
+/* ---------- flows ---------- */
+function onboard(){
+  var err=$('#ob-err'); err.hidden=true;
+  var minor = $('#ob-minor').checked, adult=$('#ob-adult').checked;
+  if (minor) { go('under18'); return; }
+  if (!adult) { err.textContent='Please confirm your age to begin.'; err.hidden=false; return; }
+  var name=$('#ob-name').value.trim(); if(!name){ err.textContent='Add a name for your coach to use.'; err.hidden=false; return; }
+  api('createUser',{ name:name, whatBrought:$('#ob-brought').value.trim(), hopedChange:$('#ob-hope').value.trim(), pressing:$('#ob-pressing').value.trim(), is18:true, plain:$('#ob-plain').checked, userId:null })
+    .then(function(u){ S.userId=u.UserID; store.set('lid.userId', u.UserID); return api('startSession'); })
+    .then(function(s){ S.sessionId=s.SessionID; return api('getState'); })
+    .then(function(st){ setState(st); go('explore'); breathe(); toast('Welcome, '+st.user.Name+'. We begin underground.'); })
+    .catch(function(e){ err.textContent=e.message; err.hidden=false; });
+}
+function signIn(key){
+  S.userId = key;
+  api('getState').then(function(st){ setState(st); store.set('lid.userId',key); return api('startSession'); })
+    .then(function(s){ S.sessionId=s.SessionID; go('journey'); })
+    .catch(function(e){ S.userId=null; toast(e.message); });
+}
+
+function captureDraft(){
+  var name=S.ctx.slice(8), s=LID.progress(S.state).steps.filter(function(x){ return x.key===name; })[0];
+  openDialog('<span class="eyebrow">Capture · '+esc(name)+'</span><h2>Drafting from your words…</h2><p class="muted"><span class="typing"><i></i><i></i><i></i></span></p>');
+  api('coach',{ context:S.ctx, mode:'draft' }).then(function(r){
+    var text = r.draft || s.statement || '';
+    openDialog('<span class="eyebrow">Capture · '+esc(name)+'</span><h2>Is this yours?</h2>'+
+      (r.notEnough?'<p class="muted">The coach thinks there isn\'t quite enough yet to draft honestly. Keep talking, or write your own version here.</p>':'<p class="muted">Proposed from your own words. Edit until it sounds like you. Nothing is saved until you choose.</p>')+
+      '<div class="field"><label for="cap-text">'+esc(name)+'</label><textarea id="cap-text" rows="7">'+esc(text)+'</textarea></div>'+
+      (s.statement?'<div class="field"><label for="cap-note">What changed, in one line <span class="hint">Kept with the version history</span></label><input id="cap-note" type="text" maxlength="140"></div>':'')+
+      '<div class="row"><button class="btn primary" data-act="saveEl" data-status="Approved">Save as approved</button><button class="btn" data-act="saveEl" data-status="Draft">Save as draft</button><button class="btn ghost" data-act="cancel">Not yet</button></div>');
+  }).catch(function(e){ closeDialog(); fail(e); });
+}
+function saveElement(status){
+  var txt=($('#cap-text').value||'').trim(); if(!txt){ toast('Write something first.'); return; }
+  var n=$('#cap-note');
+  api('saveElement',{ element:S.ctx.slice(8), statement:txt, status:status, changeNote:n?n.value.trim():'' })
+    .then(setState).then(refreshMessages).then(function(){
+      closeDialog(); render();
+      var p=LID.progress(S.state), nx=p.next;
+      breathe(); toast(S.ctx.slice(8)+' saved as '+status.toLowerCase()+'.'+(nx&&nx.key!==S.ctx.slice(8)?' '+nx.name+' is open.':''));
+    }).catch(fail);
+}
+function closeAreaDialog(){
+  var area=S.ctx.slice(8);
+  openDialog('<span class="eyebrow">Close · '+esc(area)+'</span><h2>Drafting your choice…</h2><p class="muted"><span class="typing"><i></i><i></i><i></i></span></p>');
+  api('coach',{ context:S.ctx, mode:'draft' }).then(function(r){
+    var d=r.draft||{belief:'',why:''};
+    openDialog('<span class="eyebrow">Close · '+esc(area)+'</span><h2>What do you now choose to believe?</h2>'+
+      '<p class="muted">'+(r.notEnough?'Put it in your own words.':'Proposed from what you said. Make it yours.')+' One sentence is enough.</p>'+
+      '<div class="field"><label for="cb-belief">I choose to believe…</label><textarea id="cb-belief" rows="3">'+esc(d.belief)+'</textarea></div>'+
+      '<div class="field"><label for="cb-why">Why I choose it</label><textarea id="cb-why" rows="3">'+esc(d.why)+'</textarea></div>'+
+      '<div class="row"><button class="btn primary" data-act="saveBelief">Save my belief</button><button class="btn ghost" data-act="cancel">Not yet</button></div>');
+  }).catch(function(e){ closeDialog(); fail(e); });
+}
+function saveBelief(){
+  var b=($('#cb-belief').value||'').trim(); if(!b){ toast('Write the belief first.'); return; }
+  api('saveChosenBelief',{ area:S.ctx.slice(8), belief:b, why:($('#cb-why').value||'').trim() })
+    .then(setState).then(refreshMessages).then(function(){ closeDialog(); render(); breathe(); toast('Chosen and saved. '+(S.state.chosen.length===1?'Core Beliefs is now open.':'')); }).catch(fail);
+}
+function endSessionDialog(){
+  openDialog('<span class="eyebrow">End of session</span><h2>One small step before next time</h2><p class="muted">Something specific you can do or reflect on this week.</p>'+
+    '<div class="field"><label for="cm-text">My next small step</label><textarea id="cm-text" rows="3"></textarea></div>'+
+    '<div class="row"><button class="btn primary" data-act="saveCommit">Save and end</button><button class="btn ghost" data-act="cancel">Keep talking</button></div>');
+}
+function saveCommit(){
+  var v=($('#cm-text').value||'').trim(); if(!v){ toast('Name one small step, or keep talking.'); return; }
+  api('addCommitment',{ text:v, focus:ctxTitle(S.ctx), context:S.ctx }).then(setState)
+    .then(function(){ return api('startSession'); }).then(function(s){ S.sessionId=s.SessionID; go('journey'); breathe(); toast('Saved. Enjoy the week.'); }).catch(fail);
+}
+
+/* =====================================================================
+   Phase A · Inputs, Iterate, nudges
+   ===================================================================== */
+S.inputsTab = 'tests'; S.edit = null; S.reviewing = false; S.reviewErr = null;
+S.journalPrompt = ''; S.jrDraft = ''; S.promptIdx = -1; S.growthKind = 'Knowledge';
+
+var GENERAL_PROMPTS = [
+  'What gave you energy this week, and what drained it?',
+  'Where did your time actually go this week? Did it serve your Purpose?',
+  'What did you say yes to that you wish you had said no to?',
+  'When did you feel most like yourself lately?',
+  'What are you learning about yourself right now?',
+  'Which of your Governing Principles did you lean on this week, and which did you bend?'
+];
+function promptPool(){
+  var st = S.state, pool = [];
+  st.recs.filter(function(r){ return r.ActionType==='journal' && r.Status!=='Declined'; }).slice(-3).forEach(function(r){ pool.push(r.ActionText || r.Title); });
+  var nx = LID.progress(st).next;
+  if (nx && nx.el) pool.push(nx.el.definingQuestion);
+  return pool.concat(GENERAL_PROMPTS);
+}
+function cleanAct(t){ return String(t||'').replace(' ⟨Skill⟩',''); }
+function searchUrl(q){ return 'https://www.google.com/search?q='+encodeURIComponent(q); }
+
+/* ---------- Inputs ---------- */
+function vInputs(){
+  var tabs = [['tests','Strengths & personality'],['journal','Journal'],['growth','Learning & skills']];
+  var body = S.inputsTab==='journal' ? journalTab() : S.inputsTab==='growth' ? growthTab() : testsTab();
+  return '<section class="hero"><p class="eyebrow">Inputs</p><h1>What feeds your design</h1>'+
+    '<p class="lede">Supplements to the guided process. Your coach draws on them to guide, nudge and suggest, and the framework stays at the core.</p></section>'+
+    '<div class="tabs" role="tablist">'+tabs.map(function(t){ return '<button role="tab" data-act="tab" data-tab="'+t[0]+'" aria-selected="'+(S.inputsTab===t[0])+'">'+t[1]+'</button>'; }).join('')+'</div>'+body;
+}
+
+function testsTab(){
+  var st = S.state, have = 0;
+  var cards = LID.TESTS.map(function(t){
+    var row = st.assessments.filter(function(r){ return r.Test===t.key; })[0];
+    var sum = row && row.Summary; if (sum) have++;
+    return '<button class="test'+(sum?' has':'')+'" data-act="editTest" data-test="'+t.key+'">'+
+      '<span class="row" style="justify-content:space-between"><span class="t">'+esc(t.name)+'</span>'+(sum?'<span class="chip approved">Added</span>':'<span class="chip gap">Not added</span>')+'</span>'+
+      '<span class="sum'+(sum?'':' muted')+'">'+esc(sum || t.what)+'</span>'+
+      '<span class="feeds">'+t.feeds.map(function(f){ var e=LID.elementDef(f); return '<span class="layer-tag '+(e?e.layer:'')+'">'+esc(f)+'</span>'; }).join('<span class="muted">·</span>')+'</span>'+
+    '</button>';
+  }).join('');
+  return '<p class="muted" style="margin-bottom:14px">Enter results from tests you have taken. Each one opens an input shaped to that test. '+have+' of '+LID.TESTS.length+' added.</p><div class="tests">'+cards+'</div>';
+}
+
+function journalTab(){
+  var st = S.state;
+  var entries = st.journal.slice().reverse();
+  return '<form class="panel card" id="journalForm"><span class="eyebrow">New entry · '+fmtDate(new Date().toISOString())+'</span>'+
+    (S.journalPrompt ? '<div class="row" style="justify-content:space-between;align-items:flex-start"><p class="q" style="font-family:var(--display);font-size:1.15rem;max-width:60ch">'+esc(S.journalPrompt)+'</p><button type="button" class="btn small ghost" data-act="clearPrompt">No prompt</button></div>' : '')+
+    '<div class="field"><label for="jr-entry" class="eyebrow" style="position:absolute;left:-9999px">Journal entry</label><textarea id="jr-entry" rows="6" placeholder="Write freely. Nothing here needs to be tidy.">'+esc(S.jrDraft)+'</textarea></div>'+
+    '<label class="choice"><input type="checkbox" id="jr-share" checked> Let my coach read this entry</label>'+
+    '<div class="row"><button class="btn primary" type="submit">Save entry</button><button class="btn ghost" type="button" data-act="nextPrompt">'+(S.journalPrompt?'Another prompt':'Give me a prompt')+'</button></div></form>'+
+    (entries.length ? '<div class="entries">'+entries.map(function(j){
+      var shared = LID.truthy(j.CoachCanRead);
+      return '<article class="panel entry"><div class="meta"><span>'+fmtDate(j.CreatedAt)+'</span><span class="chip '+(shared?'approved':'gap')+'">'+(shared?'Coach can read':'Private')+'</span></div>'+
+        (j.Prompt?'<p class="prompt">'+esc(j.Prompt)+'</p>':'')+'<div class="body">'+esc(j.Entry)+'</div>'+
+        '<div class="row"><button class="btn small ghost" data-act="jrShare" data-id="'+esc(j.EntryID)+'" data-v="'+(shared?'0':'1')+'">'+(shared?'Make private':'Share with coach')+'</button><button class="btn small ghost" data-act="jrDel" data-id="'+esc(j.EntryID)+'">Delete</button></div></article>';
+    }).join('')+'</div>' : '<p class="muted" style="margin-top:16px">Your entries will appear here. Only entries you share are visible to your coach.</p>');
+}
+
+function growthTab(){
+  var st = S.state;
+  var planned = st.growth.filter(function(g){ return g.Status==='Planned'; }).reverse();
+  var done = st.growth.filter(function(g){ return g.Status!=='Planned'; }).reverse();
+  function item(g){
+    return '<li><span><span class="mono muted">'+esc(g.Kind)+(g.AcquiredOn?' · '+fmtDate(g.AcquiredOn):'')+(g.Source?' · '+esc(g.Source):'')+'</span><br><strong style="font-weight:600">'+esc(g.Title)+'</strong>'+(g.Detail?'<br><span class="muted" style="font-size:.92rem">'+esc(g.Detail)+'</span>':'')+'</span>'+
+      '<span class="row">'+(g.Status==='Planned'?'<button class="btn small" data-act="grDone" data-id="'+esc(g.ItemID)+'">Mark acquired</button>':'')+'<button class="btn small ghost" data-act="grRm" data-id="'+esc(g.ItemID)+'">Remove</button></span></li>';
+  }
+  return '<div class="split">'+
+    '<form class="panel card" id="growthForm"><span class="eyebrow">Log something</span>'+
+      '<div class="seg" role="group" aria-label="Kind">'+['Knowledge','Skill'].map(function(k){ return '<button type="button" data-act="gkind" data-v="'+k+'" aria-pressed="'+(S.growthKind===k)+'">'+(k==='Knowledge'?'Knowledge acquired':'Skill acquired')+'</button>'; }).join('')+'</div>'+
+      '<div class="field"><label for="gr-title">What is it?</label><input id="gr-title" type="text" maxlength="140" placeholder="e.g. Nonviolent communication, conversational Spanish"></div>'+
+      '<div class="field"><label for="gr-detail">What you learned, or what you can now do</label><textarea id="gr-detail" rows="3"></textarea></div>'+
+      '<div class="field"><label for="gr-source">Where from <span class="hint">Book, course, mentor, experience</span></label><input id="gr-source" type="text" maxlength="120"></div>'+
+      '<div class="field"><label for="gr-status">Status</label><select id="gr-status"><option value="Acquired">Acquired</option><option value="Planned">Building it now / planned</option></select></div>'+
+      '<div class="row"><button class="btn primary" type="submit">Add to my log</button></div></form>'+
+    '<div class="growthcol">'+
+      '<section class="panel card"><span class="eyebrow">Building</span>'+(planned.length?'<ul class="list">'+planned.map(item).join('')+'</ul>':'<p class="muted">Things you are learning now, or guidance you accepted, show up here.</p>')+'</section>'+
+      '<section class="panel card"><span class="eyebrow">Acquired</span>'+(done.length?'<ul class="list">'+done.map(item).join('')+'</ul>':'<p class="muted">Nothing logged yet. These feed Resources and your coach\'s suggestions.</p>')+'</section>'+
+    '</div></div>';
+}
+
+/* ---------- test editors ---------- */
+function openEditor(key){
+  var row = S.state.assessments.filter(function(r){ return r.Test===key; })[0];
+  S.edit = { key:key, values: row && row.Results ? LID.parseJSON(row.Results, {}) : {}, takenOn: row ? row.TakenOn : '', notes: row ? row.Notes : '', exists: !!(row && row.Summary) };
+  renderEditor(true);
+}
+function renderEditor(first){
+  var e = S.edit, t = LID.testDef(e.key);
+  if (!first) { var d=$('#ed-date'), n=$('#ed-notes'); if(d) e.takenOn=d.value; if(n) e.notes=n.value; }
+  var html = '<span class="eyebrow">'+esc(t.publisher)+'</span><h2>'+esc(t.name)+'</h2>'+
+    '<p class="muted">'+esc(t.what)+' <a href="'+esc(t.url)+'" target="_blank" rel="noopener">Take or retake it ↗</a></p>'+
+    t.fields.map(function(f){ return '<section class="ed-sec"><div><label style="margin:0">'+esc(f.label)+(f.optional?' <span class="hint">Optional</span>':'')+'</label>'+(f.hint?'<p class="hint">'+esc(f.hint)+'</p>':'')+'</div>'+fieldHtml(f, e.values)+'</section>'; }).join('')+
+    '<section class="ed-sec"><div class="row" style="align-items:flex-end"><div class="field"><label for="ed-date">Date taken</label><input id="ed-date" type="date" value="'+esc(e.takenOn)+'"></div></div>'+
+      '<div class="field"><label for="ed-notes">Your notes <span class="hint">What rings true, what doesn\'t</span></label><textarea id="ed-notes" rows="2">'+esc(e.notes)+'</textarea></div></section>'+
+    '<p class="err" id="ed-err" hidden></p>'+
+    '<div class="row"><button class="btn primary" data-act="edSave">Save results</button>'+(e.exists?'<button class="btn" data-act="edClear">Clear results</button>':'')+'<button class="btn ghost" data-act="cancel">Cancel</button></div>';
+  var dlg = $('#layer .dialog');
+  if (dlg && !first) { var sc = dlg.scrollTop; dlg.innerHTML = html; dlg.scrollTop = sc; }
+  else openDialog(html, 'wide');
+}
+function fieldHtml(f, V){
+  var val = V[f.key];
+  if (f.type==='rank'){
+    val = val || [];
+    var groups = []; f.options.forEach(function(o){ var g=o.g||''; if(groups.indexOf(g)<0) groups.push(g); });
+    var full = val.length >= f.max;
+    var lab = function(o){ return o.code ? o.v+' ('+o.code+')' : o.v; };
+    var byV = {}; f.options.forEach(function(o){ byV[o.v]=o; });
+    return '<p class="bkcount"><span class="'+(val.length>=f.min?'ok':'')+'">'+val.length+(f.min===f.max?' of '+f.min:' added · at least '+f.min)+'</span></p>'+
+      (val.length?'<ol class="picked">'+val.map(function(v,i){ var o=byV[v]||{v:v};
+        return '<li><span>'+esc(lab(o))+(o.g?'<span class="g">'+esc(o.g)+'</span>':'')+'</span><span class="ctl">'+
+          '<button class="icon" type="button" data-act="rk-up" data-f="'+f.key+'" data-i="'+i+'" aria-label="Move up"'+(i===0?' disabled':'')+'>↑</button>'+
+          '<button class="icon" type="button" data-act="rk-down" data-f="'+f.key+'" data-i="'+i+'" aria-label="Move down"'+(i===val.length-1?' disabled':'')+'>↓</button>'+
+          '<button class="icon" type="button" data-act="rk-rm" data-f="'+f.key+'" data-i="'+i+'" aria-label="Remove">×</button></span></li>'; }).join('')+'</ol>':'')+
+      groups.map(function(g){ return '<div class="optgroup">'+(g?'<span class="gl">'+esc(g)+'</span>':'')+'<div class="opts">'+
+        f.options.filter(function(o){ return (o.g||'')===g; }).map(function(o){ var on=val.indexOf(o.v)>=0;
+          return '<button class="opt" type="button" data-act="rk-add" data-f="'+f.key+'" data-v="'+esc(o.v)+'" aria-pressed="'+on+'"'+(!on&&full?' disabled':'')+'>'+esc(lab(o))+'</button>'; }).join('')+'</div></div>'; }).join('');
+  }
+  if (f.type==='select' || f.type==='wing'){
+    var options = f.options;
+    if (f.type==='wing'){
+      var ty = Number(V[f.of]); if (!ty) return '<p class="muted">Choose your core type first.</p>';
+      var a = ty===1?9:ty-1, b = ty===9?1:ty+1;
+      options = [{v:String(a),label:ty+'w'+a},{v:String(b),label:ty+'w'+b}];
+    }
+    return '<div class="opts">'+options.map(function(o){ return '<button class="opt" type="button" data-act="sel" data-f="'+f.key+'" data-v="'+esc(o.v)+'" aria-pressed="'+(String(val)===o.v)+'">'+esc(o.label||o.v)+'</button>'; }).join('')+'</div>';
+  }
+  if (f.type==='pairs'){
+    val = val || [];
+    return f.pairs.map(function(p,i){ var cur = val[i]||{};
+      return '<div class="pairrow"><div class="seg" role="group">'+
+        '<button type="button" data-act="pair" data-f="'+f.key+'" data-i="'+i+'" data-v="'+p[0]+'" aria-pressed="'+(cur.pick===p[0])+'"><strong>'+p[0]+'</strong> · '+p[1]+'</button>'+
+        '<button type="button" data-act="pair" data-f="'+f.key+'" data-i="'+i+'" data-v="'+p[2]+'" aria-pressed="'+(cur.pick===p[2])+'"><strong>'+p[2]+'</strong> · '+p[3]+'</button></div>'+
+        '<label class="pct" style="margin:0;font-weight:400"><input type="number" min="50" max="100" placeholder="—" data-inp="pct" data-f="'+f.key+'" data-i="'+i+'" value="'+esc(cur.pct||'')+'" aria-label="'+p[1]+' or '+p[3]+' percentage">%</label></div>';
+    }).join('');
+  }
+  if (f.type==='scores'){
+    val = val || {};
+    var mid = Math.round((f.min+f.max)/2);
+    return f.items.map(function(it){ var has = val[it]!==undefined && val[it]!=='';
+      return '<div class="scorerow" data-row="'+esc(it)+'"><span'+(has?'':' class="muted"')+'>'+esc(it)+'</span>'+
+        '<input type="range" min="'+f.min+'" max="'+f.max+'" value="'+(has?esc(val[it]):mid)+'" data-inp="score" data-f="'+f.key+'" data-item="'+esc(it)+'" aria-label="'+esc(it)+'">'+
+        '<input type="number" min="'+f.min+'" max="'+f.max+'" value="'+(has?esc(val[it]):'')+'" placeholder="—" data-inp="score" data-f="'+f.key+'" data-item="'+esc(it)+'" aria-label="'+esc(it)+' score"></div>';
+    }).join('');
+  }
+  if (f.type==='buckets'){
+    val = val || {};
+    return '<p class="bkcount">'+f.buckets.map(function(b){ var n=f.items.filter(function(it){ return val[it]===b.v; }).length; return '<span class="'+(n===b.count?'ok':'')+'">'+esc(b.label)+' '+n+'/'+b.count+'</span>'; }).join('')+'</p>'+
+      f.items.map(function(it){ return '<div class="bkrow"><strong style="font-weight:600">'+esc(it)+'</strong><div class="seg" role="group">'+
+        f.buckets.map(function(b){ return '<button type="button" data-act="bk" data-f="'+f.key+'" data-item="'+esc(it)+'" data-v="'+b.v+'" aria-pressed="'+(val[it]===b.v)+'">'+esc(b.label)+'</button>'; }).join('')+'</div></div>'; }).join('');
+  }
+  if (f.type==='text') return '<input type="text" data-inp="text" data-f="'+f.key+'" value="'+esc(val||'')+'" placeholder="'+esc(f.placeholder||'')+'" maxlength="40">';
+  return '';
+}
+function fieldDef(key){ return LID.testDef(S.edit.key).fields.filter(function(f){ return f.key===key; })[0]; }
+
+/* ---------- Iterate ---------- */
+var DEPTH = { Why:['Contemplate','The deepest, rarest iteration. Questions to sit with, never answers.'], How:['Challenge','Is your What accomplishing your Why through your How?'], What:['Suggest','Concrete Whats from your strengths, learning, skills and communities.'] };
+
+function vIterate(){
+  var st = S.state, p = LID.progress(st);
+  var hero = '<section class="hero"><p class="eyebrow">Life Design Iteration</p><h1>Toward congruence</h1>';
+  if (!p.allDrafted){
+    var done = p.steps.slice(1).filter(function(s){ return s.done; }).length;
+    return hero+'<p class="lede">Iteration begins once your v1 design is formulated, with a first draft of all nine elements. Then your coach becomes an objective evaluator of how well your What carries out your How and Why.</p></section>'+
+      '<section class="panel card" style="max-width:640px"><div class="meter"><span class="eyebrow">Your v1 design · '+done+' of 9 drafted</span><div class="bar"><i class="tr" style="width:'+(done/9*100)+'%"></i></div></div>'+
+      (p.next?'<div class="row"><button class="btn primary" data-act="step" data-key="'+esc(p.next.key)+'">Continue with '+esc(p.next.name)+'</button></div>':'')+'</section>';
+  }
+  var lr = LID.latestReview(st);
+  var open = st.recs.filter(function(r){ return r.Status==='New'; });
+  var communities = st.recs.filter(function(r){ return r.Kind==='community' && r.Status==='Accepted'; });
+  var answered = st.recs.filter(function(r){ return r.Status!=='New'; }).slice().reverse();
+  var out = hero+'<p class="lede">An objective read of how well your What carries out your How and Why. The Why iterates rarely and deeply, the How a little more often, the What most often.</p>'+
+    '<div class="row"><button class="btn primary" data-act="runReview"'+(S.reviewing?' disabled':'')+'>'+(lr?'Run a new review':'Run your first review')+'</button><button class="btn" data-act="ctx" data-ctx="iterate">Talk it through</button></div></section>';
+  if (S.reviewing) out += '<section class="panel loading" role="status"><span class="typing"><i></i><i></i><i></i></span><span>Reviewing your design against itself. This can take up to a minute.</span></section>';
+  if (S.reviewErr) out += '<p class="err" style="margin-bottom:16px">'+esc(S.reviewErr)+'</p>';
+  if (lr){
+    var tj = LID.parseJSON(lr.TraceJSON, {trace:[],orphans:[]});
+    var n = Number(lr.Total)||0, tr = Number(lr.Traced)||0, wk = tj.trace.filter(function(t){ return t.status==='weak'; }).length;
+    out += '<section class="panel card" style="margin-bottom:22px"><div class="row" style="justify-content:space-between;align-items:flex-end"><span class="eyebrow">Congruence review · '+fmtDate(lr.CreatedAt)+'</span></div>'+
+      '<div class="meter"><p><span class="score">'+tr+' of '+n+'</span> <span class="muted">What items trace clearly to your How and Why'+(wk?' · '+wk+' weakly':'')+'</span></p>'+
+        '<div class="bar" aria-hidden="true"><i class="tr" style="width:'+(n?tr/n*100:0)+'%"></i><i class="wk" style="width:'+(n?wk/n*100:0)+'%"></i></div></div>'+
+      '<p style="max-width:70ch">'+esc(lr.Summary)+'</p>'+
+      (tj.trace.length?'<details><summary>The trace · item by item</summary><div class="scroll-x" style="margin-top:10px"><table class="trace"><thead><tr><th>Item</th><th>Element</th><th>Serves</th><th>Status</th></tr></thead><tbody>'+
+        tj.trace.map(function(t){ return '<tr><td>'+esc(t.item)+(t.note?'<br><span class="muted" style="font-size:.85rem">'+esc(t.note)+'</span>':'')+'</td><td>'+esc(t.element)+'</td><td>'+esc((t.tracesTo||[]).join(', ')||'—')+'</td><td><span class="chip '+t.status+'">'+esc(t.status)+'</span></td></tr>'; }).join('')+'</tbody></table></div></details>':'')+
+      (tj.orphans.length?'<div class="block"><span class="eyebrow">Foundation with nothing built on it</span><ul class="list">'+tj.orphans.map(function(o){ return '<li><span class="mono muted">'+esc(o.element)+'</span><span>'+esc(o.text)+(o.note?' <span class="muted">· '+esc(o.note)+'</span>':'')+'</span></li>'; }).join('')+'</ul></div>':'')+
+    '</section>';
+  } else if (!S.reviewing) {
+    out += '<section class="panel card" style="margin-bottom:22px"><p>No review yet. The first one traces every Key Activity, Method and Resource back to your How and Why, then offers guidance at each layer.</p></section>';
+  }
+  out += '<h2 style="margin-bottom:6px">Guidance</h2><p class="muted" style="margin-bottom:14px">Accept it, adapt it into your own words, or decline it. What you accept becomes a new input to your design.</p>';
+  if (open.length){
+    ['Why','How','What'].forEach(function(layer){
+      var cs = open.filter(function(r){ return r.Layer===layer; }); if(!cs.length) return;
+      out += '<div class="depth"><h3 class="layer-tag '+layer+'" style="font-size:.8rem">'+layer+' · '+DEPTH[layer][0]+'</h3><span class="d">'+esc(DEPTH[layer][1])+'</span></div><div class="gcards" style="margin:10px 0 18px">'+cs.map(recCard).join('')+'</div>';
+    });
+  } else out += '<p class="muted" style="margin-bottom:18px">'+(lr?'No open guidance. What you accepted now lives in your design.':'Guidance appears here after a review.')+'</p>';
+  if (communities.length) out += '<section class="panel card" style="margin-bottom:18px"><span class="eyebrow">Communities to look for</span><ul class="list">'+communities.map(function(r){ return '<li><strong style="font-weight:600">'+esc(r.Title)+'</strong><span class="muted" style="font-size:.92rem">'+esc(r.Body)+'</span>'+(r.SearchQuery?'<a href="'+searchUrl(r.SearchQuery)+'" target="_blank" rel="noopener">Search "'+esc(r.SearchQuery)+'" ↗</a>':'')+'</li>'; }).join('')+'</ul></section>';
+  if (answered.length || st.reviews.length>1) out += '<details class="panel card"><summary>History · '+answered.length+' response'+(answered.length===1?'':'s')+', '+st.reviews.length+' review'+(st.reviews.length===1?'':'s')+'</summary><ul class="list" style="margin-top:12px">'+
+    answered.map(function(r){ return '<li><span class="row"><span class="layer-tag '+r.Layer+'">'+r.Layer+'</span><span class="chip '+(r.Status==='Accepted'?'approved':'gap')+'">'+esc(r.Status)+(r.UserNote==='Adapted'?' · adapted':'')+'</span><span class="muted" style="font-size:.82rem">'+fmtDate(r.RespondedAt)+'</span></span><span>'+esc(r.Title)+'</span>'+(r.UserNote&&r.UserNote!=='Adapted'?'<span class="muted" style="font-size:.9rem">Your reason: '+esc(r.UserNote)+'</span>':'')+'</li>'; }).join('')+
+    st.reviews.slice().reverse().map(function(v){ return '<li><span class="mono muted">Review · '+fmtDate(v.CreatedAt)+'</span><span>'+esc(v.Traced)+' of '+esc(v.Total)+' traced</span></li>'; }).join('')+'</ul></details>';
+  return out;
+}
+function recCard(r){
+  var act = cleanAct(r.ActionText), a = '';
+  if (r.ActionType==='revise') a = 'Work into <strong>'+esc(r.ActionElement)+'</strong>: '+esc(act);
+  else if (r.ActionType==='journal') a = 'Sit with it in your journal.';
+  else if (r.ActionType==='learn') a = 'Add to your learning plan'+(/⟨Skill⟩/.test(r.ActionText)?' (skill)':'')+': '+esc(act);
+  else if (r.ActionType==='community') a = r.SearchQuery ? 'Look for: <a href="'+searchUrl(r.SearchQuery)+'" target="_blank" rel="noopener">'+esc(r.SearchQuery)+' ↗</a>' : '';
+  return '<article class="panel gcard '+r.Layer+'"><span class="row"><span class="chip L-'+r.Layer+'">'+esc(r.Kind)+'</span>'+(r.TracesTo?'<span class="muted" style="font-size:.85rem">Serves your '+esc(r.TracesTo)+'</span>':'')+'</span>'+
+    '<h3>'+esc(r.Title)+'</h3><div>'+md(r.Body)+'</div>'+(a?'<div class="act">'+a+'</div>':'')+
+    '<div class="row"><button class="btn small primary" data-act="rec" data-id="'+esc(r.RecID)+'">'+(r.ActionType==='journal'?'Sit with it':r.ActionType==='community'?'Save it':'Accept')+'</button>'+
+    (r.ActionType==='revise'||r.ActionType==='learn'?'<button class="btn small" data-act="recAdapt" data-id="'+esc(r.RecID)+'">Adapt</button>':'')+
+    '<button class="btn small ghost" data-act="recDecline" data-id="'+esc(r.RecID)+'">Decline</button></div></article>';
+}
+function findRec(id){ return S.state.recs.filter(function(r){ return r.RecID===id; })[0]; }
+function respond(id, status, extra){
+  var rec = findRec(id);
+  api('respondRec', Object.assign({ recId:id, status:status }, extra||{})).then(function(res){
+    setState(res.state); closeDialog();
+    var nx = res.next || {};
+    if (status==='Declined'){ render(); toast('Declined. Your reason helps your coach.'); return; }
+    if (status==='Accepted') breathe();
+    if (nx.open){ toast('Accepted. Let\'s work it into '+nx.open.slice(8)+'.'); openCtx(nx.open); return; }
+    if (nx.journal){ S.inputsTab='journal'; S.journalPrompt=nx.journal; go('inputs'); return; }
+    if (nx.growth){ render(); toast('Added to your learning plan under Inputs.'); return; }
+    render(); toast(rec && rec.Kind==='community' ? 'Saved to your communities.' : 'Accepted.');
+  }).catch(fail);
+}
+function runReview(){
+  if (S.reviewing) return;
+  S.reviewing = true; S.reviewErr = null; render();
+  api('coach',{ context:'iterate', mode:'review' }).then(function(){ return api('getState'); }).then(setState)
+    .catch(function(e){ S.reviewErr = e.message || String(e); })
+    .then(function(){ S.reviewing=false; if(S.view==='iterate') render(); if(!S.reviewErr) breathe(); });
+}
+
+/* ---------- notifications ---------- */
+function notifPanel(){
+  var u = S.state.user, pr = LID.getPrefs(u);
+  return '<section class="panel card" aria-label="Notifications"><span class="eyebrow">Notifications</span>'+
+    '<label class="toggle"><span class="tx"><strong>Nudges and guidance</strong><span class="hint">Shown on your Journey when something needs you.</span></span><input type="checkbox" id="nf-all"'+(pr.nudges?' checked':'')+'></label>'+
+    LID.NUDGE_TYPES.map(function(t){ return '<label class="toggle" style="padding-left:16px"><span class="tx"><span>'+esc(t.label)+'</span><span class="hint">'+esc(t.hint)+'</span></span><input type="checkbox" data-nf="'+t.key+'"'+(pr.types[t.key]?' checked':'')+(pr.nudges?'':' disabled')+'></label>'; }).join('')+
+    '<label class="toggle"><span class="tx"><strong>Weekly email</strong><span class="hint">'+(u.Email?'Monday mornings to '+esc(u.Email)+'.':'Add your email above to receive it.')+' Only when something needs you.</span></span><input type="checkbox" id="nf-email"'+(pr.email&&u.Email?' checked':'')+(pr.nudges&&u.Email?'':' disabled')+'></label>'+
+  '</section>';
+}
+document.addEventListener('change', function(ev){
+  var t = ev.target; if(!S.state) return;
+  var prefs = null;
+  if (t.id==='nf-all') prefs = { nudges: t.checked };
+  else if (t.id==='nf-email') prefs = { email: t.checked };
+  else if (t.dataset && t.dataset.nf){ prefs = { types:{} }; prefs.types[t.dataset.nf] = t.checked; }
+  if (!prefs) return;
+  api('savePrefs',{ prefs:prefs }).then(setState).then(function(){ render(); toast('Notification settings saved.'); }).catch(fail);
+});
+
+/* ---------- editor inputs ---------- */
+document.addEventListener('input', function(ev){
+  var t = ev.target; if (!S.edit || !t.dataset || !t.dataset.inp) return;
+  var V = S.edit.values, k = t.dataset.f;
+  if (t.dataset.inp==='score'){
+    V[k] = V[k] || {};
+    var f = fieldDef(k), v = t.value === '' ? '' : Math.max(f.min, Math.min(f.max, Number(t.value)));
+    V[k][t.dataset.item] = v;
+    var row = t.closest('.scorerow'); if (row) { row.querySelectorAll('input').forEach(function(x){ if(x!==t && v!=='') x.value=v; }); row.firstChild.classList.toggle('muted', v===''); }
+  } else if (t.dataset.inp==='pct'){
+    V[k] = V[k] || []; var i = Number(t.dataset.i); V[k][i] = Object.assign({}, V[k][i]||{}, { pct: t.value });
+  } else if (t.dataset.inp==='text'){ V[k] = t.value; }
+});
+
+/* ---------- clicks & submits ---------- */
+function phaseAClick(act, t){
+  var E = S.edit, V = E && E.values, k = t.dataset.f;
+  switch (act){
+    case 'tab': S.inputsTab = t.dataset.tab; render(); return true;
+    case 'editTest': openEditor(t.dataset.test); return true;
+    case 'rk-add': { var f=fieldDef(k), a=V[k]=V[k]||[], v=t.dataset.v, i=a.indexOf(v); if(i>=0) a.splice(i,1); else if(a.length<f.max) a.push(v); renderEditor(); return true; }
+    case 'rk-up': case 'rk-down': { var a2=V[k], i2=Number(t.dataset.i), j=act==='rk-up'?i2-1:i2+1; if(j<0||j>=a2.length) return true; var tmp=a2[i2]; a2[i2]=a2[j]; a2[j]=tmp; renderEditor(); return true; }
+    case 'rk-rm': V[k].splice(Number(t.dataset.i),1); renderEditor(); return true;
+    case 'sel': { var f2=fieldDef(k); V[k] = (V[k]===t.dataset.v && (f2.optional||f2.type==='wing')) ? '' : t.dataset.v;
+      if (k==='type') V.wing=''; renderEditor(); return true; }
+    case 'pair': { V[k]=V[k]||[]; var ix=Number(t.dataset.i); V[k][ix]=Object.assign({}, V[k][ix]||{}, { pick:t.dataset.v }); renderEditor(); return true; }
+    case 'bk': { V[k]=V[k]||{}; V[k][t.dataset.item] = V[k][t.dataset.item]===t.dataset.v ? '' : t.dataset.v; renderEditor(); return true; }
+    case 'edSave': {
+      E.takenOn = $('#ed-date').value; E.notes = $('#ed-notes').value;
+      var err = $('#ed-err'); err.hidden = true;
+      api('saveAssessment',{ test:E.key, values:V, takenOn:E.takenOn, notes:E.notes }).then(function(st){ setState(st); closeDialog(); render(); breathe(); toast(LID.testDef(E.key).name+' saved. Your coach will draw on it.'); })
+        .catch(function(e){ err.textContent = e.message; err.hidden = false; });
+      return true;
+    }
+    case 'edClear':
+      if (!t.dataset.armed){ t.dataset.armed='1'; t.textContent='Click again to clear'; return true; }
+      api('clearAssessment',{ test:E.key }).then(function(st){ setState(st); closeDialog(); render(); toast('Results cleared.'); }).catch(fail); return true;
+    case 'nextPrompt': { var j2=$('#jr-entry'); if(j2) S.jrDraft=j2.value; var pool=promptPool(); S.promptIdx=(S.promptIdx+1)%pool.length; S.journalPrompt=pool[S.promptIdx]; render(); return true; }
+    case 'clearPrompt': { var j3=$('#jr-entry'); if(j3) S.jrDraft=j3.value; S.journalPrompt=''; render(); return true; }
+    case 'jrShare': api('updateJournal',{ entryId:t.dataset.id, coachCanRead:t.dataset.v==='1' }).then(setState).then(function(){ keepJournalDraft(); render(); toast(t.dataset.v==='1'?'Shared with your coach.':'Now private.'); }).catch(fail); return true;
+    case 'jrDel': openDialog('<h2>Delete this entry?</h2><p>The text is erased from your design record and can\'t be recovered.</p><div class="row"><button class="btn primary" data-act="jrDelYes" data-id="'+esc(t.dataset.id)+'">Delete</button><button class="btn ghost" data-act="cancel">Keep it</button></div>'); return true;
+    case 'jrDelYes': api('updateJournal',{ entryId:t.dataset.id, erase:true }).then(setState).then(function(){ closeDialog(); keepJournalDraft(); render(); toast('Entry deleted.'); }).catch(fail); return true;
+    case 'gkind': S.growthKind=t.dataset.v; Array.prototype.forEach.call(t.parentNode.children, function(b){ b.setAttribute('aria-pressed', String(b===t)); }); return true;
+    case 'grDone': api('updateGrowth',{ itemId:t.dataset.id, status:'Acquired' }).then(setState).then(function(){ render(); breathe(); toast('Acquired. Nicely done.'); }).catch(fail); return true;
+    case 'grRm': api('updateGrowth',{ itemId:t.dataset.id, erase:true }).then(setState).then(render).catch(fail); return true;
+    case 'runReview': runReview(); return true;
+    case 'rec': respond(t.dataset.id, 'Accepted'); return true;
+    case 'recAdapt': { var r=findRec(t.dataset.id);
+      openDialog('<span class="eyebrow">Adapt · '+esc(r.Layer)+'</span><h2>'+esc(r.Title)+'</h2><p class="muted">Put it in your own words. What you accept becomes a new input to your design.</p>'+
+        '<div class="field"><label for="rec-text">'+(r.ActionType==='learn'?'What you will learn':'What you will work into '+esc(r.ActionElement))+'</label><textarea id="rec-text" rows="4">'+esc(cleanAct(r.ActionText))+'</textarea></div>'+
+        '<div class="row"><button class="btn primary" data-act="recAdaptSave" data-id="'+esc(r.RecID)+'">Accept my version</button><button class="btn ghost" data-act="cancel">Cancel</button></div>'); return true; }
+    case 'recAdaptSave': { var r2=findRec(t.dataset.id), txt=($('#rec-text').value||'').trim(); if(!txt){ toast('Write your version first.'); return true; }
+      if (/⟨Skill⟩/.test(r2.ActionText)) txt += ' ⟨Skill⟩'; respond(r2.RecID,'Accepted',{ actionText:txt }); return true; }
+    case 'recDecline': { var r3=findRec(t.dataset.id);
+      openDialog('<span class="eyebrow">Decline</span><h2>'+esc(r3.Title)+'</h2><div class="field"><label for="rec-note">Why not? <span class="hint">Optional. It helps your coach understand you.</span></label><textarea id="rec-note" rows="3"></textarea></div>'+
+        '<div class="row"><button class="btn primary" data-act="recDeclineSave" data-id="'+esc(r3.RecID)+'">Decline</button><button class="btn ghost" data-act="cancel">Cancel</button></div>'); return true; }
+    case 'recDeclineSave': respond(t.dataset.id,'Declined',{ note:($('#rec-note').value||'').trim() }); return true;
+    case 'nudge': {
+      var to=t.dataset.to;
+      if (to==='journal'||to==='tests'||to==='growth'){ S.inputsTab=to; go('inputs'); }
+      else if (to==='journey') { var c=$('.side .list'); if(c) c.scrollIntoView({behavior:'smooth',block:'center'}); }
+      else go(to);
+      return true;
+    }
+  }
+  return false;
+}
+function keepJournalDraft(){ var j=$('#jr-entry'); if(j) S.jrDraft=j.value; }
+function phaseASubmit(f){
+  if (f.id==='journalForm'){
+    var v=($('#jr-entry').value||'').trim(); if(!v){ toast('Write something first.'); return true; }
+    api('addJournal',{ entry:v, prompt:S.journalPrompt, coachCanRead:$('#jr-share').checked }).then(setState)
+      .then(function(){ S.jrDraft=''; S.journalPrompt=''; render(); breathe(); toast('Saved to your journal.'); }).catch(fail);
+    return true;
+  }
+  if (f.id==='growthForm'){
+    var title=($('#gr-title').value||'').trim(); if(!title){ toast('Name what you learned first.'); return true; }
+    api('addGrowth',{ kind:S.growthKind, title:title, detail:$('#gr-detail').value.trim(), source:$('#gr-source').value.trim(), status:$('#gr-status').value })
+      .then(setState).then(function(){ render(); breathe(); toast('Logged.'); }).catch(fail);
+    return true;
+  }
+  return false;
+}
+
+/* ---------- boot ---------- */
+function boot(){
+  if (!S.userId){ S.view='welcome'; render(); return; }
+  api('getState').then(function(st){ setState(st); return api('startSession'); })
+    .then(function(s){ S.sessionId=s.SessionID; go('journey'); })
+    .catch(function(){ store.del('lid.userId'); S.userId=null; S.view='welcome'; render(); });
+}
+boot();
+})();
+</script>
