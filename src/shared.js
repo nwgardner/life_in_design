@@ -73,6 +73,22 @@ var LID = (function () {
     var ka = steps.filter(function (s) { return s.key === 'Key Activities'; })[0];
     return { steps: steps, next: next, allDrafted: allDrafted, whatOpen: ka.unlocked };
   }
+  /* Which conversation the Design page holds right now. */
+  function homeContext(state) {
+    var p = progress(state);
+    if (p.allDrafted) return 'checkin';
+    var prefs = getPrefs(state.user);
+    var cb = chosenByArea(state);
+    var focus = String((state.user && state.user.CurrentFocus) || '').match(/^Exploration · (.+)$/);
+    if (focus && !cb[focus[1]]) return 'explore:' + focus[1];
+    for (var i = state.exploration.length - 1; i >= 0; i--) {
+      var area = state.exploration[i].Area;
+      if (!cb[area]) return 'explore:' + area;
+    }
+    if (!p.next || p.next.key === 'exploration') return 'begin';
+    if (p.next.key === 'Core Beliefs' && Object.keys(cb).length < 3 && prefs.focus !== 'element:Core Beliefs') return 'begin';
+    return 'element:' + p.next.key;
+  }
   function areaState(state, area) {
     var rows = state.exploration.filter(function (r) { return r.Area === area; });
     var lenses = FW.lenses.map(function (l) {
@@ -242,7 +258,7 @@ var LID = (function () {
       var area = ctx.slice(8);
       var st = areaState(state, area);
       var def = areaDef(area);
-      var firstEver = state.exploration.filter(function (r) { return r.Area !== area; }).length === 0 && state.chosen.length === 0;
+      var firstEver = state.exploration.filter(function (r) { return r.Area !== area; }).length === 0 && state.chosen.length === 0 && !getPrefs(state.user).premiseHeard;
       parts.push('FOCUS: the Core Beliefs Exploration, area "' + area + '"' + (def ? '' : ' (an area the person named themselves)') + '.');
       if (def && def.weight === 'Tender') parts.push('This is a tender area. Slow down, check in, and make skipping easy.');
       if (area === 'God') parts.push('Every answer is welcome here, including none, doubt and searching. Explore origins and coherence; never evaluate the belief itself.');
@@ -278,6 +294,20 @@ var LID = (function () {
         if (open.length) parts.push('The What layer has arrived. Bring back the parked problems listed above when it fits, and work them through the design they have built.');
       }
       parts.push('When the person has material for a draft, invite them to tap "Capture a draft": the app proposes wording from their own words for them to edit and approve. Never say you have saved anything yourself.');
+    } else if (ctx === 'begin') {
+      var cbA = Object.keys(chosenByArea(state));
+      var heard = getPrefs(state.user).premiseHeard;
+      parts.push('FOCUS: the Design page, where the person begins and continues the Core Beliefs Exploration. Beneath this conversation the app shows the suggested areas as stones to tap, a field to name an area of their own, and' + (cbA.length ? ' a "Move on to Core Beliefs" button.' : ' nothing else yet.'));
+      if (!cbA.length && !heard) {
+        parts.push('This is the very beginning of their design. Welcome them warmly and briefly, then share the premise of the Exploration in your own words: very little in life is logically and verifiably certain, so most of what we hold as true is strongly held belief, acted on in faith; most people never ask why they believe what they believe, yet beliefs are the root of experience and largely decide what seems possible. Invite them to be as honest with themselves as they can bear. Explain that it unfolds over several sessions at their pace, one area at a time, each seen through seven lenses (father figure, mother figure, an admired figure, society, then their own belief, what they carry forward, and belief versus verifiable truth).');
+        parts.push('If they parked a pressing problem when they signed up, acknowledge it warmly in one sentence: it is held, and it will come back when the What layer arrives. Offer no fixes for it.');
+        parts.push('Then ask which area they would like to begin with. A lighter area (Success in Life, Career, Money) is a gentle first step before heavier ones, and they may name any area that shapes their life. Keep this opening to a few short paragraphs.');
+      } else if (!cbA.length) {
+        parts.push('They have heard the premise. Help them choose a first area: ask what pulls at them, suggest a lighter one (Success in Life, Career, Money) if they are unsure, and remind them they can name their own.');
+      } else {
+        parts.push('Areas closed so far: ' + cbA.join(', ') + '. Reflect briefly on any theme you notice across their chosen beliefs, as an observation. Depth over coverage: a few areas (three or more is a good guide) let real patterns show before they distill Core Beliefs, but they decide. Ask which area they would like to explore next, or whether they feel ready to move on to Core Beliefs.');
+      }
+      parts.push('To start an area they tap its stone or name it in the field below; the conversation then moves into that area. If they name an area in chat, warmly point them to the stone or the field. Do not begin the first lens here.');
     } else if (ctx === 'iterate') {
       parts.push(iterateFocus(state));
     } else if (ctx === 'alignment') {
@@ -393,6 +423,10 @@ var LID = (function () {
       return { draft: text };
     }
     var m = addMessage(d, a.userId, a.sessionId, prepared.context, 'assistant', text);
+    if ((prepared.context === 'begin' || prepared.context.indexOf('explore:') === 0) && text) {
+      var u = mine(d, 'Users', a.userId)[0];
+      if (u && !getPrefs(u).premiseHeard) savePrefs(d, { userId: a.userId, prefs: { premiseHeard: true }, silent: true });
+    }
     return { reply: m };
   }
 
@@ -415,7 +449,8 @@ var LID = (function () {
     var p = parseJSON(user && user.Prefs, {}) || {};
     var types = {};
     NUDGE_TYPES.forEach(function (t) { types[t.key] = !(p.types && p.types[t.key] === false); });
-    return { nudges: p.nudges !== false, email: p.email !== false, types: types, lastEmailAt: p.lastEmailAt || '' };
+    return { nudges: p.nudges !== false, email: p.email !== false, types: types, lastEmailAt: p.lastEmailAt || '',
+      guideSeen: p.guideSeen === true, premiseHeard: p.premiseHeard === true, focus: p.focus || '' };
   }
   function savePrefs(d, a) {
     var cur = getPrefs(mine(d, 'Users', a.userId)[0]);
@@ -424,7 +459,10 @@ var LID = (function () {
       nudges: next.nudges !== undefined ? !!next.nudges : cur.nudges,
       email: next.email !== undefined ? !!next.email : cur.email,
       types: Object.assign({}, cur.types, next.types || {}),
-      lastEmailAt: next.lastEmailAt !== undefined ? next.lastEmailAt : cur.lastEmailAt
+      lastEmailAt: next.lastEmailAt !== undefined ? next.lastEmailAt : cur.lastEmailAt,
+      guideSeen: next.guideSeen !== undefined ? !!next.guideSeen : cur.guideSeen,
+      premiseHeard: next.premiseHeard !== undefined ? !!next.premiseHeard : cur.premiseHeard,
+      focus: next.focus !== undefined ? String(next.focus || '') : cur.focus
     };
     d.update('Users', function (r) { return r.UserID === a.userId; }, { Prefs: JSON.stringify(merged) });
     return a.silent ? merged : getState(d, a);
@@ -732,6 +770,6 @@ var LID = (function () {
     progress: progress, areaState: areaState, allAreas: allAreas, chosenByArea: chosenByArea, designMap: designMap,
     coachPrepare: coachPrepare, coachRecord: coachRecord, contextBlock: contextBlock,
     TESTS: TESTS, testDef: testDef, summarizeAssessment: summarizeAssessment, validateAssessment: validateAssessment, parseJSON: parseJSON,
-    NUDGE_TYPES: NUDGE_TYPES, getPrefs: getPrefs, computeNudges: computeNudges, latestReview: latestReview
+    NUDGE_TYPES: NUDGE_TYPES, getPrefs: getPrefs, computeNudges: computeNudges, latestReview: latestReview, homeContext: homeContext
   };
 })();

@@ -70,20 +70,41 @@ const FONTS = process.env.LID_FONT_CSS ? fs.readFileSync(process.env.LID_FONT_CS
       ok(!(await pg.url()).includes('access_token'), 'the token is cleared from the address bar');
       await pg.fill('#ob-name', 'Nate'); await pg.fill('#ob-pressing', 'Should I take the new role?'); await pg.check('#ob-adult');
       await pg.click('#onboard button[type=submit]');
-      await pg.waitForSelector('button.area[data-area="Money"]');
-      await pg.click('button.area[data-area="Money"]');
-      await pg.waitForFunction(() => !document.getElementById('pending') && document.querySelectorAll('.msg.coach').length >= 1, null, { timeout: 15000 });
+      // First sign-in: the Design page, with the guide to the framework open over it.
+      await pg.waitForSelector('.home .chat');
+      await pg.waitForSelector('.dialog.guide');
+      ok(/iterative design/.test(await pg.textContent('.dialog.guide h2')), 'first sign-in lands on Design with the framework guide open');
+      await pg.screenshot({ path: path.join(SHOTS, 'H2a-guide-desktop.png') });
+      for (let i = 0; i < 4; i++) await pg.click('.dialog.guide #guideNext');
+      ok(/walk it together/.test(await pg.textContent('.dialog.guide h2')) && (await pg.textContent('#guideNext')) === 'Begin', 'the guide walks five steps, ending with how the coach works');
+      await pg.screenshot({ path: path.join(SHOTS, 'H2b-guide-step5.png') });
+      await pg.click('#guideNext');
+      await pg.waitForSelector('.dialog.guide', { state: 'detached' });
+      await pg.waitForFunction(() => !document.getElementById('pending') && document.querySelectorAll('.home .msg.coach').length >= 1, null, { timeout: 15000 });
+      ok(await pg.isVisible('.stone[data-area="Money"]') && /Beginning the Exploration/.test(await pg.textContent('.chat-head')), 'the coach opens the Exploration right on the Design page, with areas to choose');
+      ok((await pg.textContent('#nav button >> nth=0')) === 'Design' && (await pg.textContent('#nav button >> nth=1')) === 'Journey', 'Design is the first tab, beside Journey');
+      await pg.screenshot({ path: path.join(SHOTS, 'H2c-design-begin.png') });
+      await pg.click('.protip');
+      await pg.waitForSelector('.dialog.guide');
+      ok(/iterative design/.test(await pg.textContent('.dialog.guide h2')), 'the pro tip reopens the guide');
+      await pg.keyboard.press('Escape');
+      await pg.waitForSelector('.dialog.guide', { state: 'detached' });
+      await pg.click('.stone[data-area="Money"]');
+      await pg.waitForFunction(() => /Exploring Money/.test(document.querySelector('.chat-head').textContent) && !document.getElementById('pending') && document.querySelectorAll('.msg.coach').length >= 1, null, { timeout: 15000 });
+      ok(await pg.isVisible('.home .chat') && await pg.isVisible('text=Lens 1 of 7'), 'choosing an area keeps the conversation on the Design page');
       await pg.fill('#msg', 'My dad saw money as security.'); await pg.keyboard.press('Enter');
       await pg.waitForFunction(() => !document.getElementById('pending') && document.querySelectorAll('.msg.coach').length >= 2, null, { timeout: 15000 })
         .catch(async (e) => { console.log('STREAM:', (await pg.textContent('#stream')).slice(0, 400)); throw e; });
       ok(/Take your time/.test(await pg.textContent('.msg.coach >> nth=-1')), 'the coach answers through the server');
-      await pg.screenshot({ path: path.join(SHOTS, 'H2-studio-desktop.png') });
+      await pg.waitForTimeout(1500); await pg.screenshot({ path: path.join(SHOTS, 'H2-design-desktop.png') });
     } else {
-      await pg.waitForSelector('.journey');
-      ok(true, 'phone: the same account opens straight into its existing design');
+      await pg.waitForSelector('.home .chat');
+      await pg.waitForFunction(() => /Exploring Money/.test(document.querySelector('.chat-head').textContent) && document.querySelectorAll('.msg.coach').length >= 2, null, { timeout: 15000 });
+      ok(!(await pg.$('.dialog.guide')), 'phone: the same account returns to its conversation on Design, without the guide again');
+      await pg.screenshot({ path: path.join(SHOTS, 'H2-design-phone.png'), fullPage: true });
     }
     await pg.reload();
-    await pg.waitForSelector('.journey');
+    await pg.waitForSelector('.home .chat');
     ok(true, name + ': still signed in after a reload');
     await pg.click('#nav [data-view=you]');
     await pg.waitForSelector('text=Your account');

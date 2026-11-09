@@ -47,7 +47,8 @@ To ship a change later: paste the new files, run `setup` again (it adds any new 
 
 | Framework requirement | In the app |
 |---|---|
-| Onboarding: "Consider yourself an iterative design," what brought you, what you hope changes | Welcome screen; answers saved to **Users** and given to the coach |
+| Onboarding: "Consider yourself an iterative design," what brought you, what you hope changes | Welcome screen; answers saved to **Users** and given to the coach. First sign-in opens a five-step guide to the framework and the coach's process; a *Pro tip* note on the Design page reopens it |
+| The coach front and center | **Design**, the first tab and the landing page after every sign-in, holds the conversation that matters now: the beginning of the Exploration (premise, then an area to choose), the area in progress, the next element, or a check-in once all nine are drafted |
 | Adults 18+ only | Age confirmation; under-18 gets a kind message and 988, no account |
 | Entering through the What | Optional "pressing problem" on onboarding → **ParkedProblems**; coach holds the line; problems return when Key Activities opens |
 | Core Beliefs Exploration: 14 areas + your own, 7 lenses, one at a time | Area grid → guided chat per area. Replies are captured under the current lens; *Next lens* / *Skip this lens* advance; tender-area and family-shape care built into the coach context |
@@ -57,7 +58,7 @@ To ship a change later: paste the new files, run `setup` again (it adds any new 
 | Version, don't overwrite | Every save bumps the version in **DesignRecord** and appends to **ElementHistory** with a one-line change note |
 | Session shape: reconnect, focus, explore, capture, commit | Coach reconnects after 8+ hours away; *End session* asks for one small step → **Commitments** |
 | Alignment check, living with the design, remodel | Unlock once all nine have drafts; each has its own coach focus |
-| Present the design on request | *My Design*: Why / How / What with drafts and gaps marked, plus history; *Belief map* shows every area through every lens |
+| Present the design on request | *Record*: Why / How / What with drafts and gaps marked, plus history; *Belief map* shows every area through every lens |
 | Voice and safety | Your full instructions are the coach's system prompt (server-side only, so the voice note never reaches the browser); crisis line in the footer |
 
 ## Phase A: inputs, iteration and nudges

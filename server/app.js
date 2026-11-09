@@ -90,7 +90,9 @@ function createApp({ supabase, ask, config, engine = loadEngine(), now = Date.no
     delete args.newUserId;
     args.userId = auth.user.id;
 
-    const snapshot = await supabase.snapshot(auth.token, args.context || '');
+    // Messages are loaded for one conversation only; startArea names its conversation by the area.
+    const msgContext = args.context || (action === 'startArea' && args.area ? 'explore:' + String(args.area).trim() : '');
+    const snapshot = await supabase.snapshot(auth.token, msgContext);
     const store = createStore(snapshot);
 
     if (action === 'createUser') {

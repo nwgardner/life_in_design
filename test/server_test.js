@@ -78,8 +78,17 @@ const listen = (handler) => new Promise((r) => { const s = http.createServer(han
   const draft = (await call('coach', { context: 'explore:Money', mode: 'draft' }, A)).result;
   ok(draft.draft && /^Enough/.test(draft.draft.belief), 'the chosen-belief draft comes back for approval');
   await must('saveChosenBelief', { area: 'Money', belief: draft.draft.belief, why: draft.draft.why });
+  await must('startArea', { area: 'Money', sessionId: sess.SessionID });
   const msgs = await must('getMessages', { context: 'explore:Money' });
   ok(msgs.filter((m) => m.Role === 'assistant').length === 8 && msgs[0].Content.startsWith('[note]'), 'the whole conversation is stored in order');
+  ok(msgs.filter((m) => /^\[note\] Area: Money/.test(m.Content)).length === 1, 'reopening an area does not add its opening note again');
+
+  // the Design page's beginning conversation
+  c = await call('coach', { context: 'begin', mode: 'open' }, A);
+  ok(c.result && c.result.reply && /Areas closed so far: Money/.test(cl.seen[cl.seen.length - 1].body.system[1].text), 'the Design page conversation runs through the server with the person\'s progress');
+  await must('savePrefs', { prefs: { guideSeen: true } });
+  const pr = await db.query(`select prefs from public.profiles where user_id = $1`, [A]);
+  ok(JSON.parse(pr.rows[0].prefs).guideSeen === true && JSON.parse(pr.rows[0].prefs).premiseHeard === true, 'seeing the guide and hearing the premise are saved to the profile');
 
   // design through the stack, with versioning
   ok(/opens once/.test((await call('saveElement', { element: 'Vision', statement: 'x' }, A)).error), 'the strict order holds on the server');
