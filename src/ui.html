@@ -360,6 +360,87 @@ input[type=number],input[type=date],select{border:1px solid var(--line);backgrou
 .toggle .tx{display:grid;gap:2px}
 .toggle input{width:20px;height:20px;accent-color:var(--accent);flex:none;margin-top:3px}
 .loading{display:flex;gap:14px;align-items:center;padding:22px 26px;margin-bottom:22px}
+/* design: the landing page, a conversation at the center */
+.hero.compact{margin-bottom:26px;gap:8px}
+.hero.compact h1{max-width:none;font-size:clamp(2.1rem,4.2vw,3rem)}
+.home{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,300px);gap:26px;align-items:start}
+.home .chat{min-height:0;border-radius:38px 32px 36px 30px/32px 38px 30px 36px;box-shadow:var(--shadow-lift)}
+.home .stream{height:clamp(280px,calc(100vh - 490px),620px);max-height:none;min-height:0;padding:30px 30px 24px}
+.home .chat.begin .stream{height:clamp(240px,calc(100vh - 560px),560px)}
+.home .msg.coach{font-size:1.06rem}
+.home .chat-head{padding:16px 26px}
+.chat-head .where{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.rail{display:grid;gap:16px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 92px)}
+.rail .card{padding:20px 22px}
+.rail .brief{position:static;max-height:none;padding:20px 22px}
+.protip{display:grid;gap:6px;text-align:left;cursor:pointer;padding:16px 20px 16px 22px;border:1px dashed color-mix(in srgb,var(--how) 55%,transparent);
+  background:color-mix(in srgb,var(--how-soft) 70%,transparent);border-radius:22px 28px 20px 26px/26px 20px 28px 22px;color:var(--ink);
+  transition:transform .7s var(--spring),box-shadow .6s var(--ease)}
+.protip:hover{transform:translateY(-2px) rotate(-.3deg);box-shadow:var(--shadow)}
+.protip .k{font-family:var(--hand);font-size:1.25rem;color:var(--how-ink);line-height:1}
+.protip .tx{font-size:.93rem;line-height:1.5}
+.protip .go{font-weight:700;font-size:.88rem;color:var(--how-ink)}
+.path{display:grid;gap:10px;margin:0;padding:0;list-style:none}
+.path .lyr{display:grid;gap:4px}
+.path .lyr>span{font-family:var(--hand);font-size:1.08rem;color:var(--muted);line-height:1}
+.path button{display:flex;gap:10px;align-items:center;width:100%;text-align:left;background:none;border:0;padding:3px 0;cursor:pointer;color:var(--muted);font-size:.92rem}
+.path button:hover{color:var(--ink)}
+.path button[disabled]{cursor:default;opacity:.55}
+.path button[disabled]:hover{color:var(--muted)}
+.path i{width:14px;height:12px;flex:none;border-radius:58% 42% 52% 48%/55% 50% 50% 45%;border:1.5px solid var(--rule)}
+.path .done i{border-color:transparent}
+.path .done.L-Why i{background:var(--why)}.path .done.L-How i{background:var(--how)}.path .done.L-What i{background:var(--what)}
+.path .now{color:var(--ink);font-weight:700}
+.path .now i{border-color:var(--accent);background:var(--glow);transform:scale(1.2)}
+.stones{display:grid;gap:10px}
+.stones .opts{gap:8px}
+.stone{border:1px solid var(--line);background:var(--sheet-solid);padding:8px 15px;cursor:pointer;font-size:.92rem;font-weight:600;color:var(--ink);
+  border-radius:20px 16px 22px 14px/16px 22px 14px 20px;transition:transform .6s var(--spring),box-shadow .5s var(--ease),background .4s}
+.stone:nth-child(3n+2){border-radius:16px 22px 14px 20px/22px 14px 20px 16px}
+.stone:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.stone.gentle{background:var(--what-soft);border-color:color-mix(in srgb,var(--what) 45%,transparent)}
+.stone.tender{border-style:dashed}
+.stone.chosen{color:var(--muted)}
+.stone.chosen::before{content:"✓ ";color:var(--what-ink)}
+.stones .own{display:flex;gap:8px;flex-wrap:wrap}
+.stones .own input{flex:1;min-width:160px;padding:9px 14px;border-radius:999px}
+/* the guide: five breaths through the framework */
+.dialog.guide{width:min(760px,100%);gap:20px;padding:34px 36px 28px}
+.guide .art{display:flex;justify-content:center}
+.guide .art .pyr-art{max-width:300px}
+.guide h2{font-size:clamp(1.6rem,3.4vw,2.1rem);line-height:1.15}
+.guide .body{display:grid;gap:14px}
+.guide .body p{max-width:62ch}
+.guide .layers{display:grid;gap:10px}
+.guide .gl{display:grid;grid-template-columns:86px minmax(0,1fr);gap:12px;align-items:start;padding:12px 16px;border-radius:22px 18px 24px 16px/18px 24px 16px 22px}
+.guide .gl.Why{background:var(--why-soft)}.guide .gl.How{background:var(--how-soft)}.guide .gl.What{background:var(--what-soft)}
+.guide .gl b{font-family:var(--display);font-weight:450;font-size:1.25rem}
+.guide .gl ul{margin:0;padding:0;list-style:none;display:grid;gap:3px;font-size:.92rem}
+.guide .gl li strong{font-weight:700}
+.guide .two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
+.guide .two>div{padding:14px 18px;border:1px solid var(--line);border-radius:20px 24px 18px 26px;display:grid;gap:4px}
+.guide .two .k{font-family:var(--hand);font-size:1.3rem;line-height:1}
+.guide ol.flow{margin:0;padding:0;list-style:none;display:grid;gap:8px;counter-reset:f}
+.guide ol.flow li{display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;align-items:baseline}
+.guide ol.flow li::before{counter-increment:f;content:counter(f);font-family:var(--hand);font-size:1.25rem;color:var(--muted);text-align:center}
+.guide .lensrow{display:flex;flex-wrap:wrap;gap:6px}
+.guide .lensrow span{font-size:.84rem;padding:4px 11px;border-radius:999px;background:var(--why-soft);color:var(--why-ink);font-weight:700}
+.guide .lensrow span.own{background:var(--what-soft);color:var(--what-ink)}
+.guide .foot{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-top:6px;border-top:1px solid var(--line)}
+.pebbles{display:flex;gap:7px;align-items:center}
+.pebbles button{width:13px;height:11px;padding:0;border:1.5px solid var(--rule);background:transparent;cursor:pointer;border-radius:58% 42% 52% 48%/55% 50% 50% 45%;transition:transform .5s var(--spring),background .4s}
+.pebbles button[aria-current="step"]{background:var(--accent);border-color:var(--accent);transform:scale(1.3)}
+@media (max-width:900px){
+  .home{grid-template-columns:minmax(0,1fr)}
+  .rail{position:static}
+  .home .chat{min-height:0}
+  .home .stream,.home .chat.begin .stream{height:auto;max-height:none;min-height:240px;padding:22px 18px}
+}
+@media (max-width:560px){
+  .dialog.guide{padding:24px 20px 20px}
+  .guide .two{grid-template-columns:minmax(0,1fr)}
+  .guide .gl{grid-template-columns:minmax(0,1fr);gap:6px}
+}
 @media (max-width:640px){ .split{grid-template-columns:minmax(0,1fr)} .scorerow{grid-template-columns:minmax(0,1fr) 70px} .scorerow input[type=range]{grid-column:1/-1;grid-row:2} .bkrow{grid-template-columns:minmax(0,1fr)} .pairrow{grid-template-columns:minmax(0,1fr)} }
 
 @media (max-width:900px){
@@ -379,8 +460,9 @@ input[type=number],input[type=date],select{border:1px solid var(--line);backgrou
   .cell{min-height:0;flex-direction:row;align-items:center;flex-wrap:wrap}
   .cell .s{margin-top:0;margin-left:auto}
   header .bar-in{gap:6px;border-radius:26px;padding:8px 10px}
-  .nav{width:100%;margin-left:0;justify-content:space-between}
-  .nav button{padding:6px 9px;font-size:.88rem}
+  .nav{width:100%;margin-left:0;justify-content:space-between;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+  .nav::-webkit-scrollbar{display:none}
+  .nav button{padding:6px 6px;font-size:.84rem;flex:none}
   .plan,.card,.welcome form,.dialog{padding:20px}
   .tabs{width:100%}
 }
@@ -396,7 +478,7 @@ input[type=number],input[type=date],select{border:1px solid var(--line);backgrou
 <div class="grain" aria-hidden="true"></div>
 
 <header class="bar"><div class="bar-in">
-  <button class="brand" data-act="nav" data-view="journey" aria-label="Life in Design home">
+  <button class="brand" data-act="nav" data-view="home" aria-label="Life in Design home">
     <svg viewBox="0 0 32 32" aria-hidden="true">
       <path d="M4 25 C 4 21, 10 19.6, 16 19.6 C 23 19.6, 28 21.1, 28 24.6 C 28 27.6, 22 28.6, 16 28.6 C 9 28.6, 4 27.6, 4 25 Z" fill="var(--why)"/>
       <path d="M8.2 16.4 C 8 13.8, 12 12.5, 16.3 12.6 C 20.6 12.7, 24 13.9, 23.8 16.6 C 23.6 18.8, 20 19.8, 16 19.7 C 11.7 19.6, 8.4 18.7, 8.2 16.4 Z" fill="var(--how)"/>
@@ -406,8 +488,9 @@ input[type=number],input[type=date],select{border:1px solid var(--line);backgrou
   </button>
   <span id="modeTag" class="preview-tag" hidden>Preview</span>
   <nav class="nav" id="nav" hidden>
+    <button data-act="nav" data-view="home">Design</button>
     <button data-act="nav" data-view="journey">Journey</button>
-    <button data-act="nav" data-view="design">My Design</button>
+    <button data-act="nav" data-view="design">Record</button>
     <button data-act="nav" data-view="inputs">Inputs</button>
     <button data-act="nav" data-view="iterate">Iterate</button>
     <button data-act="nav" data-view="you">You</button>
@@ -584,7 +667,9 @@ function fail(e){ toast(e && e.message ? e.message : String(e)); }
 function setState(st){ if(st && st.user) S.state = st; }
 
 function go(view){
-  S.view = view; closeDialog(); render(); window.scrollTo(0,0);
+  S.view = view; closeDialog();
+  if (view==='home' && S.state && S.state.user) loadHome(); else render();
+  window.scrollTo(0,0);
   var m = $('#view'); m.classList.remove('enter'); void m.offsetWidth; m.classList.add('enter');
 }
 
@@ -624,9 +709,9 @@ function render(){
   });
   var v = $('#view');
   var keep = $('#msg') ? $('#msg').value : '';
-  var fns = { welcome:vWelcome, journey:vJourney, explore:vExplore, studio:vStudio, design:vDesign, map:vMap, parked:vParked, you:vYou, under18:vUnder18, inputs:vInputs, iterate:vIterate, signin:vSignIn, setup:vSetup };
+  var fns = { welcome:vWelcome, home:vHome, journey:vJourney, explore:vExplore, studio:vStudio, design:vDesign, map:vMap, parked:vParked, you:vYou, under18:vUnder18, inputs:vInputs, iterate:vIterate, signin:vSignIn, setup:vSetup };
   v.innerHTML = (fns[S.view] || function(){ return '<p class="muted">Opening your design…</p>'; })();
-  if (S.view==='studio') { paintStream(); var ta=$('#msg'); if(ta){ if(keep && !S.busy) ta.value=keep; autoGrow(ta); } }
+  if (isChat()) { paintStream(); var ta=$('#msg'); if(ta){ if(keep && !S.busy) ta.value=keep; autoGrow(ta); } }
 }
 
 function pyramidArt(){
@@ -853,33 +938,162 @@ function briefFor(ctx){
 function ctxTitle(ctx){
   if (ctx.indexOf('explore:')===0) return 'Exploring '+ctx.slice(8);
   if (ctx.indexOf('element:')===0) return ctx.slice(8);
-  return {alignment:'Alignment check',checkin:'Check-in',remodel:'Remodel',iterate:'Iteration'}[ctx]||ctx;
+  return {alignment:'Alignment check',checkin:'Check-in',remodel:'Remodel',iterate:'Iteration',begin:'Beginning the Exploration'}[ctx]||ctx;
 }
 
-function vStudio(){
-  var ctx=S.ctx, actions='';
+function isChat(){ return S.view==='studio' || S.view==='home'; }
+
+function chatActions(ctx){
+  var actions='';
   if (ctx.indexOf('explore:')===0){
     var as = LID.areaState(S.state, ctx.slice(8));
     actions = (as.current ? '<button class="btn small" data-act="nextLens"'+(as.current.response.trim()?'':' disabled title="Share something on this lens first"')+'>Next lens →</button><button class="btn small ghost" data-act="skipLens">Skip this lens</button>' : '')+
       '<button class="btn small'+(as.complete?' primary':'')+'" data-act="closeArea"'+(as.complete?'':' disabled title="Explore or skip each lens first"')+'>Close this area</button>';
   } else if (ctx.indexOf('element:')===0){
     actions = '<button class="btn small primary" data-act="capture">Capture a draft</button>';
-  } else if (ctx==='alignment' || ctx==='remodel') {
-    actions = '<button class="btn small" data-act="nav" data-view="design">Open my design</button>';
+  } else if (ctx==='alignment' || ctx==='remodel' || ctx==='checkin') {
+    actions = '<button class="btn small" data-act="nav" data-view="design">Open my record</button>';
   } else if (ctx==='iterate') {
     actions = '<button class="btn small" data-act="nav" data-view="iterate">See the review and cards</button>';
   }
-  actions += '<button class="btn small ghost" data-act="endSession">End session</button>';
+  if (ctx!=='begin') actions += '<button class="btn small ghost" data-act="endSession">End session</button>';
+  return actions;
+}
+
+function chatPanel(ctx, home){
+  var head;
+  if (home){
+    var where='';
+    if (ctx.indexOf('explore:')===0){ var as=LID.areaState(S.state, ctx.slice(8)); where = as.current ? '<span class="chip draft">Lens '+as.current.order+' of 7 · '+esc(as.current.lens)+'</span>' : '<span class="chip approved">Ready to close</span>'; }
+    else if (ctx.indexOf('element:')===0){ var e=LID.elementDef(ctx.slice(8)); where = '<span class="layer-tag '+e.layer+'">'+e.layer+' · '+String(e.order).padStart(2,'0')+'</span>'; }
+    head = '<div class="where"><span class="eyebrow">'+esc(ctxTitle(ctx))+'</span>'+where+'</div>'+
+      (ctx==='begin' || ctx.indexOf('explore:')===0 ? '<button class="btn small ghost" data-act="nav" data-view="explore">All areas</button>' : '');
+  } else {
+    head = '<button class="btn small ghost" data-act="back">← '+(ctx.indexOf('explore:')===0?'All areas':ctx==='iterate'?'Iterate':'Journey')+'</button><span class="eyebrow">'+esc(ctxTitle(ctx))+'</span>';
+  }
+  var actions = chatActions(ctx);
+  return '<section class="panel chat'+(home && ctx==='begin'?' begin':'')+'" aria-label="Coaching conversation">'+
+    '<div class="chat-head">'+head+'</div>'+
+    '<div class="stream" id="stream"></div>'+
+    (home && ctx==='begin' ? '<div class="compose">'+stonesHtml()+'</div>' : '')+
+    '<form class="compose" id="compose">'+
+      (actions ? '<div class="actions">'+actions+'</div>' : '')+
+      '<div class="send"><label for="msg" class="eyebrow" style="position:absolute;left:-9999px">Your reply</label><textarea id="msg" rows="2" placeholder="Take your time…"'+(S.busy?' disabled':'')+'></textarea><button class="btn primary" type="submit"'+(S.busy?' disabled':'')+'>Send</button></div>'+
+    '</form>'+
+  '</section>';
+}
+
+function vStudio(){
+  var ctx=S.ctx;
   return '<div class="studio">'+
-    (S.view==='studio' && window.innerWidth<=900 ? '<details class="panel brief"><summary>'+esc(ctxTitle(ctx))+' · brief</summary><div class="stack" style="margin-top:12px">'+briefFor(ctx)+'</div></details>' : '<aside class="panel brief">'+briefFor(ctx)+'</aside>')+
-    '<section class="panel chat" aria-label="Coaching conversation">'+
-      '<div class="chat-head"><button class="btn small ghost" data-act="back">← '+(ctx.indexOf('explore:')===0?'All areas':ctx==='iterate'?'Iterate':'Journey')+'</button><span class="eyebrow">'+esc(ctxTitle(ctx))+'</span></div>'+
-      '<div class="stream" id="stream"></div>'+
-      '<form class="compose" id="compose">'+
-        '<div class="actions">'+actions+'</div>'+
-        '<div class="send"><label for="msg" class="eyebrow" style="position:absolute;left:-9999px">Your reply</label><textarea id="msg" rows="2" placeholder="Take your time…"'+(S.busy?' disabled':'')+'></textarea><button class="btn primary" type="submit"'+(S.busy?' disabled':'')+'>Send</button></div>'+
-      '</form>'+
-    '</section></div>';
+    (window.innerWidth<=900 ? '<details class="panel brief"><summary>'+esc(ctxTitle(ctx))+' · brief</summary><div class="stack" style="margin-top:12px">'+briefFor(ctx)+'</div></details>' : '<aside class="panel brief">'+briefFor(ctx)+'</aside>')+
+    chatPanel(ctx, false)+'</div>';
+}
+
+/* ---------- Design: the landing page, with the coach at the center ---------- */
+function loadHome(){
+  openCtx(LID.homeContext(S.state), 'home');
+  maybeGuide();
+}
+
+function stonesHtml(){
+  var st=S.state, cb=LID.chosenByArea(st);
+  var names = LID.allAreas(st);
+  var gentle = names.filter(function(a){ var d=LID.areaDef(a); return d && /Gentle/.test(d.weight); });
+  var rest = names.filter(function(a){ return gentle.indexOf(a)<0; });
+  return '<div class="stones" aria-label="Choose an area to explore">'+
+    '<span class="eyebrow">'+(Object.keys(cb).length?'Choose your next area':'Choose an area to begin')+' · the green stones are gentle places to start</span>'+
+    '<div class="opts">'+gentle.concat(rest).map(function(a){
+      var d=LID.areaDef(a), cls='stone'+(d&&/Gentle/.test(d.weight)?' gentle':'')+(d&&d.weight==='Tender'?' tender':'')+(cb[a]?' chosen':'');
+      return '<button type="button" class="'+cls+'" data-act="area" data-area="'+esc(a)+'"'+(d&&d.weight==='Tender'?' title="A tender area: go gently, and skipping is always fine"':'')+'>'+esc(a)+'</button>';
+    }).join('')+'</div>'+
+    '<div class="own"><label for="ownArea" style="position:absolute;left:-9999px">Name your own area</label><input id="ownArea" type="text" maxlength="40" placeholder="Or name your own: Health, Home, Creativity…"><button type="button" class="btn small" data-act="ownArea">Explore it</button>'+
+      (Object.keys(cb).length ? '<button type="button" class="btn small primary" data-act="moveOn">Move on to Core Beliefs</button>' : '')+'</div>'+
+  '</div>';
+}
+
+function pathCard(ctx){
+  var p=LID.progress(S.state);
+  var nowKey = ctx==='begin' || ctx.indexOf('explore:')===0 ? 'exploration' : ctx.indexOf('element:')===0 ? ctx.slice(8) : '';
+  var item = function(s){
+    var cls = 'L-'+s.layer+(s.done?' done':'')+(s.key===nowKey?' now':'');
+    return '<li><button class="'+cls+'" data-act="step" data-key="'+esc(s.key)+'"'+(s.unlocked?'':' disabled')+'><i></i><span>'+esc(s.name)+'</span></button></li>';
+  };
+  var group = function(label, layer){ return '<li class="lyr"><span>'+label+'</span><ul class="path">'+p.steps.filter(function(s){ return s.layer===layer; }).map(item).join('')+'</ul></li>'; };
+  return '<section class="panel card"><span class="eyebrow">Your path</span><ul class="path">'+group('Why · the foundation','Why')+group('How · the structure','How')+group('What · the living part','What')+'</ul>'+
+    '<div class="row"><button class="btn small ghost" data-act="nav" data-view="journey">See the whole journey</button></div></section>';
+}
+
+function vHome(){
+  var st=S.state, u=st.user, ctx=S.ctx || LID.homeContext(st);
+  var h=new Date().getHours();
+  var fresh = ctx==='begin' && !st.chosen.length && !LID.getPrefs(u).premiseHeard;
+  var greet = fresh ? 'Welcome, '+u.Name+'.' : (h<5?'Good evening':h<12?'Good morning':h<17?'Good afternoon':'Good evening')+', '+u.Name+'.';
+  var lede = ctx==='begin' ? (st.chosen.length ? 'The Exploration continues, one area at a time.' : 'Every design begins underground, with what you believe and why.')
+    : ctx.indexOf('explore:')===0 ? 'Exploring '+ctx.slice(8)+', one lens at a time.'
+    : ctx.indexOf('element:')===0 ? 'On the drawing board: '+ctx.slice(8)+'.'
+    : 'Living with your design: what you did, what you learned, what you\'ll change.';
+  var rail = '<aside class="rail">'+
+    '<button class="protip" data-act="guide"><span class="k">Pro tip</span><span class="tx">New here, or been a while? Revisit how the framework works and how your coach will walk with you.</span><span class="go">Open the guide →</span></button>'+
+    (ctx==='begin'
+      ? '<section class="panel card"><span class="eyebrow">Where we begin</span><p style="font-size:.95rem">Choose an area of life beneath the conversation. You\'ll look at it through seven lenses, then close it with a belief you choose.</p>'+
+          (st.chosen.length ? '<ul class="list">'+Object.keys(LID.chosenByArea(st)).map(function(a){ return '<li><span class="mono muted">'+esc(a)+'</span><span style="font-size:.92rem">'+esc(LID.chosenByArea(st)[a].ChosenBelief)+'</span></li>'; }).join('')+'</ul>' : '')+'</section>'
+      : ctx==='checkin' ? '' : '<section class="panel brief">'+briefFor(ctx)+'</section>')+
+    pathCard(ctx)+
+  '</aside>';
+  return '<section class="hero compact"><p class="eyebrow">Design</p><h1>'+esc(greet)+'</h1><p class="lede">'+esc(lede)+'</p></section>'+
+    '<div class="home">'+chatPanel(ctx, true)+rail+'</div>';
+}
+
+/* ---------- the guide: the framework and the coach's process, in five steps ---------- */
+var GUIDE_N = 5;
+function guideStep(i){
+  var by = function(layer){ return LID.ELEMENTS.filter(function(e){ return e.layer===layer; }); };
+  var gl = function(layer, sub){ return '<div class="gl '+layer+'"><div><b>'+layer+'</b><br><span class="muted" style="font-size:.85rem">'+sub+'</span></div><ul>'+by(layer).map(function(e){ return '<li><strong>'+esc(e.element)+'</strong> · '+esc(e.oneLine)+'</li>'; }).join('')+'</ul></div>'; };
+  var steps = [
+    { eb:'Welcome', t:'Consider yourself an iterative design.', b:
+      '<div class="art">'+pyramidArt()+'</div>'+
+      '<p>This is a place to uncover who you are and shape it into a living design: a clear <strong>Why</strong>, a deliberate <strong>How</strong> and a concrete <strong>What</strong>, aligned with each other.</p>'+
+      '<p>You are the designer and the authority on your own life. Your coach brings structure, questions, reflection and a little accountability. The design is never finished, and that is the joy: every draft is a version, not a verdict.</p>' },
+    { eb:'The framework', t:'Three layers, built from the ground up', b:
+      '<p>Nine elements in three layers. Nothing higher can stand without what lies beneath it.</p>'+
+      '<div class="layers">'+gl('What','the living part')+gl('How','the structure')+gl('Why','the foundation')+'</div>' },
+    { eb:'The framework', t:'Read it both ways', b:
+      '<div class="two"><div><span class="k" style="color:var(--what-ink)">Upward, it is built</span><span style="font-size:.95rem">Each layer rests on the one beneath. Your principles grow from your beliefs, vision and purpose; your week carries out your strategy.</span></div>'+
+      '<div><span class="k" style="color:var(--why-ink)">Downward, it is tested</span><span style="font-size:.95rem">Every habit and commitment should trace down to the foundation. What can\'t is a candidate to cut; a belief with nothing built on it is a candidate for action.</span></div></div>'+
+      '<p>Alignment is the point, and trade-offs are the design. Time, energy and attention are finite, so a good design names what it says no to.</p>' },
+    { eb:'Where we begin', t:'The Core Beliefs Exploration', b:
+      '<p>Very little in life is verifiably certain, so most of what we hold as true is belief, acted on in faith. Most of us never ask why we believe what we believe, yet our beliefs quietly decide what seems possible.</p>'+
+      '<p>One area of life at a time (Career, Money, Love, the Future, or one you name), you\'ll look through seven lenses:</p>'+
+      '<div class="lensrow">'+LID.FW.lenses.map(function(l){ return '<span class="'+(l.kind==='Own'?'own':'')+'">'+esc(l.lens)+'</span>'; }).join('')+'</div>'+
+      '<p>The first four show what you inherited; the last three are yours. Each area closes with a choice: one sentence on what you now choose to believe, and why. Go at your own pace; skipping is always fine.</p>' },
+    { eb:'Your coach', t:'How we\'ll walk it together', b:
+      '<ol class="flow"><li><span><strong>Explore</strong> your beliefs, a few areas over several sessions.</span></li>'+
+      '<li><span><strong>Design the Why:</strong> Core Beliefs, Vision, Purpose.</span></li>'+
+      '<li><span><strong>Raise the How:</strong> Governing Principles, Strategy, Relationships.</span></li>'+
+      '<li><span><strong>Bring it to life in the What:</strong> Key Activities, Resources, Methods.</span></li>'+
+      '<li><span><strong>Check the alignment</strong>, live with it, and iterate as life changes.</span></li></ol>'+
+      '<p>Each conversation asks a question or two at a time, reflects your words back, and offers drafts in your own words. Nothing is saved to your design until you approve it. If you came with something pressing, it\'s held safely and returns when the What layer arrives.</p>'+
+      '<p class="muted" style="font-size:.92rem">The conversation lives here on the Design page. Journey shows the whole path; Record holds your design and its history.</p>' }
+  ];
+  var s = steps[i];
+  return '<span class="eyebrow">'+esc(s.eb)+' · '+(i+1)+' of '+GUIDE_N+'</span><h2 id="guideTitle">'+s.t+'</h2><div class="body">'+s.b+'</div>'+
+    '<div class="foot"><div class="pebbles" role="group" aria-label="Guide steps">'+steps.map(function(_, j){ return '<button data-act="guideGo" data-step="'+j+'" aria-label="Step '+(j+1)+'"'+(j===i?' aria-current="step"':'')+'></button>'; }).join('')+'</div>'+
+    '<div class="row">'+(i===0 ? '<button class="btn ghost" data-act="guideDone">Skip the guide</button>' : '<button class="btn ghost" data-act="guideGo" data-step="'+(i-1)+'">Back</button>')+
+      (i<GUIDE_N-1 ? '<button class="btn primary" id="guideNext" data-act="guideGo" data-step="'+(i+1)+'">Next</button>' : '<button class="btn primary" id="guideNext" data-act="guideDone">Begin</button>')+'</div></div>';
+}
+function showGuide(i){
+  S.guideStep = i;
+  var dlg = $('#layer .dialog.guide');
+  if (dlg){ dlg.innerHTML = guideStep(i); dlg.scrollTop = 0; }
+  else { openDialog(guideStep(i), 'guide'); dlg = $('#layer .dialog.guide'); dlg.setAttribute('aria-labelledby','guideTitle'); }
+  var n = $('#guideNext'); if (n) n.focus({ preventScroll:true });
+}
+function maybeGuide(){
+  if (S.guideShown || !S.state || LID.getPrefs(S.state.user).guideSeen) return;
+  S.guideShown = true;
+  showGuide(0);
+  api('savePrefs',{ prefs:{ guideSeen:true } }).then(setState).catch(function(){});
 }
 
 function noteText(t){
@@ -977,20 +1191,22 @@ function coachTurn(opts){
   if (S.busy) return;
   S.busy = true; S.coachErr = null; render();
   var ctx = S.ctx;
-  api('coach', { context:ctx, mode:opts.mode, message:opts.message }, function(text){ if(S.ctx===ctx) paintStream(text); })
-    .then(function(r){ if (r.reply) S.messages.push(r.reply); })
-    .catch(function(e){ S.coachErr = e.message || String(e); })
-    .then(function(){ return ctx.indexOf('explore:')===0 ? api('getState').then(setState).catch(function(){}) : null; })
-    .then(function(){ S.busy=false; if(S.ctx===ctx && S.view==='studio'){ render(); var m=$('#msg'); if(m) m.focus(); } });
+  api('coach', { context:ctx, mode:opts.mode, message:opts.message }, function(text){ if(S.ctx===ctx && isChat()) paintStream(text); })
+    .then(function(r){ if (r.reply && S.ctx===ctx) S.messages.push(r.reply); })
+    .catch(function(e){ if (S.ctx===ctx) S.coachErr = e.message || String(e); })
+    .then(function(){ return ctx.indexOf('explore:')===0 || ctx==='begin' ? api('getState').then(setState).catch(function(){}) : null; })
+    .then(function(){ S.busy=false; if(S.ctx===ctx && isChat()){ render(); var m=$('#msg'); if(m && !$('#layer').innerHTML) m.focus({ preventScroll:true }); } });
 }
 
-function openCtx(ctx){
-  S.ctx = ctx; S.messages = []; S.coachErr=null; S.view='studio'; render(); window.scrollTo(0,0);
+function openCtx(ctx, view){
+  view = view || 'studio';
+  if (S.ctx!==ctx) S.messages = [];
+  S.ctx = ctx; S.coachErr=null; S.view=view; render(); if (view==='studio') window.scrollTo(0,0);
   var pre = ctx.indexOf('explore:')===0 ? api('startArea',{ area:ctx.slice(8) }) : Promise.resolve();
   pre.then(function(){ return api('getState'); }).then(setState)
     .then(function(){ return api('getMessages',{ context:ctx }); })
     .then(function(msgs){
-      if (S.ctx!==ctx) return;
+      if (S.ctx!==ctx || !isChat()) return;
       S.messages = msgs || [];
       render();
       var last = S.messages[S.messages.length-1];
@@ -1016,7 +1232,12 @@ document.addEventListener('click', function(ev){
     if (s.key==='exploration') go('explore'); else openCtx('element:'+s.key); return;
   }
   if (act==='ctx'){ openCtx(t.dataset.ctx); return; }
-  if (act==='area'){ openCtx('explore:'+t.dataset.area); return; }
+  if (act==='area'){ openCtx('explore:'+t.dataset.area, S.view==='home' ? 'home' : 'studio'); return; }
+  if (act==='ownArea'){ var oa=($('#ownArea').value||'').trim().replace(/\s+/g,' '); if(!oa){ $('#ownArea').focus(); return; } openCtx('explore:'+oa.charAt(0).toUpperCase()+oa.slice(1), 'home'); return; }
+  if (act==='moveOn'){ api('savePrefs',{ prefs:{ focus:'element:Core Beliefs' } }).then(setState).then(function(){ loadHome(); breathe(); }).catch(fail); return; }
+  if (act==='guide'){ showGuide(0); return; }
+  if (act==='guideGo'){ showGuide(Number(t.dataset.step)||0); return; }
+  if (act==='guideDone'){ closeDialog(); var gm=$('#msg'); if(gm) gm.focus({ preventScroll:true }); return; }
   if (act==='back'){ if (S.ctx && S.ctx.indexOf('explore:')===0) go('explore'); else if (S.ctx==='iterate') go('iterate'); else go('journey'); return; }
   if (phaseAClick(act, t, ev)) return;
   if (act==='retry'){ coachTurn({ mode:'open' }); return; }
@@ -1078,11 +1299,15 @@ function coachTurnWith(v){ coachTurn({ mode:'chat', message:v }); }
 document.addEventListener('keydown', function(ev){
   if (ev.target.id==='msg' && ev.key==='Enter' && !ev.shiftKey && !ev.isComposing){ ev.preventDefault(); var f=$('#compose'); if(f) f.requestSubmit ? f.requestSubmit() : f.dispatchEvent(new Event('submit',{cancelable:true})); }
   if (ev.key==='Escape' && $('#layer').innerHTML) closeDialog();
+  if (ev.target.id==='ownArea' && ev.key==='Enter'){ ev.preventDefault(); var b=$('[data-act=ownArea]'); if(b) b.click(); }
+  if ($('#layer .dialog.guide') && (ev.key==='ArrowRight' || ev.key==='ArrowLeft') && !/INPUT|TEXTAREA/.test(ev.target.tagName)){
+    var nx = S.guideStep + (ev.key==='ArrowRight' ? 1 : -1); if (nx>=0 && nx<GUIDE_N) showGuide(nx);
+  }
 });
 document.addEventListener('input', function(ev){ if(ev.target.id==='msg') autoGrow(ev.target); });
 function autoGrow(ta){ ta.style.height='auto'; ta.style.height=Math.min(ta.scrollHeight+2,220)+'px'; }
 var lastWide = window.innerWidth>900;
-window.addEventListener('resize', function(){ var w=window.innerWidth>900; if(w!==lastWide){ lastWide=w; if(S.view==='studio') render(); } });
+window.addEventListener('resize', function(){ var w=window.innerWidth>900; if(w!==lastWide){ lastWide=w; if(isChat()) render(); } });
 
 /* ---------- flows ---------- */
 function onboard(){
@@ -1094,13 +1319,13 @@ function onboard(){
   api('createUser',{ name:name, whatBrought:$('#ob-brought').value.trim(), hopedChange:$('#ob-hope').value.trim(), pressing:$('#ob-pressing').value.trim(), is18:true, plain:$('#ob-plain').checked, userId:null })
     .then(function(u){ S.userId=u.UserID; store.set('lid.userId', u.UserID); return api('startSession'); })
     .then(function(s){ S.sessionId=s.SessionID; return api('getState'); })
-    .then(function(st){ setState(st); go('explore'); breathe(); toast('Welcome, '+st.user.Name+'. We begin underground.'); })
+    .then(function(st){ setState(st); go('home'); breathe(); })
     .catch(function(e){ err.textContent=e.message; err.hidden=false; });
 }
 function signIn(key){
   S.userId = key;
   api('getState').then(function(st){ setState(st); store.set('lid.userId',key); return api('startSession'); })
-    .then(function(s){ S.sessionId=s.SessionID; go('journey'); })
+    .then(function(s){ S.sessionId=s.SessionID; go('home'); })
     .catch(function(e){ S.userId=null; toast(e.message); });
 }
 
@@ -1121,7 +1346,7 @@ function saveElement(status){
   var n=$('#cap-note');
   api('saveElement',{ element:S.ctx.slice(8), statement:txt, status:status, changeNote:n?n.value.trim():'' })
     .then(setState).then(refreshMessages).then(function(){
-      closeDialog(); render();
+      closeDialog(); if (S.view==='home') loadHome(); else render();
       var p=LID.progress(S.state), nx=p.next;
       breathe(); toast(S.ctx.slice(8)+' saved as '+status.toLowerCase()+'.'+(nx&&nx.key!==S.ctx.slice(8)?' '+nx.name+' is open.':''));
     }).catch(fail);
@@ -1141,7 +1366,7 @@ function closeAreaDialog(){
 function saveBelief(){
   var b=($('#cb-belief').value||'').trim(); if(!b){ toast('Write the belief first.'); return; }
   api('saveChosenBelief',{ area:S.ctx.slice(8), belief:b, why:($('#cb-why').value||'').trim() })
-    .then(setState).then(refreshMessages).then(function(){ closeDialog(); render(); breathe(); toast('Chosen and saved. '+(S.state.chosen.length===1?'Core Beliefs is now open.':'')); }).catch(fail);
+    .then(setState).then(refreshMessages).then(function(){ closeDialog(); if (S.view==='home') loadHome(); else render(); breathe(); toast('Chosen and saved.'+(S.state.chosen.length===1?' Core Beliefs is now open, whenever you\'re ready.':'')); }).catch(fail);
 }
 function endSessionDialog(){
   openDialog('<span class="eyebrow">End of session</span><h2>One small step before next time</h2><p class="muted">Something specific you can do or reflect on this week.</p>'+
@@ -1151,7 +1376,7 @@ function endSessionDialog(){
 function saveCommit(){
   var v=($('#cm-text').value||'').trim(); if(!v){ toast('Name one small step, or keep talking.'); return; }
   api('addCommitment',{ text:v, focus:ctxTitle(S.ctx), context:S.ctx }).then(setState)
-    .then(function(){ return api('startSession'); }).then(function(s){ S.sessionId=s.SessionID; go('journey'); breathe(); toast('Saved. Enjoy the week.'); }).catch(fail);
+    .then(function(){ return api('startSession'); }).then(function(s){ S.sessionId=s.SessionID; go('home'); breathe(); toast('Saved. Enjoy the week.'); }).catch(fail);
 }
 
 /* =====================================================================
@@ -1505,7 +1730,7 @@ function bootHosted(){
     if (!ses){ S.view='signin'; render(); return; }
     S.userId = ses.user.id; S.email = ses.user.email || '';
     return api('getState').then(function(st){ setState(st); return api('startSession'); })
-      .then(function(s){ S.sessionId=s.SessionID; go('journey'); })
+      .then(function(s){ S.sessionId=s.SessionID; go('home'); })
       .catch(function(e){
         if (e && e.code === 'signed_out') return;
         if (/No design found/.test(e && e.message)){ S.view='welcome'; render(); return; }
@@ -1532,7 +1757,7 @@ function boot(){
   }
   if (!S.userId){ S.view='welcome'; render(); return; }
   api('getState').then(function(st){ setState(st); return api('startSession'); })
-    .then(function(s){ S.sessionId=s.SessionID; go('journey'); })
+    .then(function(s){ S.sessionId=s.SessionID; go('home'); })
     .catch(function(){ store.del('lid.userId'); S.userId=null; S.view='welcome'; render(); });
 }
 boot();

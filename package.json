@@ -1,6 +1,6 @@
 {
   "name": "life-in-design",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "private": true,
   "description": "Life in Design Coach: an AI coach built on Nate Gardner's Life in Design Framework",
   "scripts": {

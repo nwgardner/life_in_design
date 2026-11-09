@@ -51,12 +51,24 @@ assert(st.parked.length===1 && st.parked[0].Status==='Parked', 'pressing problem
 // 3. strict order: Vision locked
 assert(ctx.api('saveElement',{ userId, element:'Vision', statement:'x', status:'Draft' }).error, 'Vision cannot be saved before the Why beneath it');
 assert(ctx.api('coach',{ userId, context:'element:Core Beliefs', mode:'open' }).error, 'Core Beliefs coaching is locked before a chosen belief');
+// 3b. the Design page: the conversation begins before any area is chosen
+assert(ctx.LID.homeContext(st)==='begin', 'a new design opens the Design page on the beginning of the Exploration');
+api('coach',{ userId, sessionId, context:'begin', mode:'open' });
+assert(/very beginning of their design/.test(lastBody.system[1].text) && /Success in Life, Career, Money/.test(lastBody.system[1].text), 'the beginning conversation shares the premise and offers gentle first areas');
+st = api('getState',{ userId });
+assert(ctx.LID.getPrefs(st.user).premiseHeard && !ctx.LID.getPrefs(st.user).guideSeen, 'hearing the premise is remembered; the guide is still unseen');
+api('savePrefs',{ userId, prefs:{ guideSeen:true } });
+let pf = ctx.LID.getPrefs(api('getState',{ userId }).user);
+assert(pf.guideSeen && pf.premiseHeard && pf.nudges, 'saving one preference keeps the others');
+api('coach',{ userId, sessionId, context:'begin', mode:'open' });
+assert(/heard the premise/.test(lastBody.system[1].text), 'the premise is not repeated on return');
 // 4. exploration: open area, coach opens, answer, lens capture
 api('startArea',{ userId, sessionId, area:'Money' });
+assert(ctx.LID.homeContext(api('getState',{ userId }))==='explore:Money', 'the Design page follows the area just opened');
 let r = api('coach',{ userId, sessionId, context:'explore:Money', mode:'open' });
 assert(r.reply && r.reply.Role==='assistant', 'coach opens the Money area');
 assert(/CURRENT Lens 1 of 7 · Father figure/.test(lastBody.system[1].text), 'context names the current lens (Father figure)');
-assert(/first area/.test(lastBody.system[1].text), 'first-ever area prompts the premise');
+assert(!/first area/.test(lastBody.system[1].text), 'the first area does not repeat the premise already shared');
 assert(lastBody.system[0].cache_control && /Life in Design Coach/.test(lastBody.system[0].text), 'full guide sent as cached system block');
 assert(/Should I take the new role/.test(lastBody.system[1].text), 'parked problem is in the coach context');
 api('coach',{ userId, sessionId, context:'explore:Money', mode:'chat', message:'My dad saw money as security; never spend.' });
@@ -74,6 +86,12 @@ assert(/All seven lenses are explored/.test(lastBody.system[1].text), 'coach tol
 r = api('coach',{ userId, sessionId, context:'explore:Money', mode:'draft' });
 assert(r.draft && r.draft.belief.startsWith('Enough'), 'draft of chosen belief parsed');
 api('saveChosenBelief',{ userId, sessionId, area:'Money', belief:r.draft.belief, why:r.draft.why });
+st = api('getState',{ userId });
+assert(ctx.LID.homeContext(st)==='begin', 'after one area the Design page invites the next');
+api('coach',{ userId, sessionId, context:'begin', mode:'open' });
+assert(/Areas closed so far: Money/.test(lastBody.system[1].text) && /Move on to Core Beliefs/.test(lastBody.system[1].text), 'the coach reflects closed areas and offers moving on');
+api('savePrefs',{ userId, prefs:{ focus:'element:Core Beliefs' } });
+assert(ctx.LID.homeContext(api('getState',{ userId }))==='element:Core Beliefs', 'choosing to move on opens Core Beliefs on the Design page');
 // 5. Core Beliefs unlocked, capture + versioning
 r = api('coach',{ userId, sessionId, context:'element:Core Beliefs', mode:'open' });
 assert(/Synthesize from the chosen beliefs/.test(lastBody.system[1].text) && /Enough is a choice/.test(lastBody.system[1].text), 'Core Beliefs context carries chosen beliefs');
@@ -169,6 +187,7 @@ api('respondRec',{ userId, sessionId, recId:recs.find(x=>x.Kind==='community').R
 r = api('coach',{ userId, sessionId, context:'iterate', mode:'open' });
 assert(/Already in one/.test(lastBody.system[1].text) && /30-minute window/.test(lastBody.system[1].text), 'accepted and declined guidance both feed the next conversation');
 assert(/objective evaluator of congruence/.test(lastBody.system[1].text), 'iterate focus sets the evaluator role');
+assert(ctx.LID.homeContext(api('getState',{ userId }))==='checkin', 'with all nine drafted, the Design page holds the check-in');
 // nudges
 const NOW = Date.now() + 20*86400000;
 let ng = ctx.LID.computeNudges(api('getState',{ userId }), NOW);

@@ -28,6 +28,7 @@ Active nudges, guidance and recommendations, each switchable (built: in-app plus
 ## Phasing
 - **A (done):** tests, journaling, knowledge and skills logs, congruence reviews with the accept / adapt / decline loop, community recommendations, nudges.
 - **Design refresh (done):** organic minimalism, wabi-sabi, fluid modernism.
+- **Design page (done):** the coach front and center as the landing page after every sign-in, a five-step framework guide on first sign-in, a pro tip that reopens it; *My Design* renamed *Record*.
 - **Hosted alpha (built, ready to deploy; see `docs/alpha-setup.md`):** code in this GitHub repo, hosted on Render at an `onrender.com` address (no domain yet), Supabase free plan for the database and sign-in with per-user access rules, email sign-in links, invite-only sign-up, Claude called from the server with a separate, spend-capped API key.
 - **B:** Google sign-in and calendar read/write with alignment metrics. Needs a domain, a privacy policy and Google's OAuth verification (unverified apps are capped at 100 users).
 - **Agent:** the coach as an agent with tools over the design record (read, propose, save on approval), shaped by a suite of evaluation conversations that test it against the guide.
