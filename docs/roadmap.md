@@ -13,6 +13,7 @@ Source: the Lucid diagram "Life in Design Coach" (Inputs → My Life Design → 
 1. Guided Prompt (built)
 2. Strength and personality tests, entered manually, each with an input shaped to its results (built): CliftonStrengths, VIA Character Strengths, Myers-Briggs / 16Personalities, Enneagram, Big Five (OCEAN), DISC, Working Genius, Kolbe A Index, Holland Code (RIASEC), 5 Love Languages.
 3. Knowledge Acquired log (built)
+3a. Goals at four horizons, and a Life Experiences ledger (built)
 4. Skills Acquired log (built)
 5. Journaling (built)
 6. Agent Discussion (built)
@@ -29,6 +30,7 @@ Active nudges, guidance and recommendations, each switchable (built: in-app plus
 - **A (done):** tests, journaling, knowledge and skills logs, congruence reviews with the accept / adapt / decline loop, community recommendations, nudges.
 - **Design refresh (done):** organic minimalism, wabi-sabi, fluid modernism.
 - **Design page (done):** the coach front and center as the landing page after every sign-in, a five-step framework guide on first sign-in, a pro tip that reopens it; *My Design* renamed *Record*.
+- **Ways in, goals, experiences (done):** after the guide, begin at the What and Inputs, the How, or the foundation, with the coach guiding organically toward the Why; *Inputs → Goals* at four horizons (SMART, OKR, vivid imagining, life-long reflection) and *Life experiences*, each with obstacles, plan, completion and lessons.
 - **Hosted alpha (built, ready to deploy; see `docs/alpha-setup.md`):** code in this GitHub repo, hosted on Render at an `onrender.com` address (no domain yet), Supabase free plan for the database and sign-in with per-user access rules, email sign-in links, invite-only sign-up, Claude called from the server with a separate, spend-capped API key.
 - **B:** Google sign-in and calendar read/write with alignment metrics. Needs a domain, a privacy policy and Google's OAuth verification (unverified apps are capped at 100 users).
 - **Agent:** the coach as an agent with tools over the design record (read, propose, save on approval), shaped by a suite of evaluation conversations that test it against the guide.

@@ -419,6 +419,82 @@ create policy own_rows on public.reviews for all to authenticated
 revoke all on public.reviews from anon, authenticated;
 grant select, insert, update on public.reviews to authenticated;
 
+-- Goals
+create table if not exists public.goals (
+  goal_id uuid not null,
+  user_id uuid not null default auth.uid() references auth.users (id) on delete cascade,
+  horizon text not null default '',
+  title text not null default '',
+  details text not null default '',
+  impediments text not null default '',
+  actions text not null default '',
+  status text not null default '',
+  completed_on text not null default '',
+  learned text not null default '',
+  linked_element text not null default '',
+  created_at text not null default '',
+  updated_at text not null default '',
+  seq bigint generated always as identity,
+  inserted_at timestamptz not null default now(),
+  primary key (goal_id)
+);
+alter table public.goals add column if not exists horizon text not null default '';
+alter table public.goals add column if not exists title text not null default '';
+alter table public.goals add column if not exists details text not null default '';
+alter table public.goals add column if not exists impediments text not null default '';
+alter table public.goals add column if not exists actions text not null default '';
+alter table public.goals add column if not exists status text not null default '';
+alter table public.goals add column if not exists completed_on text not null default '';
+alter table public.goals add column if not exists learned text not null default '';
+alter table public.goals add column if not exists linked_element text not null default '';
+alter table public.goals add column if not exists created_at text not null default '';
+alter table public.goals add column if not exists updated_at text not null default '';
+create index if not exists goals_user_seq on public.goals (user_id, seq);
+alter table public.goals enable row level security;
+drop policy if exists own_rows on public.goals;
+create policy own_rows on public.goals for all to authenticated
+  using (user_id = (select auth.uid())) with check (user_id = (select auth.uid()));
+revoke all on public.goals from anon, authenticated;
+grant select, insert, update on public.goals to authenticated;
+
+-- LifeExperiences
+create table if not exists public.life_experiences (
+  experience_id uuid not null,
+  user_id uuid not null default auth.uid() references auth.users (id) on delete cascade,
+  title text not null default '',
+  description text not null default '',
+  category text not null default '',
+  target_when text not null default '',
+  impediments text not null default '',
+  actions text not null default '',
+  status text not null default '',
+  completed_on text not null default '',
+  learned text not null default '',
+  created_at text not null default '',
+  updated_at text not null default '',
+  seq bigint generated always as identity,
+  inserted_at timestamptz not null default now(),
+  primary key (experience_id)
+);
+alter table public.life_experiences add column if not exists title text not null default '';
+alter table public.life_experiences add column if not exists description text not null default '';
+alter table public.life_experiences add column if not exists category text not null default '';
+alter table public.life_experiences add column if not exists target_when text not null default '';
+alter table public.life_experiences add column if not exists impediments text not null default '';
+alter table public.life_experiences add column if not exists actions text not null default '';
+alter table public.life_experiences add column if not exists status text not null default '';
+alter table public.life_experiences add column if not exists completed_on text not null default '';
+alter table public.life_experiences add column if not exists learned text not null default '';
+alter table public.life_experiences add column if not exists created_at text not null default '';
+alter table public.life_experiences add column if not exists updated_at text not null default '';
+create index if not exists life_experiences_user_seq on public.life_experiences (user_id, seq);
+alter table public.life_experiences enable row level security;
+drop policy if exists own_rows on public.life_experiences;
+create policy own_rows on public.life_experiences for all to authenticated
+  using (user_id = (select auth.uid())) with check (user_id = (select auth.uid()));
+revoke all on public.life_experiences from anon, authenticated;
+grant select, insert, update on public.life_experiences to authenticated;
+
 -- Invite list. Only emails listed here can create an account during the alpha.
 -- Add someone: insert into public.invites (email) values ('person@example.com');
 create table if not exists public.invites (
@@ -459,7 +535,9 @@ language sql stable security invoker set search_path = '' as $$
     'journal_entries', coalesce((select jsonb_agg(to_jsonb(t) - 'seq' - 'inserted_at' order by t.seq) from public.journal_entries t where t.user_id = (select auth.uid())), '[]'::jsonb),
     'growth_items', coalesce((select jsonb_agg(to_jsonb(t) - 'seq' - 'inserted_at' order by t.seq) from public.growth_items t where t.user_id = (select auth.uid())), '[]'::jsonb),
     'recommendations', coalesce((select jsonb_agg(to_jsonb(t) - 'seq' - 'inserted_at' order by t.seq) from public.recommendations t where t.user_id = (select auth.uid())), '[]'::jsonb),
-    'reviews', coalesce((select jsonb_agg(to_jsonb(t) - 'seq' - 'inserted_at' order by t.seq) from public.reviews t where t.user_id = (select auth.uid())), '[]'::jsonb)
+    'reviews', coalesce((select jsonb_agg(to_jsonb(t) - 'seq' - 'inserted_at' order by t.seq) from public.reviews t where t.user_id = (select auth.uid())), '[]'::jsonb),
+    'goals', coalesce((select jsonb_agg(to_jsonb(t) - 'seq' - 'inserted_at' order by t.seq) from public.goals t where t.user_id = (select auth.uid())), '[]'::jsonb),
+    'life_experiences', coalesce((select jsonb_agg(to_jsonb(t) - 'seq' - 'inserted_at' order by t.seq) from public.life_experiences t where t.user_id = (select auth.uid())), '[]'::jsonb)
   );
 $$;
 revoke all on function public.my_snapshot(text) from public, anon;

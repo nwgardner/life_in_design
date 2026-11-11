@@ -48,13 +48,17 @@ const u = api('createUser',{ name:'Nate', whatBrought:'Feeling scattered', hoped
 const userId = u.UserID; const s = api('startSession',{ userId }); const sessionId = s.SessionID;
 let st = api('getState',{ userId });
 assert(st.parked.length===1 && st.parked[0].Status==='Parked', 'pressing problem parked on onboarding');
-// 3. strict order: Vision locked
-assert(ctx.api('saveElement',{ userId, element:'Vision', statement:'x', status:'Draft' }).error, 'Vision cannot be saved before the Why beneath it');
-assert(ctx.api('coach',{ userId, context:'element:Core Beliefs', mode:'open' }).error, 'Core Beliefs coaching is locked before a chosen belief');
-// 3b. the Design page: the conversation begins before any area is chosen
-assert(ctx.LID.homeContext(st)==='begin', 'a new design opens the Design page on the beginning of the Exploration');
+// 3. a new design begins by choosing a way in
+assert(ctx.LID.homeContext(st)==='start', 'a new design opens the Design page on choosing where to begin');
+api('coach',{ userId, sessionId, context:'start', mode:'open' });
+let sys1 = lastBody.system[1].text;
+assert(/three ways in/.test(sys1) && /iterative design/.test(sys1) && /named something pressing/.test(sys1) && /Way in: not chosen yet/.test(sys1), 'the opening welcomes them, holds the pressing problem and offers three ways in');
+assert(!ctx.LID.getPrefs(api('getState',{ userId }).user).premiseHeard, 'the welcome does not count as sharing the Exploration premise');
+api('savePrefs',{ userId, prefs:{ entry:'why' } });
+st = api('getState',{ userId });
+assert(ctx.LID.homeContext(st)==='begin' && ctx.LID.progress(st).entry==='why', 'choosing the foundation opens the Exploration on the Design page');
 api('coach',{ userId, sessionId, context:'begin', mode:'open' });
-assert(/very beginning of their design/.test(lastBody.system[1].text) && /Success in Life, Career, Money/.test(lastBody.system[1].text), 'the beginning conversation shares the premise and offers gentle first areas');
+assert(/beginning of the Exploration, the deepest way/.test(lastBody.system[1].text) && /Success in Life, Career, Money/.test(lastBody.system[1].text), 'the Exploration opens with the premise and gentle first areas');
 st = api('getState',{ userId });
 assert(ctx.LID.getPrefs(st.user).premiseHeard && !ctx.LID.getPrefs(st.user).guideSeen, 'hearing the premise is remembered; the guide is still unseen');
 api('savePrefs',{ userId, prefs:{ guideSeen:true } });
@@ -188,6 +192,59 @@ r = api('coach',{ userId, sessionId, context:'iterate', mode:'open' });
 assert(/Already in one/.test(lastBody.system[1].text) && /30-minute window/.test(lastBody.system[1].text), 'accepted and declined guidance both feed the next conversation');
 assert(/objective evaluator of congruence/.test(lastBody.system[1].text), 'iterate focus sets the evaluator role');
 assert(ctx.LID.homeContext(api('getState',{ userId }))==='checkin', 'with all nine drafted, the Design page holds the check-in');
+// other ways in: the What and the How
+{
+  const w = api('createUser',{ name:'Wren', is18:true }).UserID;
+  api('savePrefs',{ userId:w, prefs:{ entry:'what' } });
+  let ws = api('getState',{ userId:w });
+  assert(ctx.LID.homeContext(ws)==='element:Resources' && ctx.LID.progress(ws).whatOpen, 'beginning with the tangible opens Resources, and the What has arrived');
+  api('coach',{ userId:w, context:'element:Resources', mode:'open' });
+  const rs = lastBody.system[1].text;
+  assert(/begin with what is tangible/.test(rs) && /Open Inputs/.test(rs) && /still have gaps \(Core Beliefs, Vision, Purpose, Governing Principles, Strategy, Relationships\)/.test(rs) && /provisional/.test(rs), 'the coach starts from what they already have, invites Inputs, and holds the draft as provisional');
+  api('saveElement',{ userId:w, element:'Resources', statement:'Writing, listening, a quiet garage', status:'Draft' });
+  api('saveElement',{ userId:w, element:'Vision', statement:'Neighbours who know each other', status:'Draft' });
+  ws = api('getState',{ userId:w });
+  assert(ctx.LID.progress(ws).next.key==='Key Activities' && ws.design.length===2, 'any element can be saved in any order; the suggestion follows the way in');
+  api('savePrefs',{ userId:w, prefs:{ focus:'element:Governing Principles' } });
+  ws = api('getState',{ userId:w });
+  assert(ctx.LID.homeContext(ws)==='element:Governing Principles' && ws.user.CurrentFocus==='Governing Principles', 'a step chosen on the Design page takes the conversation there');
+  api('saveElement',{ userId:w, element:'Governing Principles', statement:'I say the hard thing early', status:'Draft' });
+  ws = api('getState',{ userId:w });
+  assert(ctx.LID.getPrefs(ws.user).focus==='' && ctx.LID.homeContext(ws)==='element:Key Activities', 'once saved, the chosen step gives way to the next suggestion');
+
+  const h = api('createUser',{ name:'Hal', is18:true }).UserID;
+  api('savePrefs',{ userId:h, prefs:{ entry:'how' } });
+  assert(ctx.LID.homeContext(api('getState',{ userId:h }))==='element:Governing Principles', 'beginning with the How opens Governing Principles');
+  ['Governing Principles','Strategy','Relationships'].forEach(e => api('saveElement',{ userId:h, element:e, statement:e+' v1', status:'Draft' }));
+  assert(ctx.LID.homeContext(api('getState',{ userId:h }))==='begin', 'after the How, the path leads down to the foundation');
+  api('coach',{ userId:h, context:'begin', mode:'open' });
+  assert(/after designing Governing Principles, Strategy, Relationships/.test(lastBody.system[1].text), 'arriving at the foundation later, the coach connects it to what was built');
+}
+// goals and life experiences
+{
+  const g = api('createUser',{ name:'Gia', is18:true }).UserID;
+  let gs = api('saveGoal',{ userId:g, horizon:'short', title:'Run a 10k', details:{ specific:'Run 10k without stopping', measurable:'Race time', achievable:'Three runs a week', relevant:'Energy for my family', timeBound:'2027-01-31' }, impediments:'Dark mornings', actions:'Lay out shoes the night before', linkedElement:'Key Activities' });
+  const goal = gs.goals[0];
+  assert(goal.Horizon==='short' && JSON.parse(goal.Details).timeBound==='2027-01-31' && goal.LinkedElement==='Key Activities' && goal.Status==='Open', 'a SMART goal is saved with its five parts, obstacles and plan');
+  gs = api('saveGoal',{ userId:g, goalId:goal.GoalID, horizon:'short', title:'Run a 10k', details:JSON.parse(goal.Details), done:true, learned:'Consistency beats intensity' });
+  assert(gs.goals.length===1 && gs.goals[0].Status==='Done' && /^\d{4}-\d{2}-\d{2}$/.test(gs.goals[0].CompletedOn) && gs.goals[0].Learned==='Consistency beats intensity', 'completing a goal records the date and what was learned');
+  gs = api('saveGoal',{ userId:g, horizon:'mid', title:'Launch the studio', details:{ keyResults:[{ text:'10 paying clients', progress:140 }, { text:'', progress:5 }], by:'2027-09-01' } });
+  const okr = JSON.parse(gs.goals[1].Details);
+  assert(okr.keyResults.length===1 && okr.keyResults[0].progress===100, 'an OKR keeps its key results, with progress held between 0 and 100');
+  gs = api('saveGoal',{ userId:g, horizon:'life', details:{ place:'An empty beach at sunset', become:'Someone unhurried and kind' } });
+  assert(gs.goals[2].Title==='Who I hope to become', 'a life-long reflection needs no title');
+  assert(ctx.api('saveGoal',{ userId:g, horizon:'mid', title:'' }).error && ctx.api('saveGoal',{ userId:g, horizon:'decade', title:'x' }).error, 'an OKR needs its objective, and the horizon must be one of the four');
+  gs = api('saveExperience',{ userId:g, title:'See the northern lights', category:'Nature', targetWhen:'Before I turn 50', impediments:'Cost', actions:'Save a little each month' });
+  const xp = gs.experiences[0];
+  gs = api('saveExperience',{ userId:g, experienceId:xp.ExperienceID, title:xp.Title, category:'Nature', done:true, completedOn:'2027-02-10', learned:'Awe needs patience' });
+  assert(gs.experiences.length===1 && gs.experiences[0].CompletedOn==='2027-02-10' && gs.experiences[0].Learned==='Awe needs patience', 'a life experience is ledgered and fulfilled with what was learned');
+  api('coach',{ userId:g, context:'element:Strategy', mode:'open' });
+  const gsys = lastBody.system[1].text;
+  assert(/Goals they hold/.test(gsys) && /Launch the studio/.test(gsys) && /Goals they accomplished:\n- Run a 10k/.test(gsys) && /Life experiences they have lived:\n- See the northern lights — what they learned: "Awe needs patience"/.test(gsys) && /show where they want their time and energy to go/.test(gsys), 'the coach sees goals and experiences, and brings them into Strategy');
+  gs = api('removeGoal',{ userId:g, goalId:goal.GoalID });
+  gs = api('removeExperience',{ userId:g, experienceId:xp.ExperienceID });
+  assert(gs.goals.length===2 && gs.experiences.length===0, 'removed goals and experiences leave the lists');
+}
 // nudges
 const NOW = Date.now() + 20*86400000;
 let ng = ctx.LID.computeNudges(api('getState',{ userId }), NOW);

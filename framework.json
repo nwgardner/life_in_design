@@ -353,6 +353,36 @@
    "TraceJSON",
    "Traced",
    "Total"
+  ],
+  "Goals": [
+   "GoalID",
+   "UserID",
+   "Horizon",
+   "Title",
+   "Details",
+   "Impediments",
+   "Actions",
+   "Status",
+   "CompletedOn",
+   "Learned",
+   "LinkedElement",
+   "CreatedAt",
+   "UpdatedAt"
+  ],
+  "LifeExperiences": [
+   "ExperienceID",
+   "UserID",
+   "Title",
+   "Description",
+   "Category",
+   "TargetWhen",
+   "Impediments",
+   "Actions",
+   "Status",
+   "CompletedOn",
+   "Learned",
+   "CreatedAt",
+   "UpdatedAt"
   ]
  },
  "tests": [
@@ -1027,6 +1057,32 @@
      ]
     }
    ]
+  }
+ ],
+ "goalHorizons": [
+  {
+   "key": "short",
+   "name": "Short-term",
+   "span": "30 – 90 days",
+   "shape": "SMART"
+  },
+  {
+   "key": "mid",
+   "name": "Mid-term",
+   "span": "90 – 360 days",
+   "shape": "OKR"
+  },
+  {
+   "key": "long",
+   "name": "Long-term",
+   "span": "1 – 5 years",
+   "shape": "Vivid imagining"
+  },
+  {
+   "key": "life",
+   "name": "Life-long",
+   "span": "A lifetime",
+   "shape": "Reflection"
   }
  ]
 }

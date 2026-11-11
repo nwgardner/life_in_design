@@ -91,7 +91,7 @@ const listen = (handler) => new Promise((r) => { const s = http.createServer(han
   ok(JSON.parse(pr.rows[0].prefs).guideSeen === true && JSON.parse(pr.rows[0].prefs).premiseHeard === true, 'seeing the guide and hearing the premise are saved to the profile');
 
   // design through the stack, with versioning
-  ok(/opens once/.test((await call('saveElement', { element: 'Vision', statement: 'x' }, A)).error), 'the strict order holds on the server');
+  ok(/Unknown element/.test((await call('saveElement', { element: 'Wisdom', statement: 'x' }, A)).error), 'only the nine elements can be saved');
   for (const e of ['Core Beliefs', 'Vision', 'Purpose', 'Governing Principles', 'Strategy', 'Relationships', 'Key Activities', 'Resources', 'Methods']) await must('saveElement', { element: e, statement: e + ' v1', status: 'Draft' });
   await must('saveElement', { element: 'Vision', statement: 'Vision v2', status: 'Approved', changeNote: 'Bigger' });
   const dr = await db.query(`select version, status from public.design_record where user_id = $1 and element = 'Vision'`, [A]);
@@ -108,12 +108,21 @@ const listen = (handler) => new Promise((r) => { const s = http.createServer(han
   const resp = await must('respondRec', { recId: how.RecID, status: 'Accepted', actionText: 'Email in one window after lunch' });
   ok(resp.next.open === 'element:Strategy', 'accepted guidance opens the element it changes');
 
+  // goals and life experiences, stored in their own tables
+  st = await must('saveGoal', { horizon: 'long', details: { when: '2030', picture: 'A studio full of light', truths: ['I write every morning', 'We live by the sea'] }, impediments: 'Fear', actions: 'One page a day' });
+  const lg = st.goals.find((g) => g.Horizon === 'long');
+  await must('saveGoal', { goalId: lg.GoalID, horizon: 'long', title: lg.Title, details: JSON.parse(lg.Details), done: true, completedOn: '2030-06-01', learned: 'It came slowly, then all at once' });
+  await must('saveExperience', { title: 'Walk the Camino', category: 'Travel', targetWhen: 'Someday' });
+  const gRows = await db.query(`select title, status, completed_on, learned from public.goals where user_id = $1`, [A]);
+  const xRows = await db.query(`select title, category from public.life_experiences where user_id = $1`, [A]);
+  ok(gRows.rows.length === 1 && gRows.rows[0].title === 'My life 2030' && gRows.rows[0].status === 'Done' && gRows.rows[0].completed_on === '2030-06-01' && xRows.rows[0].category === 'Travel', 'goals and life experiences are saved in Postgres, updated in place');
+
   // isolation between people
   const sB = await call('getState', { userId: A }, B);
   ok(/No design found/.test(sB.error), "another person cannot reach Nate's design, even by sending his id");
   await must('createUser', { name: 'Friend', is18: true }, B);
   const fB = await must('getState', {}, B);
-  ok(fB.user.Name === 'Friend' && fB.design.length === 0 && fB.journal.length === 0, 'each person sees only their own design');
+  ok(fB.user.Name === 'Friend' && fB.design.length === 0 && fB.journal.length === 0 && fB.goals.length === 0 && fB.experiences.length === 0, 'each person sees only their own design');
   const rowsA = await db.query(`select count(*)::int n from public.journal_entries where user_id = $1`, [A]);
   ok(rowsA.rows[0].n === 1, "Nate's journal is untouched by the other account");
 
