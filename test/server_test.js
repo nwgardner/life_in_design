@@ -108,6 +108,14 @@ const listen = (handler) => new Promise((r) => { const s = http.createServer(han
   const resp = await must('respondRec', { recId: how.RecID, status: 'Accepted', actionText: 'Email in one window after lunch' });
   ok(resp.next.open === 'element:Strategy', 'accepted guidance opens the element it changes');
 
+  // two requests touching the same profile row keep each other's changes
+  supa.calls.shapes = [];
+  await Promise.all([must('savePrefs', { prefs: { seenRelease: '2026-11-11' } }), must('startArea', { area: 'Career' })]);
+  const prof = (await db.query(`select prefs, current_focus from public.profiles where user_id = $1`, [A])).rows[0];
+  const shape = supa.calls.shapes.find((x) => x.table === 'profiles' && x.keys.includes('current_focus'));
+  ok(JSON.parse(prof.prefs).seenRelease === '2026-11-11' && prof.current_focus === 'Exploration · Career' && shape && !shape.keys.includes('prefs'),
+    'changes save only the columns they touched, so simultaneous requests never undo each other');
+
   // goals and life experiences, stored in their own tables
   st = await must('saveGoal', { horizon: 'long', details: { when: '2030', picture: 'A studio full of light', truths: ['I write every morning', 'We live by the sea'] }, impediments: 'Fear', actions: 'One page a day' });
   const lg = st.goals.find((g) => g.Horizon === 'long');

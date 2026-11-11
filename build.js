@@ -6,7 +6,13 @@ const SHEET_ID = process.argv[2] || '';
 
 const fw = JSON.parse(R('framework.json'));
 const guide = R('src/guide.md');
-const shared = R('src/shared.js').replace('/*@@FRAMEWORK@@*/null', JSON.stringify(fw));
+// Release notes shown to existing people after an update (what's new, badges). Newest last.
+const releases = JSON.parse(R('src/releases.json'));
+releases.forEach((r, i) => {
+  if (!r.id || !r.since || isNaN(Date.parse(r.since)) || !(r.items || []).length) throw new Error('Release ' + (r.id || i) + ' needs an id, a since date and items.');
+  if (i && !(r.id > releases[i - 1].id)) throw new Error('Releases must be listed oldest first with increasing ids.');
+});
+const shared = R('src/shared.js').replace('/*@@FRAMEWORK@@*/null', JSON.stringify(fw)).replace('/*@@RELEASES@@*/[]', JSON.stringify(releases));
 const backend = R('src/backend.gs.js')
   .replace('/*@@SHEET_ID@@*/', SHEET_ID)
   .replace("/*@@GUIDE@@*/''", JSON.stringify(guide));

@@ -35,13 +35,20 @@ function createSupabase({ url, anonKey, fetchImpl = fetch }) {
       return res.json();
     },
 
-    // Insert-or-update full rows for one table, keyed on its primary key.
-    async upsert(token, sheet, rows) {
+    // Insert-or-update rows for one table, keyed on its primary key. With cols, only those columns
+    // (plus the keys and owner) are sent, so other columns keep whatever another request saved.
+    async upsert(token, sheet, rows, cols) {
       const t = TABLES[sheet];
+      let payload = rows.map((r) => toDb(sheet, r));
+      if (cols) {
+        const keep = new Set(t.pk.concat(['user_id']));
+        for (const c of t.columns) if (cols.includes(c.name)) keep.add(c.col);
+        payload = payload.map((full) => { const out = {}; for (const k of Object.keys(full)) if (keep.has(k)) out[k] = full[k]; return out; });
+      }
       const res = await fetchImpl(base + '/rest/v1/' + t.table + '?on_conflict=' + t.pk.join(','), {
         method: 'POST',
         headers: headers(token, { 'Content-Type': 'application/json', Prefer: 'resolution=merge-duplicates,return=minimal' }),
-        body: JSON.stringify(rows.map((r) => toDb(sheet, r)))
+        body: JSON.stringify(payload)
       });
       if (!res.ok) throw await failure(res, 'Saving to ' + t.table);
     }

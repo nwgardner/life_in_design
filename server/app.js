@@ -55,7 +55,16 @@ function createApp({ supabase, ask, config, engine = loadEngine(), now = Date.no
 
   async function flush(token, store) {
     const changes = store.takeChanges();
-    for (const sheet of Object.keys(changes)) await supabase.upsert(token, sheet, changes[sheet]);
+    for (const sheet of Object.keys(changes)) {
+      // One save per shape: new rows whole, changed rows with just the columns that changed.
+      const groups = new Map();
+      for (const { row, cols } of changes[sheet]) {
+        const key = cols ? Array.from(cols).sort().join(',') : '*';
+        if (!groups.has(key)) groups.set(key, { cols: cols ? Array.from(cols).sort() : null, rows: [] });
+        groups.get(key).rows.push(row);
+      }
+      for (const g of groups.values()) await supabase.upsert(token, sheet, g.rows, g.cols);
+    }
   }
 
   function send(res, status, body, headers) {

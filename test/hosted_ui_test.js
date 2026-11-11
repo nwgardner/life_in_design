@@ -36,6 +36,8 @@ const FONTS = process.env.LID_FONT_CSS ? fs.readFileSync(process.env.LID_FONT_CS
   const browser = await chromium.launch();
   const errors = [];
   for (const [name, viewport, scheme] of [['desktop', { width: 1280, height: 860 }, 'light'], ['phone', { width: 390, height: 844 }, 'dark']]) {
+    // The phone visit plays someone who joined before the latest update.
+    if (name === 'phone') await db.query(`update public.profiles set created_at = '2026-10-01T12:00:00.000Z'`);
     const ctx = await browser.newContext({ viewport, colorScheme: scheme });
     const pg = await ctx.newPage();
     pg.on('pageerror', (e) => errors.push(name + ': ' + e.message));
@@ -85,6 +87,7 @@ const FONTS = process.env.LID_FONT_CSS ? fs.readFileSync(process.env.LID_FONT_CS
       await pg.click('#guideNext');
       await pg.waitForSelector('.dialog.guide', { state: 'detached' });
       await pg.waitForFunction(() => !document.getElementById('pending') && document.querySelectorAll('.home .msg.coach').length >= 1, null, { timeout: 15000 });
+      ok(!(await pg.$('.dialog.whatsnew')) && !(await pg.$('.newpip')) && !(await pg.$('#notice')), 'someone new sees no update notes: everything is new to them');
       ok((await pg.$$('.way[data-entry]')).length === 3 && /Choosing where to begin/.test(await pg.textContent('.chat-head')), 'the pressing problem was optional, and the coach opens by offering three ways in');
       ok((await pg.textContent('#nav button >> nth=0')) === 'Design' && (await pg.textContent('#nav button >> nth=1')) === 'Journey', 'Design is the first tab, beside Journey');
       await pg.screenshot({ path: path.join(SHOTS, 'H2c-design-start.png') });
@@ -164,6 +167,33 @@ const FONTS = process.env.LID_FONT_CSS ? fs.readFileSync(process.env.LID_FONT_CS
       await pg.waitForSelector('.home .chat');
     } else {
       await pg.waitForSelector('.home .chat');
+      // Returning after an update: the what's-new window, once, with a mark on each place that changed.
+      await pg.waitForSelector('.dialog.whatsnew');
+      ok((await pg.$$('.wn-item')).length === 3 && /Give it a try/.test(await pg.textContent('.dialog.whatsnew')), 'phone: returning after an update opens what\'s new, with a nudge to try each thing');
+      await pg.waitForTimeout(900); await pg.screenshot({ path: path.join(SHOTS, 'H10-whatsnew-phone.png') });
+      ok(!!(await pg.$('#nav [data-view=inputs] .newpip')) && !!(await pg.$('#nav [data-view=home] .newpip')) && !(await pg.$('#nav [data-view=journey] .newpip')), 'the tabs where things changed carry a small mark, and only those');
+      await pg.click('[data-act=wnTry][data-key=goals]');
+      await pg.waitForSelector('.horizons');
+      ok(!(await pg.$('.tabs [data-tab=goals] .newpip')) && !!(await pg.$('.tabs [data-tab=experiences] .newpip')) && !!(await pg.$('#nav [data-view=inputs] .newpip')), '"Give it a try" opens Goals; its mark fades, the trail to the rest stays');
+      await pg.click('[data-act=tab][data-tab=experiences]');
+      await pg.waitForFunction(() => !document.querySelector('#nav [data-view=inputs] .newpip'));
+      ok(true, 'once both new places are visited, the Inputs tab is quiet');
+      await pg.click('#nav [data-view=home]');
+      await pg.waitForSelector('#pathCard .newmark');
+      await pg.click('.path button[data-key="Strategy"]');
+      await pg.waitForFunction(() => !document.querySelector('.newpip') && !document.querySelector('.newmark'));
+      ok(true, 'stepping onto the path clears the last mark');
+      // An update that lands mid-session shows on the next refresh, as a quiet note in the corner.
+      await db.query(`update public.profiles set prefs = (prefs::jsonb - 'seenRelease' - 'explored')::text`);
+      await pg.reload();
+      await pg.waitForSelector('#notice');
+      ok(!(await pg.$('.dialog.whatsnew')) && /Something new/.test(await pg.textContent('#notice')), 'phone: a refresh mid-session gets a quiet note in the corner, not the window');
+      await pg.waitForTimeout(1000); await pg.screenshot({ path: path.join(SHOTS, 'H11-notice-phone.png') });
+      await pg.click('[data-act=noticeOpen]');
+      await pg.waitForSelector('.dialog.whatsnew');
+      await pg.waitForSelector('#notice', { state: 'detached' });
+      ok(true, 'the note opens what\'s new, and steps aside');
+      await pg.keyboard.press('Escape');
       await pg.waitForFunction(() => /Strategy/.test(document.querySelector('.chat-head').textContent) && document.querySelectorAll('.msg.coach').length >= 1, null, { timeout: 15000 });
       ok(!(await pg.$('.dialog.guide')), 'phone: the same account returns to the step it chose on Design, without the guide again');
       await pg.screenshot({ path: path.join(SHOTS, 'H2-design-phone.png'), fullPage: true });

@@ -1,6 +1,7 @@
 /* Life in Design · shared engine (runs in Apps Script and in the browser) */
 var LID = (function () {
   var FW = /*@@FRAMEWORK@@*/null;
+  var RELEASES = /*@@RELEASES@@*/[];
   var ELEMENTS = FW.elements;
   var STEPS = [{ key: 'exploration', name: 'Core Beliefs Exploration', layer: 'Why', order: 0 }]
     .concat(ELEMENTS.map(function (e) { return { key: e.element, name: e.element, layer: e.layer, order: e.order, el: e }; }));
@@ -97,6 +98,17 @@ var LID = (function () {
     var first = state.design[0];
     if (first) { var el = elementDef(first.Element); if (el) return el.layer.toLowerCase(); }
     return '';
+  }
+  /* What's new for this person: releases since they joined that they haven't been shown,
+     and the new things they haven't clicked into yet. People who joined after a release meet it as part of the app. */
+  function whatsNew(state, releases) {
+    var list = releases || RELEASES, u = state.user || {}, prefs = getPrefs(u);
+    var joined = Date.parse(u.CreatedAt);
+    var theirs = list.filter(function (r) { return isNaN(joined) || joined < Date.parse(r.since); });
+    var unseen = theirs.filter(function (r) { return !prefs.seenRelease || r.id > prefs.seenRelease; });
+    var items = [];
+    theirs.forEach(function (r) { r.items.forEach(function (it) { if (prefs.explored.indexOf(it.key) < 0) items.push(Object.assign({ release: r.id }, it)); }); });
+    return { latest: list.length ? list[list.length - 1].id : '', unseen: unseen, items: items };
   }
   /* Which conversation the Design page holds right now. */
   function homeContext(state) {
@@ -488,7 +500,8 @@ var LID = (function () {
     var types = {};
     NUDGE_TYPES.forEach(function (t) { types[t.key] = !(p.types && p.types[t.key] === false); });
     return { nudges: p.nudges !== false, email: p.email !== false, types: types, lastEmailAt: p.lastEmailAt || '',
-      guideSeen: p.guideSeen === true, premiseHeard: p.premiseHeard === true, focus: p.focus || '', entry: p.entry || '' };
+      guideSeen: p.guideSeen === true, premiseHeard: p.premiseHeard === true, focus: p.focus || '', entry: p.entry || '',
+      seenRelease: p.seenRelease || '', explored: Array.isArray(p.explored) ? p.explored : [] };
   }
   function savePrefs(d, a) {
     var cur = getPrefs(mine(d, 'Users', a.userId)[0]);
@@ -501,7 +514,10 @@ var LID = (function () {
       guideSeen: next.guideSeen !== undefined ? !!next.guideSeen : cur.guideSeen,
       premiseHeard: next.premiseHeard !== undefined ? !!next.premiseHeard : cur.premiseHeard,
       focus: next.focus !== undefined ? String(next.focus || '') : cur.focus,
-      entry: next.entry !== undefined ? (ENTRIES[next.entry] ? next.entry : '') : cur.entry
+      entry: next.entry !== undefined ? (ENTRIES[next.entry] ? next.entry : '') : cur.entry,
+      seenRelease: next.seenRelease !== undefined ? String(next.seenRelease || '').slice(0, 40) : cur.seenRelease,
+      explored: cur.explored.concat([].concat(next.explore || []).map(function (k) { return String(k).slice(0, 60); })
+        .filter(function (k, i, all) { return k && cur.explored.indexOf(k) < 0 && all.indexOf(k) === i; })).slice(-100)
     };
     var patch = { Prefs: JSON.stringify(merged) };
     if (next.focus) patch.CurrentFocus = /^element:/.test(next.focus) ? next.focus.slice(8) : 'Core Beliefs Exploration';
@@ -877,7 +893,7 @@ var LID = (function () {
     progress: progress, areaState: areaState, allAreas: allAreas, chosenByArea: chosenByArea, designMap: designMap,
     coachPrepare: coachPrepare, coachRecord: coachRecord, contextBlock: contextBlock,
     TESTS: TESTS, testDef: testDef, summarizeAssessment: summarizeAssessment, validateAssessment: validateAssessment, parseJSON: parseJSON,
-    NUDGE_TYPES: NUDGE_TYPES, getPrefs: getPrefs, computeNudges: computeNudges, latestReview: latestReview, homeContext: homeContext,
+    NUDGE_TYPES: NUDGE_TYPES, getPrefs: getPrefs, computeNudges: computeNudges, latestReview: latestReview, homeContext: homeContext, whatsNew: whatsNew, RELEASES: RELEASES,
     HORIZONS: HORIZONS, EXPERIENCE_KINDS: EXPERIENCE_KINDS, PATHS: PATHS
   };
 })();

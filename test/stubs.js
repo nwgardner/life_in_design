@@ -51,6 +51,7 @@ function supabaseStub(db) {
         const keys = Object.keys(rows[0]);
         if (rows.some((r) => Object.keys(r).join() !== keys.join())) return json(400, { message: 'All object keys must match' });
         calls.upserts++;
+        (calls.shapes = calls.shapes || []).push({ table: t.table, keys });
         await asUser(db, uid, async (tx) => {
           for (const r of rows) {
             const cols = keys.map((k) => `"${k}"`).join(', ');
