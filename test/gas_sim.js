@@ -192,6 +192,24 @@ r = api('coach',{ userId, sessionId, context:'iterate', mode:'open' });
 assert(/Already in one/.test(lastBody.system[1].text) && /30-minute window/.test(lastBody.system[1].text), 'accepted and declined guidance both feed the next conversation');
 assert(/objective evaluator of congruence/.test(lastBody.system[1].text), 'iterate focus sets the evaluator role');
 assert(ctx.LID.homeContext(api('getState',{ userId }))==='checkin', 'with all nine drafted, the Design page holds the check-in');
+// what's new after an update, for people who were here before it
+{
+  const rel = [{ id:'2026-01-01', since:'2026-01-01T00:00:00Z', title:'Old', items:[{ key:'old', title:'Old', view:'you' }] },
+               { id:'2026-11-11', since:'2026-11-11T19:00:00Z', title:'New rooms', items:[{ key:'goals', title:'Goals', view:'inputs', tab:'goals' }, { key:'open-path', title:'Path', view:'home', spot:'path' }] }];
+  const before = { user:{ CreatedAt:'2026-10-02T09:00:00.000Z', Prefs:'' } };
+  let wn = ctx.LID.whatsNew(before, rel);
+  assert(wn.latest==='2026-11-11' && wn.unseen.map(r=>r.id).join()==='2026-11-11' && wn.items.map(i=>i.key).join()==='goals,open-path', 'someone who joined before an update is shown it, and only what came after they joined');
+  const after = { user:{ CreatedAt:'2026-11-12T09:00:00.000Z', Prefs:'' } };
+  assert(ctx.LID.whatsNew(after, rel).unseen.length===0 && ctx.LID.whatsNew(after, rel).items.length===0, 'someone who joined after it meets it as part of the app: no window, no marks');
+  const v = api('createUser',{ name:'Vic', is18:true }).UserID;
+  api('savePrefs',{ userId:v, prefs:{ seenRelease:'2026-11-11', explore:'goals' } });
+  api('savePrefs',{ userId:v, prefs:{ explore:['goals','open-path'] } });
+  const vp = ctx.LID.getPrefs(api('getState',{ userId:v }).user);
+  assert(vp.seenRelease==='2026-11-11' && vp.explored.join()==='goals,open-path' && vp.nudges, 'the window is remembered once seen; visited things are remembered once each, without touching other settings');
+  wn = ctx.LID.whatsNew({ user:Object.assign({}, before.user, { Prefs: JSON.stringify({ seenRelease:'2026-11-11', explored:['goals'] }) }) }, rel);
+  assert(wn.unseen.length===0 && wn.items.map(i=>i.key).join()==='open-path', 'after the window, marks stay on what has not been visited yet');
+  assert(ctx.LID.RELEASES.length>=1 && ctx.LID.RELEASES.every(r => r.items.every(i => i.key && i.view && i.title && i.body)), 'the shipped release notes are complete');
+}
 // other ways in: the What and the How
 {
   const w = api('createUser',{ name:'Wren', is18:true }).UserID;

@@ -87,6 +87,27 @@ The interface aims to feel like a deep breath: organic minimalism, wabi-sabi and
 - **Texture and shape.** A faint paper grain, pebble-shaped cards with uneven corners, hand-drawn wavy dividers, shadows cast as if by sunlight from the upper left.
 - **Motion.** The fog drifts over minutes and follows the hour (dawn, day, dusk, night). Saving a reflection, a belief, a draft, a commitment or accepting guidance sends a ripple from where you tapped, brightens the fog and turns it a little; the turn is remembered on that device. Buttons and cards give with a soft spring instead of snapping. Everything holds still for people who set "reduce motion".
 
+## Announcing an update
+
+When a release adds something people should know about, add an entry at the end of [`src/releases.json`](src/releases.json) in the same pull request:
+
+```json
+{
+  "id": "2026-12-01",
+  "since": "2026-12-01T18:00:00Z",
+  "title": "A short, warm headline",
+  "intro": "One or two sentences.",
+  "items": [
+    { "key": "unique-key", "title": "What it is", "where": "Inputs → Goals", "body": "What it does for them.", "view": "inputs", "tab": "goals" }
+  ]
+}
+```
+
+- `id` must be later than the one before it; `since` is roughly when it goes live. Only people who joined before `since` are told about it; anyone newer meets it as part of the app.
+- Each item names where it lives: `view` (a nav tab: `home`, `journey`, `design`, `inputs`, `iterate`, `you`), plus an Inputs `tab` or a `spot` on the page if it's more specific.
+- **What people see:** opening the app in a new visit (a new tab, or after signing in) shows a *What's new* window with a "Give it a try" for each item. If the update arrived during a visit, the next refresh shows a quiet note in the top left instead. A small *new* mark sits above each tab where something changed, and on the sub-tab or card inside, until the person steps into it. *You → What's new* reopens the window.
+- Visits and the seen window are kept in the person's settings, so there is no database change.
+
 ## How it works
 
 ```

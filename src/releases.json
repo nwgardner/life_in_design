@@ -1,0 +1,34 @@
+[
+  {
+    "id": "2026-11-11",
+    "since": "2026-11-11T19:08:57Z",
+    "title": "New rooms in your design",
+    "intro": "A few things have been added since you were last here. Each one feeds your coach, so your conversations can go further.",
+    "items": [
+      {
+        "key": "goals",
+        "title": "Goals at four horizons",
+        "where": "Inputs → Goals",
+        "body": "A SMART goal for the next few months, an objective with key results for the year, a vivid picture of life a few years out, and a life-long reflection on who you hope to become. Each asks what's in the way, and what you'll do.",
+        "view": "inputs",
+        "tab": "goals"
+      },
+      {
+        "key": "experiences",
+        "title": "Life experiences",
+        "where": "Inputs → Life experiences",
+        "body": "A ledger for the experiences you want to live, from \"still ahead\" to \"lived\", with what each one taught you.",
+        "view": "inputs",
+        "tab": "experiences"
+      },
+      {
+        "key": "open-path",
+        "title": "Open at every level",
+        "where": "Design → Your path",
+        "body": "Work on any part of your pyramid whenever you feel ready. Tap any step on your path, and your coach will help it trace back to the foundation.",
+        "view": "home",
+        "spot": "path"
+      }
+    ]
+  }
+]

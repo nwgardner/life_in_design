@@ -404,6 +404,43 @@ input[type=number],input[type=date],select{border:1px solid var(--line);backgrou
 .stone.chosen::before{content:"✓ ";color:var(--what-ink)}
 .stones .own{display:flex;gap:8px;flex-wrap:wrap}
 .stones .own input{flex:1;min-width:160px;padding:9px 14px;border-radius:999px}
+/* what's new: a quiet mark on what changed, until it's been visited */
+.nav button{position:relative}
+.newpip{position:absolute;left:50%;top:-11px;transform:translateX(-50%);font-family:var(--hand);font-size:.92rem;line-height:1;font-weight:400;
+  padding:2px 7px 3px;border-radius:999px;background:var(--accent);color:var(--paper);pointer-events:none;letter-spacing:.02em;
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 18%,transparent);animation:pip-glow 3.6s var(--ease) infinite}
+@keyframes pip-glow{0%,100%{box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 16%,transparent)}50%{box-shadow:0 0 0 6px color-mix(in srgb,var(--accent) 6%,transparent)}}
+.tabs button{position:relative}
+.tabs .newpip{top:-9px}
+.newmark{display:inline-flex;align-items:center;gap:6px;font-family:var(--hand);font-size:1.05rem;line-height:1.1;color:var(--accent)}
+.newmark::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 20%,transparent)}
+.spot-glow{animation:spot-glow 2.4s var(--ease) 2}
+@keyframes spot-glow{0%,100%{box-shadow:var(--shadow)}50%{box-shadow:0 0 0 6px color-mix(in srgb,var(--accent) 22%,transparent),var(--shadow-lift)}}
+.dialog.whatsnew{width:min(640px,100%);gap:18px}
+.wn-items{display:grid;gap:12px}
+.wn-item{display:grid;gap:6px;padding:16px 18px 16px 20px;border:1px solid var(--line);background:var(--sheet-solid);border-radius:22px 18px 24px 20px/18px 24px 20px 22px}
+.wn-item:nth-child(even){border-radius:18px 24px 20px 22px/24px 18px 22px 20px}
+.wn-item .where{font-family:var(--hand);font-size:1.05rem;line-height:1;color:var(--muted)}
+.wn-item b{font-family:var(--display);font-weight:450;font-size:1.2rem}
+.wn-item p{margin:0;font-size:.94rem;line-height:1.55;color:var(--muted)}
+.wn-item .row{margin-top:4px}
+.notice{position:fixed;top:calc(env(safe-area-inset-top,0px) + 88px);left:max(16px,env(safe-area-inset-left,0px));z-index:30;width:min(360px,calc(100% - 32px));
+  display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;align-items:start;padding:14px 14px 14px 18px;
+  background:var(--sheet-solid);color:var(--ink);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:20px 24px 22px 18px;
+  box-shadow:var(--shadow-lift);animation:notice-in .9s var(--spring)}
+.notice.out{animation:notice-out .6s var(--ease) forwards}
+@keyframes notice-in{from{opacity:0;transform:translate(-18px,-10px)}to{opacity:1;transform:none}}
+@keyframes notice-out{to{opacity:0;transform:translate(-14px,-6px)}}
+.notice .k{font-family:var(--hand);font-size:1.12rem;line-height:1;color:var(--accent)}
+.notice p{margin:2px 0 0;font-size:.92rem;line-height:1.45;grid-column:1/-1}
+.notice .acts{grid-column:1/-1;display:flex;gap:8px;margin-top:8px}
+.notice .x{background:none;border:0;cursor:pointer;color:var(--muted);font-size:1.1rem;line-height:1;padding:2px 4px}
+@media (max-width:560px){
+  .newpip{top:1px;left:auto;right:1px;transform:none;width:7px;height:7px;padding:0;font-size:0;color:transparent}
+  .tabs .newpip{top:3px;right:3px}
+  .notice{top:calc(env(safe-area-inset-top,0px) + 112px)}
+}
+@media (prefers-reduced-motion:reduce){ .newpip,.notice,.spot-glow{animation:none} }
 /* goals: four horizons, each with its own shape */
 .horizons{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:26px}
 .hz{display:grid;gap:6px;align-content:start;text-align:left;padding:18px 18px 16px;cursor:pointer;color:var(--ink);border:1px solid var(--line);background:var(--sheet);
@@ -715,7 +752,17 @@ var Hosted = (function(){
   };
 })();
 
+// Settings are one stored value, so changes to them go one at a time and never overwrite each other.
+var prefsChain = Promise.resolve();
 function api(action, args, onText){
+  if (action==='savePrefs'){
+    var run = prefsChain.then(function(){ return callApi(action, args, onText); });
+    prefsChain = run.catch(function(){});
+    return run;
+  }
+  return callApi(action, args, onText);
+}
+function callApi(action, args, onText){
   args = Object.assign({ userId:S.userId, sessionId:S.sessionId }, args||{});
   if (HOSTED) return Hosted.api(action, args, onText).catch(function(e){
     if (e && e.code === 'signed_out' && S.view !== 'signin'){ S.state = null; S.userId = null; S.view = 'signin'; render(); }
@@ -742,6 +789,7 @@ function setState(st){ if(st && st.user) S.state = st; }
 
 function go(view){
   S.view = view; closeDialog();
+  explore(newFor(view, '', ''));
   if (view==='home' && S.state && S.state.user) loadHome(); else render();
   window.scrollTo(0,0);
   var m = $('#view'); m.classList.remove('enter'); void m.offsetWidth; m.classList.add('enter');
@@ -781,6 +829,7 @@ function render(){
     var map = { studio: S.ctx==='iterate' ? 'iterate' : 'journey', explore:'journey', map:'design', parked:'journey' };
     if (b.dataset.view === S.view || map[S.view] === b.dataset.view) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current');
   });
+  paintNews();
   var v = $('#view');
   var keep = $('#msg') ? $('#msg').value : '';
   var fns = { welcome:vWelcome, home:vHome, journey:vJourney, explore:vExplore, studio:vStudio, design:vDesign, map:vMap, parked:vParked, you:vYou, under18:vUnder18, inputs:vInputs, iterate:vIterate, signin:vSignIn, setup:vSetup };
@@ -1072,6 +1121,82 @@ function vStudio(){
 function loadHome(){
   openCtx(LID.homeContext(S.state), 'home');
   maybeGuide();
+  maybeWhatsNew();
+}
+
+/* ---------- what's new: after an update, for people who were here before it ---------- */
+// A page load in a tab that already held a signed-in session is a refresh mid-session; anything else is a fresh visit.
+var WAS_ALIVE = (function(){ try { return !!sessionStorage.getItem('lid.alive'); } catch(e){ return false; } })();
+// What's been visited this visit counts at once, even before the save comes back.
+function news(){
+  if (!(S.state && S.state.user)) return { unseen:[], items:[], latest:'' };
+  var wn = LID.whatsNew(S.state), local = S.localExplored || [];
+  wn.items = wn.items.filter(function(i){ return local.indexOf(i.key) < 0; });
+  return wn;
+}
+/* The first unvisited new thing at a place: a view, optionally an Inputs tab or a spot on the page. Returns its key. */
+function newFor(view, tab, spot){
+  var it = news().items.filter(function(i){ return i.view===view && (tab===undefined || (i.tab||'')===(tab||'')) && (spot===undefined || (i.spot||'')===(spot||'')); })[0];
+  return it ? it.key : '';
+}
+function explore(key){
+  if (!key || !S.state || !S.state.user) return;
+  S.localExplored = (S.localExplored || []).concat([key]);
+  paintNews();
+  api('savePrefs',{ prefs:{ explore:key }, silent:true }).catch(function(){});
+}
+function paintNews(){
+  var items = news().items;
+  Array.prototype.forEach.call(document.querySelectorAll('#nav button'), function(b){
+    var has = items.some(function(i){ return i.view===b.dataset.view; });
+    var pip = b.querySelector('.newpip');
+    if (has && !pip){ b.insertAdjacentHTML('beforeend','<span class="newpip" aria-hidden="true">new</span>'); b.setAttribute('aria-description','Something new here'); }
+    if (!has && pip){ pip.remove(); b.removeAttribute('aria-description'); }
+  });
+}
+function maybeWhatsNew(){
+  if (S.newsChecked || !S.state || !S.state.user) return;
+  S.newsChecked = true;
+  try { sessionStorage.setItem('lid.alive','1'); } catch(e){}
+  var wn = news();
+  if (!wn.unseen.length) return;
+  S.lastNews = wn;
+  // A brand-new guide takes the stage; the update waits quietly in the corner.
+  if (WAS_ALIVE || $('#layer .dialog.guide')) showNotice(wn); else showWhatsNew(wn);
+  api('savePrefs',{ prefs:{ seenRelease:wn.latest }, silent:true }).then(function(){
+    var p = LID.parseJSON(S.state.user.Prefs, {}) || {}; p.seenRelease = wn.latest; S.state.user.Prefs = JSON.stringify(p);
+  }).catch(function(){});
+}
+function whatsNewHtml(wn){
+  var rel = wn.unseen[wn.unseen.length-1];
+  var all = []; wn.unseen.forEach(function(r){ r.items.forEach(function(i){ all.push(i); }); });
+  return '<span class="eyebrow">What\'s new · '+fmtDate(rel.since)+'</span><h2>'+esc(rel.title)+'</h2>'+(rel.intro?'<p class="muted" style="margin:0">'+esc(rel.intro)+'</p>':'')+
+    '<div class="wn-items">'+all.map(function(i){
+      return '<div class="wn-item"><span class="where">'+esc(i.where||'')+'</span><b>'+esc(i.title)+'</b><p>'+esc(i.body)+'</p>'+
+        '<div class="row"><button class="btn small primary" data-act="wnTry" data-key="'+esc(i.key)+'">Give it a try →</button></div></div>';
+    }).join('')+'</div>'+
+    '<p class="muted" style="font-size:.88rem;margin:0">Look for the small <span class="newmark" style="font-size:.98rem">new</span> marks around the app. They fade once you\'ve stepped inside.</p>'+
+    '<div class="row"><button class="btn" data-act="cancel">Maybe later</button></div>';
+}
+function showWhatsNew(wn){ openDialog(whatsNewHtml(wn || { unseen: LID.RELEASES.slice(-1) }), 'whatsnew'); var b=$('#layer [data-act=wnTry]'); if(b) b.focus({ preventScroll:true }); }
+function showNotice(wn){
+  var old = $('#notice'); if (old) old.remove();
+  var names = []; wn.unseen.forEach(function(r){ r.items.forEach(function(i){ names.push(i.title); }); });
+  var list = names.length > 2 ? names.slice(0,2).join(', ')+' and more' : names.join(' and ');
+  document.body.insertAdjacentHTML('beforeend','<aside class="notice" id="notice" role="status"><span class="k">Something new is here</span><button class="x" data-act="noticeX" aria-label="Dismiss">×</button>'+
+    '<p>'+esc(list)+'. Take a look whenever you like.</p><div class="acts"><button class="btn small primary" data-act="noticeOpen">See what\'s new</button></div></aside>');
+  var n = $('#notice'), hover = false;
+  n.addEventListener('mouseenter', function(){ hover = true; }); n.addEventListener('mouseleave', function(){ hover = false; });
+  setTimeout(function tick(){ if (!document.body.contains(n)) return; if (hover) { setTimeout(tick, 3000); return; } hideNotice(); }, 18000);
+}
+function hideNotice(){ var n=$('#notice'); if(!n) return; n.classList.add('out'); setTimeout(function(){ n.remove(); }, 650); }
+function tryNew(key){
+  var it = LID.RELEASES.reduce(function(a, r){ return a.concat(r.items); }, []).filter(function(i){ return i.key===key; })[0];
+  if (!it) return;
+  closeDialog(); hideNotice();
+  if (it.tab){ S.inputsTab = it.tab; explore(it.key); }
+  go(it.view);
+  if (it.spot){ setTimeout(function(){ var el = it.spot==='path' ? $('#pathCard') : null; if (el){ el.scrollIntoView({ block:'center', behavior:'smooth' }); el.classList.add('spot-glow'); } }, 350); }
 }
 
 function stonesHtml(){
@@ -1111,7 +1236,8 @@ function pathCard(ctx){
     return '<li><button class="'+cls+'" data-act="step" data-key="'+esc(s.key)+'"'+(s.key===nowKey?' aria-current="step"':'')+'><i></i><span>'+esc(s.name)+'</span>'+(sugg?'<em>suggested</em>':'')+'</button></li>';
   };
   var group = function(label, layer){ return '<li class="lyr"><span>'+label+'</span><ul class="path">'+p.steps.filter(function(s){ return s.layer===layer; }).map(item).join('')+'</ul></li>'; };
-  return '<section class="panel card"><span class="eyebrow">Your path</span><p class="muted" style="font-size:.88rem;margin:0">Open at every level. Tap any step to work on it here.</p><ul class="path">'+group('Why · the foundation','Why')+group('How · the structure','How')+group('What · the living part','What')+'</ul>'+
+  var nw = newFor('home', '', 'path');
+  return '<section class="panel card" id="pathCard"><span class="eyebrow">Your path</span>'+(nw?'<span class="newmark">New · open at every level</span>':'')+'<p class="muted" style="font-size:.88rem;margin:0">Open at every level. Tap any step to work on it here.</p><ul class="path">'+group('Why · the foundation','Why')+group('How · the structure','How')+group('What · the living part','What')+'</ul>'+
     '<div class="row"><button class="btn small ghost" data-act="nav" data-view="journey">See the whole journey</button></div></section>';
 }
 
@@ -1125,13 +1251,15 @@ function vHome(){
     : ctx.indexOf('explore:')===0 ? 'Exploring '+ctx.slice(8)+', one lens at a time.'
     : ctx.indexOf('element:')===0 ? 'On the drawing board: '+ctx.slice(8)+'.'
     : 'Living with your design: what you did, what you learned, what you\'ll change.';
-  var rail = '<aside class="rail">'+
+  // While the open path is new, it sits at the top of the rail where the mark can be seen.
+  var pathFirst = !!newFor('home', '', 'path');
+  var rail = '<aside class="rail">'+(pathFirst ? pathCard(ctx) : '')+
     '<button class="protip" data-act="guide"><span class="k">Pro tip</span><span class="tx">New here, or been a while? Revisit how the framework works and how your coach will walk with you.</span><span class="go">Open the guide →</span></button>'+
     (ctx==='begin'
       ? '<section class="panel card"><span class="eyebrow">Where we begin</span><p style="font-size:.95rem">Choose an area of life beneath the conversation. You\'ll look at it through seven lenses, then close it with a belief you choose.</p>'+
           (st.chosen.length ? '<ul class="list">'+Object.keys(LID.chosenByArea(st)).map(function(a){ return '<li><span class="mono muted">'+esc(a)+'</span><span style="font-size:.92rem">'+esc(LID.chosenByArea(st)[a].ChosenBelief)+'</span></li>'; }).join('')+'</ul>' : '')+'</section>'
       : ctx==='checkin' || ctx==='start' ? '' : '<section class="panel brief">'+briefFor(ctx)+'</section>')+
-    pathCard(ctx)+
+    (pathFirst ? '' : pathCard(ctx))+
   '</aside>';
   return '<section class="hero compact"><p class="eyebrow">Design</p><h1>'+esc(greet)+'</h1><p class="lede">'+esc(lede)+'</p></section>'+
     '<div class="home">'+chatPanel(ctx, true)+rail+'</div>';
@@ -1268,6 +1396,7 @@ function vYou(){
       '<label class="choice"><input type="checkbox" id="you-plain"'+(LID.truthy(u.PlainStyle)?' checked':'')+'> I prefer plain, simple language</label>'+
       '<div class="row"><button class="btn" type="submit">Save</button></div></form>'+
     notifPanel()+
+    (LID.RELEASES.length ? '<section class="panel card"><span class="eyebrow">What\'s new</span><p>The latest update: '+esc(LID.RELEASES[LID.RELEASES.length-1].title.toLowerCase())+', '+fmtDate(LID.RELEASES[LID.RELEASES.length-1].since)+'.</p><div class="row"><button class="btn" data-act="whatsNew">See what\'s new</button></div></section>' : '')+
     (HOSTED ? '<section class="panel card"><span class="eyebrow">Your account</span><p>Signed in as <strong>'+esc(S.email)+'</strong>. Sign in with this email on any device to open your design.</p>'+
       '<div class="row"><button class="btn" data-act="signOut">Sign out</button></div></section>' :
     '<section class="panel card"><span class="eyebrow">Personal key</span><p>Use this key to open your design on another device. Keep it private: anyone with it can read your design.</p>'+
@@ -1323,7 +1452,7 @@ document.addEventListener('click', function(ev){
   if (act==='nav'){ ev.preventDefault(); if(!S.state && t.dataset.view!=='welcome') return; go(t.dataset.view); return; }
   if (act==='step'){
     var key=t.dataset.key;
-    if (S.view==='home'){ chooseFocus(key==='exploration' ? 'exploration' : 'element:'+key); return; }
+    if (S.view==='home'){ explore(newFor('home', '', 'path')); chooseFocus(key==='exploration' ? 'exploration' : 'element:'+key); return; }
     if (key==='exploration') go('explore'); else openCtx('element:'+key); return;
   }
   if (act==='ctx'){ openCtx(t.dataset.ctx); return; }
@@ -1357,7 +1486,13 @@ document.addEventListener('click', function(ev){
     try { navigator.clipboard.writeText(S.userId).then(function(){ toast('Key copied.'); }, function(){ selectKey(); }); } catch(e){ selectKey(); }
     return;
   }
+  if (act==='wnTry'){ tryNew(t.dataset.key); return; }
+  if (act==='noticeOpen'){ hideNotice(); showWhatsNew(S.lastNews); return; }
+  if (act==='noticeX'){ hideNotice(); return; }
+  if (act==='whatsNew'){ showWhatsNew(); return; }
   if (act==='signOut'){
+    try { sessionStorage.removeItem('lid.alive'); } catch(e){}
+    S.localExplored = []; S.newsChecked = false;
     if (HOSTED){ Hosted.signOut().then(function(){ S.userId=null; S.state=null; S.sessionId=null; S.email=''; S.linkSentTo=''; go('signin'); }); return; }
     store.del('lid.userId'); S.userId=null; S.state=null; S.sessionId=null; go('welcome'); return;
   }
@@ -1508,7 +1643,7 @@ function vInputs(){
   var body = S.inputsTab==='journal' ? journalTab() : S.inputsTab==='growth' ? growthTab() : S.inputsTab==='goals' ? goalsTab() : S.inputsTab==='experiences' ? experiencesTab() : testsTab();
   return '<section class="hero"><p class="eyebrow">Inputs</p><h1>What feeds your design</h1>'+
     '<p class="lede">Supplements to the guided process. Your coach draws on them to guide, nudge and suggest, and the framework stays at the core.</p></section>'+
-    '<div class="tabs" role="tablist">'+tabs.map(function(t){ return '<button role="tab" data-act="tab" data-tab="'+t[0]+'" aria-selected="'+(S.inputsTab===t[0])+'">'+t[1]+'</button>'; }).join('')+'</div>'+body;
+    '<div class="tabs" role="tablist">'+tabs.map(function(t){ var nw=newFor('inputs', t[0]); return '<button role="tab" data-act="tab" data-tab="'+t[0]+'" aria-selected="'+(S.inputsTab===t[0])+'"'+(nw?' aria-description="New"':'')+'>'+t[1]+(nw?'<span class="newpip" aria-hidden="true">new</span>':'')+'</button>'; }).join('')+'</div>'+body;
 }
 
 function testsTab(){
@@ -1979,7 +2114,7 @@ function phaseAClick(act, t){
   if (goalsClick(act, t)) return true;
   var E = S.edit, V = E && E.values, k = t.dataset.f;
   switch (act){
-    case 'tab': S.inputsTab = t.dataset.tab; render(); return true;
+    case 'tab': S.inputsTab = t.dataset.tab; explore(newFor('inputs', t.dataset.tab)); render(); return true;
     case 'editTest': openEditor(t.dataset.test); return true;
     case 'rk-add': { var f=fieldDef(k), a=V[k]=V[k]||[], v=t.dataset.v, i=a.indexOf(v); if(i>=0) a.splice(i,1); else if(a.length<f.max) a.push(v); renderEditor(); return true; }
     case 'rk-up': case 'rk-down': { var a2=V[k], i2=Number(t.dataset.i), j=act==='rk-up'?i2-1:i2+1; if(j<0||j>=a2.length) return true; var tmp=a2[i2]; a2[i2]=a2[j]; a2[j]=tmp; renderEditor(); return true; }
