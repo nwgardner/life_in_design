@@ -20,6 +20,7 @@ async def main():
             await pg.screenshot(path=SHOTS+f'/L1-welcome-{name}.png')
             await pg.fill('#ob-name','Nate'); await pg.check('#ob-adult'); await pg.click('#onboard button[type=submit]'); await pg.wait_for_timeout(400)
             await pg.click('[data-act=guideDone]'); await pg.wait_for_timeout(300)
+            await pg.click('.way[data-entry="why"]'); await pg.wait_for_timeout(500)
             await pg.click('.stone[data-area="Money"]'); await pg.wait_for_timeout(700)
             await pg.fill('#msg','My dad saw money as security. Never spend unless you must.'); await pg.keyboard.press('Enter'); await pg.wait_for_timeout(1200)
             await pg.screenshot(path=SHOTS+f'/L2-studio-{name}.png')
