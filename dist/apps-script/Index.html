@@ -441,6 +441,60 @@ input[type=number],input[type=date],select{border:1px solid var(--line);backgrou
   .notice{top:calc(env(safe-area-inset-top,0px) + 112px)}
 }
 @media (prefers-reduced-motion:reduce){ .newpip,.notice,.spot-glow{animation:none} }
+/* MAIA on the Design page: a fresh greeting, a clean conversation */
+.maia{width:22px;height:22px;flex:none;border-radius:58% 42% 52% 48%/55% 50% 50% 45%;background:radial-gradient(circle at 35% 30%,var(--glow),var(--accent) 70%);box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 14%,transparent);animation:maia-breathe 6s var(--ease) infinite}
+@keyframes maia-breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
+.home .chat.today .stream{height:clamp(280px,calc(100vh - 560px),560px)}
+.hero.today h1{font-size:clamp(2.2rem,4.6vw,3.3rem)}
+.hero.today .lede{font-family:var(--display);font-size:clamp(1.2rem,2.2vw,1.5rem);color:var(--ink);opacity:.82;max-width:34ch}
+.today-empty{color:var(--muted);font-family:var(--display);font-size:1.08rem;margin:auto 0;text-align:center;padding:40px 10px}
+.picks{display:grid;gap:8px}
+.picks .opts{gap:8px}
+.routes{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.msg.coach.nudge{border-style:dashed;max-width:min(560px,100%)}
+.msg.coach.nudge .steps{display:grid;gap:8px;margin-top:12px}
+.msg.coach.nudge .step{display:flex;justify-content:space-between;gap:12px;align-items:baseline;text-align:left;cursor:pointer;padding:10px 14px;color:var(--ink);
+  background:var(--sheet-solid);border:1px solid var(--line);border-radius:16px 20px 14px 18px;font-size:.95rem;transition:transform .6s var(--spring),box-shadow .5s var(--ease)}
+.msg.coach.nudge .step:hover{transform:translateX(3px);box-shadow:var(--shadow)}
+.msg.coach.nudge .step em{font-style:normal;font-family:var(--hand);font-size:1rem;color:var(--muted);white-space:nowrap}
+/* score: how much of v1 is laid */
+.ring{position:relative;width:var(--d,92px);height:var(--d,92px);flex:none}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:8;stroke-linecap:round}
+.ring .bg{stroke:color-mix(in srgb,var(--rule) 70%,transparent)}
+.ring .fg{stroke:var(--accent);transition:stroke-dashoffset 1.4s var(--ease)}
+.ring b{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--display);font-weight:450;font-size:calc(var(--d,92px) * .27)}
+.scorecard{display:flex;gap:16px;align-items:center;text-align:left;cursor:pointer;width:100%;color:var(--ink)}
+.scorecard .t{display:grid;gap:3px}
+.scorecard .t span{font-size:.9rem;color:var(--muted);line-height:1.4}
+/* badges: six paths, three stones each */
+.badge-top{display:flex;gap:28px;align-items:center;flex-wrap:wrap;padding:24px 28px;margin-bottom:24px}
+.badge-top .t{display:grid;gap:6px;flex:1;min-width:240px}
+.badge-top h2{margin:0;font-size:clamp(1.5rem,3vw,2rem)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:.88rem;color:var(--muted)}
+.legend span{display:inline-flex;gap:6px;align-items:center}
+.badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+.bcat{display:grid;gap:14px;padding:22px 24px;align-content:start}
+.bcat h3{font-family:var(--display);font-weight:450;font-size:1.35rem;margin:0}
+.bcat .blurb{margin:0;font-size:.92rem;color:var(--muted);line-height:1.5}
+.btiers{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.btier{display:grid;gap:3px;justify-items:center;align-content:start;text-align:center;padding:10px 4px 10px;border-radius:18px 22px 16px 20px;border:1px solid transparent}
+.btier.earned{background:color-mix(in srgb,var(--c) 12%,transparent);border-color:color-mix(in srgb,var(--c) 30%,transparent)}
+.btier .nm{font-weight:800;font-size:.88rem;line-height:1.25}
+.btier .lv{font-family:var(--hand);font-size:1.02rem;line-height:1;color:var(--muted)}
+.btier.locked .nm{color:var(--muted);font-weight:600}
+.btier .when{font-size:.75rem;color:var(--muted)}
+.cairn-svg{width:60px;height:60px}
+.cairn-svg ellipse{transition:opacity .6s}
+.nextup{display:grid;gap:6px;padding-top:12px;border-top:1px solid var(--line)}
+.nextup .need{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;font-size:.88rem;align-items:center}
+.nextup .need .mini{grid-column:1/-1;height:5px;border-radius:999px;background:color-mix(in srgb,var(--rule) 60%,transparent);overflow:hidden}
+.nextup .need .mini i{display:block;height:100%;background:var(--c);border-radius:999px}
+.nextup .need.met{color:var(--muted);text-decoration:line-through;text-decoration-color:color-mix(in srgb,var(--muted) 50%,transparent)}
+.bcat.first{--c:var(--why)}.bcat.living{--c:var(--how)}.bcat.awareness{--c:color-mix(in srgb,var(--why) 50%,var(--accent))}
+.bcat.expansion{--c:var(--what)}.bcat.congruence{--c:var(--accent)}.bcat.rhythm{--c:color-mix(in srgb,var(--how) 55%,var(--what))}
+@media (max-width:560px){ .badge-top{padding:20px} .badges{grid-template-columns:minmax(0,1fr)} }
+@media (prefers-reduced-motion:reduce){ .maia{animation:none} }
 /* goals: four horizons, each with its own shape */
 .horizons{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:26px}
 .hz{display:grid;gap:6px;align-content:start;text-align:left;padding:18px 18px 16px;cursor:pointer;color:var(--ink);border:1px solid var(--line);background:var(--sheet);
@@ -545,7 +599,7 @@ input[type=number],input[type=date],select{border:1px solid var(--line);backgrou
   .home{grid-template-columns:minmax(0,1fr)}
   .rail{position:static}
   .home .chat{min-height:0}
-  .home .stream,.home .chat.begin .stream{height:auto;max-height:none;min-height:240px;padding:22px 18px}
+  .home .stream,.home .chat.begin .stream,.home .chat.today .stream{height:auto;max-height:none;min-height:240px;padding:22px 18px}
 }
 @media (max-width:560px){
   .dialog.guide{padding:24px 20px 20px}
@@ -573,6 +627,7 @@ input[type=number],input[type=date],select{border:1px solid var(--line);backgrou
   header .bar-in{gap:6px;border-radius:26px;padding:8px 10px}
   .nav{width:100%;margin-left:0;justify-content:space-between;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
   .nav::-webkit-scrollbar{display:none}
+  .nav{-webkit-mask-image:linear-gradient(90deg,#000 88%,transparent);mask-image:linear-gradient(90deg,#000 88%,transparent);padding-right:18px}
   .nav button{padding:6px 6px;font-size:.84rem;flex:none}
   .plan,.card,.welcome form,.dialog{padding:20px}
   .tabs{width:100%}
@@ -604,6 +659,7 @@ input[type=number],input[type=date],select{border:1px solid var(--line);backgrou
     <button data-act="nav" data-view="design">Record</button>
     <button data-act="nav" data-view="inputs">Inputs</button>
     <button data-act="nav" data-view="iterate">Iterate</button>
+    <button data-act="nav" data-view="badges">Badges</button>
     <button data-act="nav" data-view="you">You</button>
   </nav>
 </div></header>
@@ -621,7 +677,7 @@ input[type=number],input[type=date],select{border:1px solid var(--line);backgrou
 <script>/* Life in Design · shared engine (runs in Apps Script and in the browser) */
 var LID = (function () {
   var FW = {"version":"1.0","elements":[{"order":1,"layer":"Why","element":"Core Beliefs","oneLine":"The beliefs you accept as true about yourself, others and the cosmos","definingQuestion":"What do I choose to believe is fundamentally true about myself, others and the universe?","strongDraft":"3–7 short statements covering self, others and the universe, each one the person would act on."},{"order":2,"layer":"Why","element":"Vision","oneLine":"A future state you envision for you and others","definingQuestion":"What is the grandest possible future, emerging from my beliefs, that I can see for me and others?","strongDraft":"A vivid, energizing picture that includes other people, not only the self, and that clearly grows out of the Core Beliefs."},{"order":3,"layer":"Why","element":"Purpose","oneLine":"Your role in bringing about the vision you see","definingQuestion":"What is my central role in bringing about my Vision of the future?","strongDraft":"One or two sentences naming the person's distinct role in the Vision. Memorable enough to recall in a hard moment."},{"order":4,"layer":"How","element":"Governing Principles","oneLine":"The fundamental ethos that governs and motivates your attitudes and actions","definingQuestion":"What governing principles naturally emerge as necessarily connected to my Core Beliefs, Vision and Purpose?","strongDraft":"3–7 principles phrased as usable decision rules, each traceable to the Why."},{"order":5,"layer":"How","element":"Strategy","oneLine":"Your action plan, aligning vision and purpose with time, energy and resources","definingQuestion":"With finite time and finite resources, what trade-offs (say yes, say no) will I make to accomplish my Purpose?","strongDraft":"A short list of focus areas and goals for a defined period, plus an explicit list of what the person is saying no to."},{"order":6,"layer":"How","element":"Relationships","oneLine":"The people you choose to work with to achieve your purpose","definingQuestion":"Who will I walk with to enrich my Purpose and bring about my Vision?","strongDraft":"Named people or groups in roles (multipliers, complements, fellow travelers), plus energizing and draining influences to adjust."},{"order":7,"layer":"What","element":"Key Activities","oneLine":"Your priorities, daily habits and where you spend your time","definingQuestion":"How will I spend my time to accomplish my Purpose, and what activities will I say no to?","strongDraft":"A realistic picture of a typical week, with specific activities added and removed to match the Strategy."},{"order":8,"layer":"What","element":"Resources","oneLine":"Your strengths: what you are good at and passionate about","definingQuestion":"What strengths, tools, resources and advantages are at my disposal to help me achieve my Purpose?","strongDraft":"An honest inventory of strengths, skills, assets and access, each linked to where it serves the Strategy."},{"order":9,"layer":"What","element":"Methods","oneLine":"The style, habits, systems and processes that govern your actions","definingQuestion":"What systems, tools and metrics do I use to achieve and measure progress toward my Purpose?","strongDraft":"A few habits or routines, one to three measures of progress, and the mindset practices that keep the person on course."}],"areas":[{"order":1,"area":"Success in Life","weight":"Gentle start"},{"order":2,"area":"Career","weight":"Gentle start"},{"order":3,"area":"Money","weight":"Gentle start"},{"order":4,"area":"The Nature of Themselves","weight":""},{"order":5,"area":"The Future","weight":""},{"order":6,"area":"Leadership","weight":""},{"order":7,"area":"Relationships","weight":""},{"order":8,"area":"Belief","weight":""},{"order":9,"area":"Doubt","weight":""},{"order":10,"area":"God","weight":"Tender"},{"order":11,"area":"Parenting","weight":"Tender"},{"order":12,"area":"Failure","weight":"Tender"},{"order":13,"area":"Love","weight":"Tender"},{"order":14,"area":"Sex","weight":"Tender"}],"lenses":[{"order":1,"key":"father","lens":"Father figure","kind":"Inherited","questions":"What do you believe your father figure holds as true about this? What explicit and implicit messages led you to that conclusion? Where do you think their belief came from?","alt":"If a father figure was absent, unknown or painful, explore another caregiver or early influence instead, or skip this lens."},{"order":2,"key":"mother","lens":"Mother figure","kind":"Inherited","questions":"What do you believe your mother figure holds as true about this? What explicit and implicit messages led you to that conclusion? Where do you think their belief came from?","alt":"If a mother figure was absent, unknown or painful, explore another caregiver or early influence instead, or skip this lens."},{"order":3,"key":"admired","lens":"Admired figure","kind":"Inherited","questions":"What do you believe someone you admire holds as true about this? What explicit and implicit messages led you to that conclusion? Where do you think their belief came from?","alt":""},{"order":4,"key":"society","lens":"Society","kind":"Inherited","questions":"What does general society hold as true about this? What messages tell you so? Where does that belief come from?","alt":""},{"order":5,"key":"own","lens":"My own","kind":"Own","questions":"What do I hold as true about this?","alt":""},{"order":6,"key":"vis","lens":"Me vis-à-vis others","kind":"Own","questions":"What am I carrying forward from my father, mother, admired figure and society? How well does this belief serve me in becoming the grandest version of myself I can imagine? Is there a belief that could expand my possibilities beyond what I believe now?","alt":""},{"order":7,"key":"truth","lens":"Belief vs. verifiable truth","kind":"Own","questions":"What here is truth and what is belief? Why do I choose to believe it, and what is really motivating that choice?","alt":""}],"tables":{"Users":["UserID","Name","Email","CreatedAt","LastActiveAt","Stage","CurrentFocus","WhatBroughtYou","HopedChange","Is18OrOlder","PlainStyle","Prefs"],"DesignRecord":["UserID","Layer","Element","ElementOrder","Statement","Status","Version","UpdatedAt"],"ElementHistory":["HistoryID","UserID","Element","Version","Statement","Status","ChangedAt","ChangeNote"],"BeliefExploration":["EntryID","UserID","Area","IsCustomArea","LensOrder","Lens","Response","Skipped","UpdatedAt","LensStatus"],"ChosenBeliefs":["ChoiceID","UserID","Area","ChosenBelief","Why","ApprovedAt"],"ParkedProblems":["ProblemID","UserID","Description","ParkedAt","Status","ResolvedAt","ResolutionNote"],"Commitments":["CommitmentID","UserID","SessionID","Focus","Commitment","Status","CreatedAt","CompletedAt","Reflection"],"Sessions":["SessionID","UserID","StartedAt","EndedAt","Focus","Summary"],"Messages":["MessageID","UserID","SessionID","Timestamp","Context","Role","Content"],"Assessments":["AssessmentID","UserID","Test","TakenOn","Results","Summary","Notes","UpdatedAt"],"Journal":["EntryID","UserID","CreatedAt","Prompt","Entry","CoachCanRead","Tag"],"Growth":["ItemID","UserID","Kind","Title","Detail","Source","Status","AcquiredOn","LinkedElement","CreatedAt"],"Recommendations":["RecID","UserID","ReviewID","CreatedAt","Layer","Kind","Title","Body","TracesTo","ActionType","ActionElement","ActionText","SearchQuery","Status","RespondedAt","UserNote"],"Reviews":["ReviewID","UserID","CreatedAt","Summary","TraceJSON","Traced","Total"],"Goals":["GoalID","UserID","Horizon","Title","Details","Impediments","Actions","Status","CompletedOn","Learned","LinkedElement","CreatedAt","UpdatedAt"],"LifeExperiences":["ExperienceID","UserID","Title","Description","Category","TargetWhen","Impediments","Actions","Status","CompletedOn","Learned","CreatedAt","UpdatedAt"]},"tests":[{"key":"clifton","name":"CliftonStrengths","publisher":"Gallup","url":"https://www.gallup.com/cliftonstrengths/","what":"Your top talent themes out of 34, grouped in four domains.","feeds":["Resources","Key Activities"],"fields":[{"key":"top","label":"Your themes, in order","type":"rank","min":5,"max":34,"hint":"Add your top 5 at least. Add all 34 if you have the full report.","options":[{"v":"Achiever","g":"Executing"},{"v":"Arranger","g":"Executing"},{"v":"Belief","g":"Executing"},{"v":"Consistency","g":"Executing"},{"v":"Deliberative","g":"Executing"},{"v":"Discipline","g":"Executing"},{"v":"Focus","g":"Executing"},{"v":"Responsibility","g":"Executing"},{"v":"Restorative","g":"Executing"},{"v":"Activator","g":"Influencing"},{"v":"Command","g":"Influencing"},{"v":"Communication","g":"Influencing"},{"v":"Competition","g":"Influencing"},{"v":"Maximizer","g":"Influencing"},{"v":"Self-Assurance","g":"Influencing"},{"v":"Significance","g":"Influencing"},{"v":"Woo","g":"Influencing"},{"v":"Adaptability","g":"Relationship Building"},{"v":"Connectedness","g":"Relationship Building"},{"v":"Developer","g":"Relationship Building"},{"v":"Empathy","g":"Relationship Building"},{"v":"Harmony","g":"Relationship Building"},{"v":"Includer","g":"Relationship Building"},{"v":"Individualization","g":"Relationship Building"},{"v":"Positivity","g":"Relationship Building"},{"v":"Relator","g":"Relationship Building"},{"v":"Analytical","g":"Strategic Thinking"},{"v":"Context","g":"Strategic Thinking"},{"v":"Futuristic","g":"Strategic Thinking"},{"v":"Ideation","g":"Strategic Thinking"},{"v":"Input","g":"Strategic Thinking"},{"v":"Intellection","g":"Strategic Thinking"},{"v":"Learner","g":"Strategic Thinking"},{"v":"Strategic","g":"Strategic Thinking"}]}]},{"key":"via","name":"VIA Character Strengths","publisher":"VIA Institute on Character","url":"https://www.viacharacter.org/","what":"Your 24 character strengths, ranked, across six virtues.","feeds":["Resources","Governing Principles"],"fields":[{"key":"rank","label":"Your strengths, in order","type":"rank","min":5,"max":24,"hint":"Your top 5 are your signature strengths. Add more if you like.","options":[{"v":"Creativity","g":"Wisdom"},{"v":"Curiosity","g":"Wisdom"},{"v":"Judgment","g":"Wisdom"},{"v":"Love of Learning","g":"Wisdom"},{"v":"Perspective","g":"Wisdom"},{"v":"Bravery","g":"Courage"},{"v":"Perseverance","g":"Courage"},{"v":"Honesty","g":"Courage"},{"v":"Zest","g":"Courage"},{"v":"Love","g":"Humanity"},{"v":"Kindness","g":"Humanity"},{"v":"Social Intelligence","g":"Humanity"},{"v":"Teamwork","g":"Justice"},{"v":"Fairness","g":"Justice"},{"v":"Leadership","g":"Justice"},{"v":"Forgiveness","g":"Temperance"},{"v":"Humility","g":"Temperance"},{"v":"Prudence","g":"Temperance"},{"v":"Self-Regulation","g":"Temperance"},{"v":"Appreciation of Beauty & Excellence","g":"Transcendence"},{"v":"Gratitude","g":"Transcendence"},{"v":"Hope","g":"Transcendence"},{"v":"Humor","g":"Transcendence"},{"v":"Spirituality","g":"Transcendence"}]}]},{"key":"mbti","name":"Myers-Briggs / 16Personalities","publisher":"The Myers-Briggs Company · 16Personalities","url":"https://www.16personalities.com/","what":"Your four-letter type, with how clear each preference is.","feeds":["Methods","Relationships"],"fields":[{"key":"pairs","label":"Your preferences","type":"pairs","pairs":[["E","Extraversion","I","Introversion"],["S","Sensing","N","Intuition"],["T","Thinking","F","Feeling"],["J","Judging","P","Perceiving"]],"hint":"Percentages are optional."},{"key":"identity","label":"Identity (16Personalities only)","type":"select","optional":true,"options":[{"v":"A","label":"Assertive (-A)"},{"v":"T","label":"Turbulent (-T)"}]}]},{"key":"enneagram","name":"Enneagram","publisher":"Various (e.g. The Enneagram Institute)","url":"https://www.enneagraminstitute.com/","what":"Your core type, wing and instinct.","feeds":["Core Beliefs","Governing Principles"],"fields":[{"key":"type","label":"Core type","type":"select","options":[{"v":"1","label":"1 · Reformer"},{"v":"2","label":"2 · Helper"},{"v":"3","label":"3 · Achiever"},{"v":"4","label":"4 · Individualist"},{"v":"5","label":"5 · Investigator"},{"v":"6","label":"6 · Loyalist"},{"v":"7","label":"7 · Enthusiast"},{"v":"8","label":"8 · Challenger"},{"v":"9","label":"9 · Peacemaker"}]},{"key":"wing","label":"Wing","type":"wing","of":"type","optional":true},{"key":"instinct","label":"Dominant instinct","type":"select","optional":true,"options":[{"v":"sp","label":"Self-preservation (sp)"},{"v":"so","label":"Social (so)"},{"v":"sx","label":"One-to-one (sx)"}]},{"key":"tritype","label":"Tritype","type":"text","optional":true,"placeholder":"e.g. 513"}]},{"key":"bigfive","name":"Big Five (OCEAN)","publisher":"Various (e.g. IPIP-NEO)","url":"https://bigfive-test.com/","what":"Five broad traits, as percentiles.","feeds":["Methods","Relationships"],"fields":[{"key":"scores","label":"Percentile for each trait","type":"scores","min":0,"max":100,"unit":"th pct","items":["Openness","Conscientiousness","Extraversion","Agreeableness","Neuroticism"]}]},{"key":"disc","name":"DISC","publisher":"Various (e.g. Everything DiSC)","url":"https://www.discprofile.com/","what":"Your behavioral style across four dimensions.","feeds":["Relationships","Methods"],"fields":[{"key":"primary","label":"Primary style","type":"select","options":[{"v":"D","label":"D · Dominance"},{"v":"I","label":"I · Influence"},{"v":"S","label":"S · Steadiness"},{"v":"C","label":"C · Conscientiousness"}]},{"key":"secondary","label":"Secondary style","type":"select","optional":true,"options":[{"v":"D","label":"D · Dominance"},{"v":"I","label":"I · Influence"},{"v":"S","label":"S · Steadiness"},{"v":"C","label":"C · Conscientiousness"}]},{"key":"scores","label":"Scores","type":"scores","min":0,"max":100,"optional":true,"items":["Dominance","Influence","Steadiness","Conscientiousness"]}]},{"key":"genius","name":"Working Genius","publisher":"The Table Group","url":"https://www.workinggenius.com/","what":"Which kinds of work give you energy and which drain it.","feeds":["Key Activities","Relationships"],"fields":[{"key":"buckets","label":"Sort the six types","type":"buckets","items":["Wonder","Invention","Discernment","Galvanizing","Enablement","Tenacity"],"buckets":[{"v":"genius","label":"Genius","count":2},{"v":"competency","label":"Competency","count":2},{"v":"frustration","label":"Frustration","count":2}]}]},{"key":"kolbe","name":"Kolbe A Index","publisher":"Kolbe Corp","url":"https://www.kolbe.com/","what":"How you naturally take action, in four modes.","feeds":["Methods","Key Activities"],"fields":[{"key":"modes","label":"Your score in each Action Mode","type":"scores","min":1,"max":10,"items":["Fact Finder","Follow Thru","Quick Start","Implementor"]}]},{"key":"holland","name":"Holland Code (RIASEC)","publisher":"e.g. O*NET Interest Profiler, Strong Interest Inventory","url":"https://www.mynextmove.org/explore/ip","what":"Your three strongest interest areas, in order.","feeds":["Strategy","Key Activities"],"fields":[{"key":"code","label":"Your three-letter code, in order","type":"rank","min":3,"max":3,"options":[{"v":"Realistic","code":"R"},{"v":"Investigative","code":"I"},{"v":"Artistic","code":"A"},{"v":"Social","code":"S"},{"v":"Enterprising","code":"E"},{"v":"Conventional","code":"C"}]}]},{"key":"love","name":"5 Love Languages","publisher":"Gary Chapman","url":"https://5lovelanguages.com/quizzes","what":"How you most give and receive care.","feeds":["Relationships"],"fields":[{"key":"scores","label":"Your score for each language","type":"scores","min":0,"max":12,"items":["Words of Affirmation","Quality Time","Receiving Gifts","Acts of Service","Physical Touch"]}]}],"goalHorizons":[{"key":"short","name":"Short-term","span":"30 – 90 days","shape":"SMART"},{"key":"mid","name":"Mid-term","span":"90 – 360 days","shape":"OKR"},{"key":"long","name":"Long-term","span":"1 – 5 years","shape":"Vivid imagining"},{"key":"life","name":"Life-long","span":"A lifetime","shape":"Reflection"}]};
-  var RELEASES = [{"id":"2026-11-11","since":"2026-11-11T19:08:57Z","title":"New rooms in your design","intro":"A few things have been added since you were last here. Each one feeds your coach, so your conversations can go further.","items":[{"key":"goals","title":"Goals at four horizons","where":"Inputs → Goals","body":"A SMART goal for the next few months, an objective with key results for the year, a vivid picture of life a few years out, and a life-long reflection on who you hope to become. Each asks what's in the way, and what you'll do.","view":"inputs","tab":"goals"},{"key":"experiences","title":"Life experiences","where":"Inputs → Life experiences","body":"A ledger for the experiences you want to live, from \"still ahead\" to \"lived\", with what each one taught you.","view":"inputs","tab":"experiences"},{"key":"open-path","title":"Open at every level","where":"Design → Your path","body":"Work on any part of your pyramid whenever you feel ready. Tap any step on your path, and your coach will help it trace back to the foundation.","view":"home","spot":"path"}]}];
+  var RELEASES = [{"id":"2026-11-11","since":"2026-11-11T19:08:57Z","title":"New rooms in your design","intro":"A few things have been added since you were last here. Each one feeds your coach, so your conversations can go further.","items":[{"key":"goals","title":"Goals at four horizons","where":"Inputs → Goals","body":"A SMART goal for the next few months, an objective with key results for the year, a vivid picture of life a few years out, and a life-long reflection on who you hope to become. Each asks what's in the way, and what you'll do.","view":"inputs","tab":"goals"},{"key":"experiences","title":"Life experiences","where":"Inputs → Life experiences","body":"A ledger for the experiences you want to live, from \"still ahead\" to \"lived\", with what each one taught you.","view":"inputs","tab":"experiences"},{"key":"open-path","title":"Open at every level","where":"Design → Your path","body":"Work on any part of your pyramid whenever you feel ready. Tap any step on your path, and your coach will help it trace back to the foundation.","view":"home","spot":"path"}]},{"id":"2026-11-23","since":"2026-11-23T16:00:00Z","title":"Meet MAIA, and stones along the way","intro":"Your coach has a name, the Design page starts fresh each visit, and there's a new way to see how far your design has come.","items":[{"key":"maia","title":"Meet MAIA","where":"Design","body":"Your coach is now MAIA. Each visit begins with a fresh greeting and one question: what part of your design would you like to work on today? MAIA takes you there, and when a question is still waiting for your answer, MAIA waits with it.","view":"home","spot":"today"},{"key":"badges","title":"Badges","where":"Badges","body":"See how close your first full design is, and earn stones along six paths: The First Design, The Living Design, Awareness, Expansion, Congruence and Rhythm. Each has a Pebble, a Stone and a Cairn.","view":"badges"}]}];
   var ELEMENTS = FW.elements;
   var STEPS = [{ key: 'exploration', name: 'Core Beliefs Exploration', layer: 'Why', order: 0 }]
     .concat(ELEMENTS.map(function (e) { return { key: e.element, name: e.element, layer: e.layer, order: e.order, el: e }; }));
@@ -659,7 +715,8 @@ var LID = (function () {
       recs: mine(d, 'Recommendations', userId).slice(-80),
       reviews: mine(d, 'Reviews', userId),
       goals: mine(d, 'Goals', userId).filter(function (g) { return g.Status !== 'Removed'; }),
-      experiences: mine(d, 'LifeExperiences', userId).filter(function (x) { return x.Status !== 'Removed'; })
+      experiences: mine(d, 'LifeExperiences', userId).filter(function (x) { return x.Status !== 'Removed'; }),
+      visits: mine(d, 'Sessions', userId).map(function (s) { return s.StartedAt; }).slice(-400)
     };
   }
 
@@ -719,6 +776,7 @@ var LID = (function () {
     if (first) { var el = elementDef(first.Element); if (el) return el.layer.toLowerCase(); }
     return '';
   }
+  function partOfDay(d) { var h = (d || new Date()).getHours(); return h < 5 ? 'evening' : h < 12 ? 'morning' : h < 17 ? 'afternoon' : 'evening'; }
   /* What's new for this person: releases since they joined that they haven't been shown,
      and the new things they haven't clicked into yet. People who joined after a release meet it as part of the app. */
   function whatsNew(state, releases) {
@@ -975,6 +1033,13 @@ var LID = (function () {
         parts.push('Areas closed so far: ' + cbA.join(', ') + '. Reflect briefly on any theme you notice across their chosen beliefs, as an observation. Depth over coverage: a few areas (three or more is a good guide) let real patterns show before they distill Core Beliefs, but they decide. Ask which area they would like to explore next, or whether they feel ready to move on to Core Beliefs.');
       }
       parts.push('To start an area they tap its stone or name it in the field below; the conversation then moves into that area. If they name an area in chat, warmly point them to the stone or the field. Do not begin the first lens here.');
+    } else if (ctx.indexOf('today:') === 0) {
+      var mo = momentum(state);
+      var where = homeContext(state);
+      parts.push('FOCUS: the Design page, at the start of today\'s visit. The app has just greeted them: "Good ' + partOfDay() + ', ' + state.user.Name + '. What part of your design would you like to work on today?" Help them choose one focus for today. Listen for what is alive for them and connect it to a place in their design: an element, an area of the Exploration, their Inputs, a check-in or a congruence review. Draw on their Inputs when it helps (a goal coming due, a journal theme, a result that bears on it). Keep it light and brief: a sentence or two of framing, not the work itself.');
+      parts.push('Where they left off: ' + (where.indexOf('element:') === 0 ? where.slice(8) : where.indexOf('explore:') === 0 ? 'the ' + where.slice(8) + ' area of the Exploration' : where === 'begin' ? 'the Core Beliefs Exploration' : where === 'checkin' ? 'living with a complete v1 design' : 'not begun') + '. Their v1 design is ' + scoreV1(state).pct + '% complete.');
+      if (mo) parts.push('Their design has held still for ' + mo.days + ' days. If they seem unsure, offer one or two easy, concrete first steps, never a lecture. Easy steps the app suggests: ' + mo.steps.map(function (x) { return x.label; }).join('; ') + '.');
+      parts.push('When they have chosen, or you can name a clear fit, end your reply with one line in exactly this form, and nothing after it: [[open:TARGET]] where TARGET is one of: element:<one of the nine element names>, explore:<an area of the Exploration>, begin (choose an area of the Exploration), checkin, iterate (a congruence review), inputs:tests, inputs:goals, inputs:experiences, inputs:journal or inputs:growth. The app turns that line into a button for them to tap; never mention the brackets or the button. At most two such lines in a reply. Do not begin the element\'s questions here: the conversation continues there.');
     } else if (ctx === 'start') {
       var parkedNow = state.parked.filter(function (x) { return x.Status !== 'Resolved'; }).length;
       parts.push('FOCUS: the Design page, at the very start of their design. The person has just read the app\'s short guide to the framework. Welcome them warmly by name, briefly, in your own words, with the invitation "Consider yourself an iterative design."');
@@ -1025,6 +1090,8 @@ var LID = (function () {
       L.push('## Open commitments');
       openC.forEach(function (c) { L.push('- ' + clip(c.Commitment, 200) + ' (from ' + String(c.CreatedAt).slice(0, 10) + ')'); });
     }
+    var bb = badgeBoard(state);
+    L.push('Design v1: ' + bb.score.pct + '% complete' + (bb.score.complete ? ' (v1 is complete; the work now is iteration, awareness, expansion and congruence)' : '') + '. Badges earned: ' + bb.earned + ' of ' + bb.total + '. If a milestone comes up naturally, celebrate it warmly and specifically; never make the work about points.');
     var inp = inputsBlock(state);
     if (inp) L.push(inp);
     L.push('');
@@ -1113,7 +1180,8 @@ var LID = (function () {
     { key: 'recommendations', label: 'Guidance waiting', hint: 'When a review has left cards for you to accept or decline.' },
     { key: 'review', label: 'Review reminders', hint: 'A congruence review every two weeks, and a deeper look at your Why each quarter.' },
     { key: 'commitments', label: 'Small steps', hint: 'A check on steps you committed to more than a week ago.' },
-    { key: 'inputs', label: 'Inputs', hint: 'Suggestions to add strengths results or log what you are learning.' }
+    { key: 'inputs', label: 'Inputs', hint: 'Suggestions to add strengths results or log what you are learning.' },
+    { key: 'momentum', label: 'Easy ways back in', hint: 'When your design has held still for a while, MAIA suggests a few small steps.' }
   ];
   function getPrefs(user) {
     var p = parseJSON(user && user.Prefs, {}) || {};
@@ -1121,7 +1189,8 @@ var LID = (function () {
     NUDGE_TYPES.forEach(function (t) { types[t.key] = !(p.types && p.types[t.key] === false); });
     return { nudges: p.nudges !== false, email: p.email !== false, types: types, lastEmailAt: p.lastEmailAt || '',
       guideSeen: p.guideSeen === true, premiseHeard: p.premiseHeard === true, focus: p.focus || '', entry: p.entry || '',
-      seenRelease: p.seenRelease || '', explored: Array.isArray(p.explored) ? p.explored : [] };
+      seenRelease: p.seenRelease || '', explored: Array.isArray(p.explored) ? p.explored : [],
+      badges: p.badges && typeof p.badges === 'object' && !Array.isArray(p.badges) ? p.badges : {} };
   }
   function savePrefs(d, a) {
     var cur = getPrefs(mine(d, 'Users', a.userId)[0]);
@@ -1137,7 +1206,9 @@ var LID = (function () {
       entry: next.entry !== undefined ? (ENTRIES[next.entry] ? next.entry : '') : cur.entry,
       seenRelease: next.seenRelease !== undefined ? String(next.seenRelease || '').slice(0, 40) : cur.seenRelease,
       explored: cur.explored.concat([].concat(next.explore || []).map(function (k) { return String(k).slice(0, 60); })
-        .filter(function (k, i, all) { return k && cur.explored.indexOf(k) < 0 && all.indexOf(k) === i; })).slice(-100)
+        .filter(function (k, i, all) { return k && cur.explored.indexOf(k) < 0 && all.indexOf(k) === i; })).slice(-100),
+      // Badges, once earned, stay earned, with the day they were first noticed.
+      badges: (function () { var b = Object.assign({}, cur.badges); [].concat(next.award || []).forEach(function (k) { k = String(k).slice(0, 40); if (BADGE_KEYS[k] && !b[k]) b[k] = now().slice(0, 10); }); return b; })()
     };
     var patch = { Prefs: JSON.stringify(merged) };
     if (next.focus) patch.CurrentFocus = /^element:/.test(next.focus) ? next.focus.slice(8) : 'Core Beliefs Exploration';
@@ -1422,6 +1493,126 @@ var LID = (function () {
   }
 
   /* ---------- nudges (pure) ---------- */
+  /* ---------- the v1 score: how much of the first full design exists ---------- */
+  function scoreV1(state) {
+    var p = progress(state);
+    var areas = Object.keys(chosenByArea(state)).length;
+    var drafted = p.steps.filter(function (s) { return s.key !== 'exploration' && s.done; });
+    var approved = drafted.filter(function (s) { return s.status === 'Approved'; }).length;
+    // Exploration up to 10 (three areas), each element 9 for a draft and 1 more once approved.
+    var pts = Math.min(areas, 3) / 3 * 10 + drafted.length * 9 + approved;
+    return { pct: Math.round(pts), areas: areas, drafted: drafted.length, approved: approved, complete: drafted.length === 9 && areas > 0 };
+  }
+
+  /* ---------- badges: six paths, each in three tiers ---------- */
+  var TIERS = ['Pebble', 'Stone', 'Cairn'];
+  function isoWeek(t) { var d = new Date(t); if (isNaN(d)) return ''; d = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate())); var day = d.getUTCDay() || 7; d.setUTCDate(d.getUTCDate() + 4 - day); var y = d.getUTCFullYear(); return y + '-' + Math.ceil(((d - Date.UTC(y, 0, 1)) / 86400000 + 1) / 7); }
+  function facts(state) {
+    var sc = scoreV1(state);
+    var revisions = state.history.filter(function (h) { return Number(h.Version) > 1; });
+    var revisedEls = {}; revisions.forEach(function (h) { revisedEls[h.Element] = 1; });
+    var lr = latestReview(state);
+    var weeks = {};
+    (state.visits || []).concat(state.history.map(function (h) { return h.ChangedAt; }), state.journal.map(function (j) { return j.CreatedAt; })).forEach(function (t) { var w = isoWeek(t); if (w) weeks[w] = 1; });
+    var goals = state.goals || [], exps = state.experiences || [];
+    return {
+      score: sc.pct, complete: sc.complete, areas: sc.areas,
+      revisions: revisions.length, revisedElements: Object.keys(revisedEls).length,
+      reviews: state.reviews.length, ratio: lr && Number(lr.Total) ? Number(lr.Traced) / Number(lr.Total) : 0,
+      accepted: state.recs.filter(function (r) { return r.Status === 'Accepted'; }).length,
+      tests: state.assessments.filter(function (r) { return r.Summary; }).length,
+      journal: state.journal.filter(function (j) { return j.Entry; }).length,
+      planted: goals.length + exps.length + state.growth.length,
+      fulfilled: goals.filter(function (g) { return g.Status === 'Done'; }).length + exps.filter(function (x) { return x.Status === 'Done'; }).length,
+      acquired: state.growth.filter(function (g) { return g.Status === 'Acquired'; }).length,
+      lifeReflection: goals.some(function (g) { return g.Horizon === 'life' && parseJSON(g.Details, {}).become; }) ? 1 : 0,
+      weeks: Object.keys(weeks).length
+    };
+  }
+  // Each tier lists what it asks for: [fact, at least, how to say it].
+  var BADGES = [
+    { key: 'first', name: 'The First Design', blurb: 'Laying the first full version of your design, stone by stone.', tiers: [
+      { key: 'first-stone', name: 'First Stone', needs: [['score', 1, 'Choose a belief or draft any element']] },
+      { key: 'halfway-up', name: 'Halfway Up', needs: [['score', 50, 'Reach 50% of your v1 design']] },
+      { key: 'version-one', name: 'Version One', needs: [['complete', 1, 'Draft all nine elements, on a foundation of at least one chosen belief']] }] },
+    { key: 'living', name: 'The Living Design', blurb: 'Returning to the design and letting it change as you do.', tiers: [
+      { key: 'second-draft', name: 'Second Draft', needs: [['revisions', 1, 'Revise any element']] },
+      { key: 'remodeler', name: 'Remodeler', needs: [['revisions', 5, 'Make five revisions'], ['revisedElements', 3, 'across three elements']] },
+      { key: 'never-finished', name: 'Never Finished', needs: [['revisions', 15, 'Make fifteen revisions'], ['reviews', 3, 'and run three congruence reviews']] }] },
+    { key: 'awareness', name: 'Awareness', blurb: 'Seeing where your beliefs came from, and who you are becoming.', tiers: [
+      { key: 'looking-in', name: 'Looking In', needs: [['areas', 1, 'Close one area of the Exploration']] },
+      { key: 'deep-well', name: 'Deep Well', needs: [['areas', 3, 'Close three areas'], ['tests', 1, 'add a strengths or personality result'], ['journal', 5, 'and write five journal entries']] },
+      { key: 'still-water', name: 'Still Water', needs: [['areas', 6, 'Close six areas'], ['tests', 3, 'add three results'], ['journal', 20, 'and write twenty journal entries']] }] },
+    { key: 'expansion', name: 'Expansion', blurb: 'Growing past the edges: goals reached, experiences lived, skills gained.', tiers: [
+      { key: 'first-sprout', name: 'First Sprout', needs: [['planted', 1, 'Add a goal, a life experience or something you\'re learning']] },
+      { key: 'branching-out', name: 'Branching Out', needs: [['fulfilled', 1, 'Accomplish a goal or live an experience'], ['acquired', 3, 'and gain three skills or pieces of knowledge']] },
+      { key: 'canopy', name: 'Canopy', needs: [['fulfilled', 5, 'Accomplish or live five'], ['acquired', 8, 'gain eight'], ['lifeReflection', 1, 'and write your life-long reflection']] }] },
+    { key: 'congruence', name: 'Congruence', blurb: 'Why, How and What, sounding together.', tiers: [
+      { key: 'first-reflection', name: 'First Reflection', needs: [['reviews', 1, 'Run a congruence review']] },
+      { key: 'in-tune', name: 'In Tune', needs: [['accepted', 3, 'Take on three pieces of guidance'], ['ratio', 0.6, 'and trace 60% of your What to its Why']] },
+      { key: 'whole-chord', name: 'Whole Chord', needs: [['reviews', 3, 'Run three reviews'], ['ratio', 0.85, 'and trace 85% of your What to its Why']] }] },
+    { key: 'rhythm', name: 'Rhythm', blurb: 'Coming back to the practice, week after week.', tiers: [
+      { key: 'returning', name: 'Returning', needs: [['weeks', 2, 'Spend time with your design in two different weeks']] },
+      { key: 'steady', name: 'Steady', needs: [['weeks', 6, 'in six weeks']] },
+      { key: 'tidal', name: 'Tidal', needs: [['weeks', 12, 'in twelve weeks']] }] }
+  ];
+  var BADGE_KEYS = {}; BADGES.forEach(function (c) { c.tiers.forEach(function (t) { BADGE_KEYS[t.key] = 1; }); });
+  function badgeBoard(state) {
+    var f = facts(state), kept = getPrefs(state.user).badges;
+    var cats = BADGES.map(function (c) {
+      var tiers = c.tiers.map(function (t, i) {
+        var needs = t.needs.map(function (n) { var have = Number(f[n[0]]) || 0; return { fact: n[0], have: have, need: n[1], label: n[2], met: have >= n[1] }; });
+        var met = needs.every(function (n) { return n.met; });
+        return { key: t.key, name: t.name, tier: TIERS[i], level: i + 1, needs: needs, met: met, earned: met || !!kept[t.key], on: kept[t.key] || '' };
+      });
+      var level = 0; tiers.forEach(function (t) { if (t.earned && t.level === level + 1) level = t.level; });
+      return { key: c.key, name: c.name, blurb: c.blurb, tiers: tiers, level: level, next: tiers[level] || null };
+    });
+    var fresh = []; cats.forEach(function (c) { c.tiers.forEach(function (t) { if (t.met && !kept[t.key]) fresh.push(t.key); }); });
+    return { score: scoreV1(state), facts: f, categories: cats, fresh: fresh,
+      earned: cats.reduce(function (n, c) { return n + c.tiers.filter(function (t) { return t.earned; }).length; }, 0), total: BADGES.length * 3 };
+  }
+
+  /* ---------- momentum: when the design has held still, a few easy ways back in ---------- */
+  function latestTime(list) { var m = 0; list.forEach(function (t) { var v = new Date(t).getTime(); if (!isNaN(v) && v > m) m = v; }); return m; }
+  function momentum(state, nowMs) {
+    nowMs = nowMs || Date.now();
+    var prefs = getPrefs(state.user);
+    if (!prefs.nudges || !prefs.types.momentum) return null;
+    var p = progress(state), sc = scoreV1(state);
+    var joined = new Date(state.user.CreatedAt).getTime();
+    var v1Moves = latestTime(state.history.map(function (h) { return h.ChangedAt; }).concat(state.chosen.map(function (c) { return c.ApprovedAt; }), state.exploration.map(function (r) { return r.UpdatedAt; })));
+    var kind, last, days;
+    if (!p.allDrafted) {
+      if (!v1Moves) { days = isNaN(joined) ? 0 : (nowMs - joined) / 86400000; if (days < 2) return null; kind = 'not-started'; }
+      else { days = (nowMs - v1Moves) / 86400000; if (days < 7) return null; kind = 'stalled'; }
+    } else {
+      last = latestTime(state.history.map(function (h) { return h.ChangedAt; }).concat(state.reviews.map(function (r) { return r.CreatedAt; }), state.recs.map(function (r) { return r.RespondedAt; })));
+      days = (nowMs - last) / 86400000; if (days < 21) return null; kind = 'iteration';
+    }
+    var steps = [];
+    var nx = p.next;
+    if (kind !== 'iteration' && nx) steps.push(nx.key === 'exploration'
+      ? { label: 'Explore one area of belief, one lens at a time', go: 'begin', time: 'about 10 minutes' }
+      : { label: 'Answer one question about your ' + nx.name, go: 'element:' + nx.key, time: 'about 5 minutes' });
+    if (kind === 'iteration') {
+      var lr = latestReview(state);
+      if (!lr || daysSince(lr.CreatedAt, nowMs) > 30) steps.push({ label: 'Run a congruence review and see what has drifted', go: 'iterate', time: 'about 5 minutes' });
+      var byEl = {}; state.design.forEach(function (r) { byEl[r.Element] = r.UpdatedAt; });
+      var oldest = ELEMENTS.slice().sort(function (a, b) { return new Date(byEl[a.element] || 0) - new Date(byEl[b.element] || 0); })[0];
+      steps.push({ label: 'Reread your ' + oldest.element + '. Does it still hold?', go: 'element:' + oldest.element, time: 'about 5 minutes' });
+    }
+    var openC = state.commitments.filter(function (c) { return c.Status === 'Open'; }).slice(-1)[0];
+    if (openC) steps.push({ label: 'Close the loop on "' + clip(openC.Commitment, 60) + '"', go: 'journey', time: 'a minute' });
+    if (!state.assessments.some(function (r) { return r.Summary; })) steps.push({ label: 'Add a strengths or personality result you already have', go: 'inputs:tests', time: 'a few minutes' });
+    else if (!(state.goals || []).some(function (g) { return g.Status === 'Open'; })) steps.push({ label: 'Set one goal for the next 30 to 90 days', go: 'inputs:goals', time: 'a few minutes' });
+    steps.push({ label: 'Write one honest line in your journal', go: 'inputs:journal', time: 'a minute' });
+    var say = kind === 'not-started' ? 'Every design begins with a single stone. Here are a few easy ways to set the first one:'
+      : kind === 'stalled' ? 'It\'s been ' + Math.floor(days) + ' days since your design last moved, and that\'s all right. A few small ways back in:'
+      : 'Your design has held still for ' + Math.floor(days) + ' days. A living design likes a little tending. A few light ways to stir it:';
+    return { kind: kind, days: Math.floor(days), say: say, steps: steps.slice(0, 3), score: sc.pct };
+  }
+
   function daysSince(iso, nowMs) { var t = new Date(iso).getTime(); return isNaN(t) ? 9999 : (nowMs - t) / 86400000; }
   function computeNudges(state, nowMs) {
     nowMs = nowMs || Date.now();
@@ -1444,7 +1635,7 @@ var LID = (function () {
       if (lastWhy && (nowMs - lastWhy) / 86400000 > 90) out.push({ type: 'review', text: 'A season has passed since your Why last changed. Does it still hold?', action: 'design', cta: 'Revisit your Why' });
     }
     if (on('reflection') && age > 2 && (!lastJournal || daysSince(lastJournal.CreatedAt, nowMs) > 7)) {
-      out.push({ type: 'reflection', text: lastJournal ? 'A week since your last journal entry. A few lines is plenty.' : 'Try the journal: a few honest lines between sessions give your coach more to work with.', action: 'journal', cta: 'Write' });
+      out.push({ type: 'reflection', text: lastJournal ? 'A week since your last journal entry. A few lines is plenty.' : 'Try the journal: a few honest lines between sessions give MAIA more to work with.', action: 'journal', cta: 'Write' });
     }
     if (on('commitments')) {
       var stale = state.commitments.filter(function (c) { return c.Status === 'Open' && daysSince(c.CreatedAt, nowMs) > 7; });
@@ -1452,7 +1643,7 @@ var LID = (function () {
     }
     if (on('inputs')) {
       var have = state.assessments.filter(function (r) { return r.Summary; }).length;
-      if (p.whatOpen && !have) out.push({ type: 'inputs', text: 'Your design has reached the What. Strengths results will sharpen Resources and your coach\'s suggestions.', action: 'tests', cta: 'Add results' });
+      if (p.whatOpen && !have) out.push({ type: 'inputs', text: 'Your design has reached the What. Strengths results will sharpen Resources and MAIA\'s suggestions.', action: 'tests', cta: 'Add results' });
       else if (p.allDrafted && !state.growth.length) out.push({ type: 'inputs', text: 'Log something you\'ve learned or a skill you\'re building. It feeds Resources and future suggestions.', action: 'growth', cta: 'Log it' });
     }
     return out;
@@ -1469,7 +1660,8 @@ var LID = (function () {
     var lr = latestReview(state);
     var goals = (state.goals || []), exps = (state.experiences || []);
     if (!(tests.length || growth.length || journal.length || accepted.length || declined.length || lr || goals.length || exps.length)) return '';
-    L.push('## Supplementary inputs (aids to guidance; the framework stays at the core. Never let a test result define the person; their own words lead.)');
+    L.push('## Their Inputs (aids to guidance; the framework stays at the core. Never let a test result define the person; their own words lead.)');
+    L.push('Coach with these actively. When one bears on the moment, name it specifically (a result, a goal and its obstacle, an experience they hope for, a journal theme, a skill) and ask how it connects. Notice where an input and the design pull against each other, and where an input is evidence for something they have not yet said. Weave them in; do not list them back.');
     if (tests.length) { L.push('Strengths & personality results (self-reported):'); tests.forEach(function (r) { var t = testDef(r.Test); L.push('- ' + (t ? t.name : r.Test) + ': ' + r.Summary + (r.Notes ? ' — their note: "' + clip(r.Notes, 160) + '"' : '')); }); }
     if (growth.length) { L.push('Learning & skills log:'); growth.slice(-10).forEach(function (g) { L.push('- ' + g.Kind + (g.Status === 'Planned' ? ' (planned)' : '') + ': ' + clip(g.Title, 120) + (g.Detail ? ' — ' + clip(g.Detail, 160) : '')); }); }
     var openG = goals.filter(function (g) { return g.Status === 'Open'; }), doneG = goals.filter(function (g) { return g.Status === 'Done'; });
@@ -1514,6 +1706,7 @@ var LID = (function () {
     coachPrepare: coachPrepare, coachRecord: coachRecord, contextBlock: contextBlock,
     TESTS: TESTS, testDef: testDef, summarizeAssessment: summarizeAssessment, validateAssessment: validateAssessment, parseJSON: parseJSON,
     NUDGE_TYPES: NUDGE_TYPES, getPrefs: getPrefs, computeNudges: computeNudges, latestReview: latestReview, homeContext: homeContext, whatsNew: whatsNew, RELEASES: RELEASES,
+    scoreV1: scoreV1, badgeBoard: badgeBoard, BADGES: BADGES, TIERS: TIERS, momentum: momentum, partOfDay: partOfDay,
     HORIZONS: HORIZONS, EXPERIENCE_KINDS: EXPERIENCE_KINDS, PATHS: PATHS
   };
 })();
@@ -1566,18 +1759,18 @@ var Local = (function(){
     return sampleP;
   }
   var SAMPLE_MSG = {
-    not_granted:'Allow this page to use Claude to hear from the coach.', sampling_disabled:'Claude is not available for this account.',
-    rate_limited:'The coach needs a short pause. Try again in a minute.', session_expired:'Sign in to Claude again, then retry.',
-    refused:'The coach could not answer that. Try rephrasing.', prompt_too_large:'This conversation has grown long. Start a fresh session.'
+    not_granted:'Allow this page to use Claude to hear from MAIA.', sampling_disabled:'Claude is not available for this account.',
+    rate_limited:'MAIA needs a short pause. Try again in a minute.', session_expired:'Sign in to Claude again, then retry.',
+    refused:'MAIA could not answer that. Try rephrasing.', prompt_too_large:'This conversation has grown long. Start a fresh session.'
   };
   function coach(a, onText){
     var prepared = LID.coachPrepare(d, a);
     return getSample().then(function(sample){
-      if(!sample) throw new Error('The coach answers inside Claude. Open this preview in Claude, or use the live app.');
+      if(!sample) throw new Error('MAIA answers inside Claude. Open this preview in Claude, or use the live app.');
       var msgs = prepared.messages.map(function(m){ return {role:m.role, content:m.content}; });
-      msgs[0].content = 'You are acting as the coach inside the Life in Design app. Follow these instructions throughout.\n\n' + GUIDE_PUBLIC + '\n\n' + prepared.system + '\n\n---\n\n' + msgs[0].content;
+      msgs[0].content = 'You are acting as MAIA, the coach inside the Life in Design app. Follow these instructions throughout.\n\n' + GUIDE_PUBLIC + '\n\n' + prepared.system + '\n\n---\n\n' + msgs[0].content;
       return sample(msgs, { cache:false, onText: onText ? function(u){ onText(u.text); } : undefined })
-        .catch(function(e){ throw new Error(SAMPLE_MSG[e && e.code] || 'The coach could not answer just now. Try again.'); });
+        .catch(function(e){ throw new Error(SAMPLE_MSG[e && e.code] || 'MAIA could not answer just now. Try again.'); });
     }).then(function(r){ return LID.coachRecord(d, a, prepared, r.text); });
   }
   return {
@@ -1626,7 +1819,7 @@ var Hosted = (function(){
     }
     function pump(){
       return reader.read().then(function(r){
-        if (r.done){ handle(buf); if (error) throw new Error(error); if (result === undefined) throw new Error('The coach was interrupted. Try again.'); return result; }
+        if (r.done){ handle(buf); if (error) throw new Error(error); if (result === undefined) throw new Error('MAIA was interrupted. Try again.'); return result; }
         buf += decoder.decode(r.value, { stream:true });
         var i; while ((i = buf.indexOf('\n')) >= 0){ handle(buf.slice(0, i)); buf = buf.slice(i+1); }
         return pump();
@@ -1684,11 +1877,12 @@ function toast(t){
 }
 function fail(e){ toast(e && e.message ? e.message : String(e)); }
 
-function setState(st){ if(st && st.user) S.state = st; }
+function setState(st){ if(st && st.user){ S.state = st; checkBadges(); } }
 
 function go(view){
   S.view = view; closeDialog();
   explore(newFor(view, '', ''));
+  if (view==='badges') S.badgePip = false;
   if (view==='home' && S.state && S.state.user) loadHome(); else render();
   window.scrollTo(0,0);
   var m = $('#view'); m.classList.remove('enter'); void m.offsetWidth; m.classList.add('enter');
@@ -1731,7 +1925,7 @@ function render(){
   paintNews();
   var v = $('#view');
   var keep = $('#msg') ? $('#msg').value : '';
-  var fns = { welcome:vWelcome, home:vHome, journey:vJourney, explore:vExplore, studio:vStudio, design:vDesign, map:vMap, parked:vParked, you:vYou, under18:vUnder18, inputs:vInputs, iterate:vIterate, signin:vSignIn, setup:vSetup };
+  var fns = { welcome:vWelcome, home:vHome, journey:vJourney, explore:vExplore, studio:vStudio, design:vDesign, map:vMap, parked:vParked, you:vYou, under18:vUnder18, inputs:vInputs, iterate:vIterate, badges:vBadges, signin:vSignIn, setup:vSetup };
   v.innerHTML = (fns[S.view] || function(){ return '<p class="muted">Opening your design…</p>'; })();
   if (isChat()) { paintStream(); var ta=$('#msg'); if(ta){ if(keep && !S.busy) ta.value=keep; autoGrow(ta); } }
 }
@@ -1774,7 +1968,7 @@ function vWelcome(){
    '</section>'+
    '<form class="panel" id="onboard" autocomplete="on" novalidate>'+
     '<h2>Begin your design</h2>'+
-    '<div class="field"><label for="ob-name">What should your coach call you?</label><input id="ob-name" type="text" required maxlength="60" autocomplete="given-name"></div>'+
+    '<div class="field"><label for="ob-name">What should MAIA call you?</label><input id="ob-name" type="text" required maxlength="60" autocomplete="given-name"></div>'+
     '<div class="field"><label for="ob-brought">What brought you here? <span class="hint">Optional</span></label><textarea id="ob-brought" rows="3"></textarea></div>'+
     '<div class="field"><label for="ob-hope">What do you hope will be different? <span class="hint">Optional</span></label><textarea id="ob-hope" rows="3"></textarea></div>'+
     '<div class="field"><label for="ob-pressing">Is something pressing on you right now? <span class="hint">Optional. We\'ll park it safely and return to it when your design reaches the What, where it can be solved properly.</span></label><textarea id="ob-pressing" rows="2"></textarea></div>'+
@@ -1831,7 +2025,7 @@ function vSetup(){
 function vUnder18(){
   return '<section class="panel card" style="max-width:640px">'+
     '<h2>Thank you for being honest.</h2>'+
-    '<p>Life in Design is built for adults aged 18 and over, so the coach can\'t begin a design with you yet. The questions it asks are worth asking at any age, and they are best explored with people who know you: a parent, teacher, mentor or counselor you trust.</p>'+
+    '<p>Life in Design is built for adults aged 18 and over, so MAIA can\'t begin a design with you yet. The questions it asks are worth asking at any age, and they are best explored with people who know you: a parent, teacher, mentor or counselor you trust.</p>'+
     '<p>If things feel heavy right now, please talk to a trusted adult. In the US you can call or text <strong>988</strong> any time to reach someone who will listen.</p>'+
     '<div class="row"><button class="btn" data-act="nav" data-view="welcome">Back</button>'+(HOSTED?'<button class="btn ghost" data-act="signOut">Sign out</button>':'')+'</div>'+
   '</section>';
@@ -1935,7 +2129,7 @@ function briefFor(ctx){
       if (rel.length || gr.length) extra+='<div class="block"><span class="eyebrow">From your inputs</span><ul class="list">'+
         rel.map(function(r){ return '<li><span class="mono muted">'+esc(LID.testDef(r.Test).name)+'</span><span style="font-size:.92rem">'+esc(r.Summary)+'</span></li>'; }).join('')+
         gr.slice(-6).map(function(g){ return '<li><span class="mono muted">'+esc(g.Kind)+(g.Status==='Planned'?' · planned':'')+'</span><span style="font-size:.92rem">'+esc(g.Title)+'</span></li>'; }).join('')+'</ul></div>';
-      else if (name==='Resources') extra+='<div class="block"><span class="eyebrow">From your inputs</span><p class="muted" style="font-size:.9rem">Add strengths results under Inputs and your coach will draw on them here.</p></div>';
+      else if (name==='Resources') extra+='<div class="block"><span class="eyebrow">From your inputs</span><p class="muted" style="font-size:.9rem">Add strengths results under Inputs and MAIA will draw on them here.</p></div>';
     }
     if (e.layer==='What'){ var op=st.parked.filter(function(x){ return x.Status!=='Resolved'; }); if(op.length) extra+='<div class="block"><span class="eyebrow">Parked for the What</span><ul class="list">'+op.map(function(x){ return '<li>'+esc(x.Description)+'</li>'; }).join('')+'</ul></div>'; }
     return '<span class="layer-tag '+e.layer+'">'+e.layer+' · '+String(e.order).padStart(2,'0')+'</span><h2>'+esc(e.element)+'</h2><p class="muted">'+esc(e.oneLine)+'</p>'+
@@ -1947,7 +2141,7 @@ function briefFor(ctx){
   }
   if (ctx==='iterate'){
     var lr = LID.latestReview(st), open = st.recs.filter(function(r){ return r.Status==='New'; });
-    return '<span class="eyebrow">Life Design Iteration</span><h2>Talk it through</h2><p class="muted">Your coach as an objective evaluator: provocative, challenging, guiding. Accepted guidance becomes a new input to your design.</p>'+
+    return '<span class="eyebrow">Life Design Iteration</span><h2>Talk it through</h2><p class="muted">MAIA as an objective evaluator: provocative, challenging, guiding. Accepted guidance becomes a new input to your design.</p>'+
       (lr?'<div class="block"><span class="eyebrow">Latest review · '+fmtDate(lr.CreatedAt)+'</span><p><strong>'+esc(lr.Traced)+' of '+esc(lr.Total)+'</strong> What items trace clearly to your How and Why.</p><p class="muted" style="font-size:.92rem">'+esc(lr.Summary)+'</p></div>':'')+
       (open.length?'<div class="block"><span class="eyebrow">Open guidance</span><ul class="list">'+open.map(function(r){ return '<li><span class="layer-tag '+r.Layer+'">'+r.Layer+' · '+esc(r.Kind)+'</span><span style="font-size:.92rem">'+esc(r.Title)+'</span></li>'; }).join('')+'</ul></div>':'');
   }
@@ -1961,6 +2155,7 @@ function briefFor(ctx){
 function ctxTitle(ctx){
   if (ctx.indexOf('explore:')===0) return 'Exploring '+ctx.slice(8);
   if (ctx.indexOf('element:')===0) return ctx.slice(8);
+  if (isToday(ctx)) return 'Today';
   return {alignment:'Alignment check',checkin:'Check-in',remodel:'Remodel',iterate:'Iteration',begin:'The Core Beliefs Exploration',start:'Choosing where to begin'}[ctx]||ctx;
 }
 
@@ -1981,7 +2176,7 @@ function chatActions(ctx){
   } else if (ctx==='iterate') {
     actions = '<button class="btn small" data-act="nav" data-view="iterate">See the review and cards</button>';
   }
-  if (ctx!=='begin' && ctx!=='start') actions += '<button class="btn small ghost" data-act="endSession">End session</button>';
+  if (ctx!=='begin' && ctx!=='start' && !isToday(ctx)) actions += '<button class="btn small ghost" data-act="endSession">End session</button>';
   return actions;
 }
 
@@ -1991,20 +2186,23 @@ function chatPanel(ctx, home){
     var where='';
     if (ctx.indexOf('explore:')===0){ var as=LID.areaState(S.state, ctx.slice(8)); where = as.current ? '<span class="chip draft">Lens '+as.current.order+' of 7 · '+esc(as.current.lens)+'</span>' : '<span class="chip approved">Ready to close</span>'; }
     else if (ctx.indexOf('element:')===0){ var e=LID.elementDef(ctx.slice(8)); where = '<span class="layer-tag '+e.layer+'">'+e.layer+' · '+String(e.order).padStart(2,'0')+'</span>'; }
-    head = '<div class="where"><span class="eyebrow">'+esc(ctxTitle(ctx))+'</span>'+where+'</div>'+
-      (ctx==='begin' || ctx.indexOf('explore:')===0 ? '<button class="btn small ghost" data-act="nav" data-view="explore">All areas</button>' : '');
+    if (isToday(ctx) && newFor('home','','today')) where += '<span class="newmark">New · meet MAIA</span>';
+    head = '<div class="where"><span class="maia" aria-hidden="true"></span><span class="eyebrow">MAIA'+(isToday(ctx)?'':' · '+esc(ctxTitle(ctx)))+'</span>'+where+'</div>'+
+      '<span class="row" style="gap:6px">'+(ctx==='begin' || ctx.indexOf('explore:')===0 ? '<button class="btn small ghost" data-act="nav" data-view="explore">All areas</button>' : '')+
+      (isToday(ctx) || ctx==='start' ? '' : '<button class="btn small ghost" data-act="today">← Today</button>')+'</span>';
   } else {
     head = '<button class="btn small ghost" data-act="back">← '+(ctx.indexOf('explore:')===0?'All areas':ctx==='iterate'?'Iterate':'Journey')+'</button><span class="eyebrow">'+esc(ctxTitle(ctx))+'</span>';
   }
   var actions = chatActions(ctx);
-  return '<section class="panel chat'+(home && (ctx==='begin'||ctx==='start')?' begin':'')+'" aria-label="Coaching conversation">'+
+  return '<section class="panel chat'+(home && (ctx==='begin'||ctx==='start')?' begin':'')+(home && isToday(ctx)?' today':'')+'" aria-label="Conversation with MAIA">'+
     '<div class="chat-head">'+head+'</div>'+
     '<div class="stream" id="stream"></div>'+
     (home && ctx==='begin' ? '<div class="compose">'+stonesHtml()+'</div>' : '')+
     (home && ctx==='start' ? '<div class="compose">'+waysHtml()+'</div>' : '')+
+    (home && isToday(ctx) ? '<div class="compose">'+todayPicks()+'</div>' : '')+
     '<form class="compose" id="compose">'+
       (actions ? '<div class="actions">'+actions+'</div>' : '')+
-      '<div class="send"><label for="msg" class="eyebrow" style="position:absolute;left:-9999px">Your reply</label><textarea id="msg" rows="2" placeholder="Take your time…"'+(S.busy?' disabled':'')+'></textarea><button class="btn primary" type="submit"'+(S.busy?' disabled':'')+'>Send</button></div>'+
+      '<div class="send"><label for="msg" class="eyebrow" style="position:absolute;left:-9999px">Your reply</label><textarea id="msg" rows="2" placeholder="'+(isToday(ctx)?'Tell MAIA what you\'d like to work on…':'Take your time…')+'"'+(S.busy?' disabled':'')+'></textarea><button class="btn primary" type="submit"'+(S.busy?' disabled':'')+'>Send</button></div>'+
     '</form>'+
   '</section>';
 }
@@ -2017,10 +2215,68 @@ function vStudio(){
 }
 
 /* ---------- Design: the landing page, with the coach at the center ---------- */
+// Each visit (a browser tab's session) starts the Design page fresh: a greeting and a clean conversation.
+function stamp(){ return new Date().toISOString().replace(/[-:T.Z]/g,'').slice(0,14); }
+function visit(){
+  if (!S.visit){ var v=null; try { v = JSON.parse(sessionStorage.getItem('lid.visit')||'null'); } catch(e){} S.visit = v && v.today ? v : { today:stamp(), ctx:'' }; saveVisit(); }
+  return S.visit;
+}
+function saveVisit(){ try { sessionStorage.setItem('lid.visit', JSON.stringify(S.visit)); } catch(e){} }
+function isToday(ctx){ return String(ctx||'').indexOf('today:')===0; }
 function loadHome(){
-  openCtx(LID.homeContext(S.state), 'home');
+  var v = visit(), home = LID.homeContext(S.state);
+  var ctx = home==='start' ? 'start' : (v.ctx || 'today:'+v.today);
+  openCtx(ctx, 'home', isToday(ctx));
   maybeGuide();
   maybeWhatsNew();
+}
+/* Take up a part of the design on the Design page, for the rest of this visit. */
+function setHomeCtx(ctx){
+  var v = visit(); v.ctx = isToday(ctx) || ctx==='start' ? '' : ctx; saveVisit();
+  var focus = ctx.indexOf('element:')===0 ? ctx : ctx==='begin' ? 'exploration' : null;
+  var pre = focus ? api('savePrefs',{ prefs:{ focus:focus } }).then(setState) : Promise.resolve();
+  pre.then(function(){ S.view='home'; closeDialog(); loadHome(); window.scrollTo({ top:0, behavior:'smooth' }); }).catch(fail);
+}
+var INPUT_TABS = { tests:'Strengths & personality', goals:'Goals', experiences:'Life experiences', journal:'Journal', growth:'Learning & skills' };
+function targetLabel(t){
+  if (t.indexOf('element:')===0) return LID.elementDef(t.slice(8)) ? 'Work on '+t.slice(8)+' with MAIA' : '';
+  if (t.indexOf('explore:')===0) return t.length>8 ? 'Explore '+t.slice(8) : '';
+  if (t.indexOf('inputs:')===0) return INPUT_TABS[t.slice(7)] ? 'Open Inputs · '+INPUT_TABS[t.slice(7)] : '';
+  return { begin:'Choose an area to explore', checkin:'Check in on your design', iterate:'Open a congruence review', journey:'Open your journey' }[t] || '';
+}
+/* Go wherever MAIA, a pick or a step points. */
+function goCtx(t){
+  if (S.view==='home' && isToday(S.ctx)) explore(newFor('home','','today'));
+  if (t.indexOf('inputs:')===0){ S.inputsTab = t.slice(7); explore(newFor('inputs', S.inputsTab)); go('inputs'); return; }
+  if (t==='iterate'){ go('iterate'); return; }
+  if (t==='journey'){ go('journey'); return; }
+  setHomeCtx(t);
+}
+/* MAIA's lines like [[open:element:Vision]] become buttons. */
+function routes(text){
+  var btns = [];
+  var clean = String(text||'').replace(/\[\[open:([^\]\n]+)\]\]/g, function(_, t){ t=t.trim(); var lab=targetLabel(t); if (lab) btns.push('<button class="btn small primary" data-act="goCtx" data-ctx="'+esc(t)+'">'+esc(lab)+' →</button>'); return ''; });
+  return { text: clean.replace(/\[\[[^\]]*$/,'').trim(), btns: btns };
+}
+function leftOffLabel(c){
+  return c.indexOf('element:')===0 ? 'Pick up where you left off: '+c.slice(8)
+    : c.indexOf('explore:')===0 ? 'Pick up where you left off: exploring '+c.slice(8)
+    : c==='begin' ? 'Continue the Core Beliefs Exploration' : c==='checkin' ? 'Check in on how your design is living' : '';
+}
+function todayPicks(){
+  var st=S.state, p=LID.progress(st), left=LID.homeContext(st), picks=[];
+  if (leftOffLabel(left)) picks.push([left, leftOffLabel(left), 'primary']);
+  if (!p.allDrafted && p.next){ var nx = p.next.key==='exploration' ? 'begin' : 'element:'+p.next.key; if (nx!==left) picks.push([nx, 'Suggested next: '+p.next.name, '']); }
+  if (p.allDrafted) picks.push(['iterate','Run a congruence review','']);
+  picks.push(['inputs:goals','Tend your goals and Inputs','ghost']);
+  return '<div class="picks" role="group" aria-label="Places to begin today"><span class="eyebrow">Or choose a place to begin</span><div class="opts">'+
+    picks.map(function(x){ return '<button type="button" class="btn small '+x[2]+'" data-act="goCtx" data-ctx="'+esc(x[0])+'">'+esc(x[1])+'</button>'; }).join('')+'</div></div>';
+}
+function nudgeBubble(){
+  var mo = LID.momentum(S.state);
+  if (!mo) return '';
+  return '<div class="msg coach nudge"><p>'+esc(mo.say)+'</p><div class="steps">'+mo.steps.map(function(x){
+    return '<button type="button" class="step" data-act="goCtx" data-ctx="'+esc(x.go)+'"><span>'+esc(x.label)+'</span><em>'+esc(x.time)+'</em></button>'; }).join('')+'</div></div>';
 }
 
 /* ---------- what's new: after an update, for people who were here before it ---------- */
@@ -2047,7 +2303,7 @@ function explore(key){
 function paintNews(){
   var items = news().items;
   Array.prototype.forEach.call(document.querySelectorAll('#nav button'), function(b){
-    var has = items.some(function(i){ return i.view===b.dataset.view; });
+    var has = items.some(function(i){ return i.view===b.dataset.view; }) || (S.badgePip && b.dataset.view==='badges');
     var pip = b.querySelector('.newpip');
     if (has && !pip){ b.insertAdjacentHTML('beforeend','<span class="newpip" aria-hidden="true">new</span>'); b.setAttribute('aria-description','Something new here'); }
     if (!has && pip){ pip.remove(); b.removeAttribute('aria-description'); }
@@ -2095,7 +2351,7 @@ function tryNew(key){
   closeDialog(); hideNotice();
   if (it.tab){ S.inputsTab = it.tab; explore(it.key); }
   go(it.view);
-  if (it.spot){ setTimeout(function(){ var el = it.spot==='path' ? $('#pathCard') : null; if (el){ el.scrollIntoView({ block:'center', behavior:'smooth' }); el.classList.add('spot-glow'); } }, 350); }
+  if (it.spot){ setTimeout(function(){ var el = it.spot==='path' ? $('#pathCard') : it.spot==='today' ? $('.home .chat') : null; if (el){ el.scrollIntoView({ block:'center', behavior:'smooth' }); el.classList.add('spot-glow'); if (it.spot==='today'){ var m=$('#msg'); if(m) m.focus({ preventScroll:true }); } } }, 350); }
 }
 
 function stonesHtml(){
@@ -2122,9 +2378,7 @@ function waysHtml(){
     way('why','Why','Deeper · challenging','Start at the foundation','The Core Beliefs Exploration: where your beliefs came from, and which you choose.')+
   '</div>';
 }
-function chooseFocus(focus){
-  api('savePrefs',{ prefs:{ focus:focus } }).then(setState).then(function(){ loadHome(); window.scrollTo({ top:0, behavior:'smooth' }); }).catch(fail);
-}
+function chooseFocus(focus){ setHomeCtx(focus==='exploration' ? 'begin' : focus); }
 
 function pathCard(ctx){
   var p=LID.progress(S.state);
@@ -2142,25 +2396,25 @@ function pathCard(ctx){
 
 function vHome(){
   var st=S.state, u=st.user, ctx=S.ctx || LID.homeContext(st);
-  var h=new Date().getHours();
   var fresh = ctx==='start';
-  var greet = fresh ? 'Welcome, '+u.Name+'.' : (h<5?'Good evening':h<12?'Good morning':h<17?'Good afternoon':'Good evening')+', '+u.Name+'.';
+  var greet = fresh ? 'Welcome, '+u.Name+'.' : 'Good '+LID.partOfDay()+', '+u.Name+'.';
   var lede = ctx==='start' ? 'Begin wherever you feel ready. Every way in leads through the whole design.'
+    : isToday(ctx) ? 'What part of your design would you like to work on today?'
     : ctx==='begin' ? (st.chosen.length ? 'The Exploration continues, one area at a time.' : 'The foundation: what you believe, and why.')
     : ctx.indexOf('explore:')===0 ? 'Exploring '+ctx.slice(8)+', one lens at a time.'
     : ctx.indexOf('element:')===0 ? 'On the drawing board: '+ctx.slice(8)+'.'
     : 'Living with your design: what you did, what you learned, what you\'ll change.';
   // While the open path is new, it sits at the top of the rail where the mark can be seen.
   var pathFirst = !!newFor('home', '', 'path');
-  var rail = '<aside class="rail">'+(pathFirst ? pathCard(ctx) : '')+
-    '<button class="protip" data-act="guide"><span class="k">Pro tip</span><span class="tx">New here, or been a while? Revisit how the framework works and how your coach will walk with you.</span><span class="go">Open the guide →</span></button>'+
+  var rail = '<aside class="rail">'+(pathFirst ? pathCard(ctx) : '')+(ctx==='start' ? '' : scoreCard())+
+    '<button class="protip" data-act="guide"><span class="k">Pro tip</span><span class="tx">New here, or been a while? Revisit how the framework works and how MAIA, your coach, will walk with you.</span><span class="go">Open the guide →</span></button>'+
     (ctx==='begin'
       ? '<section class="panel card"><span class="eyebrow">Where we begin</span><p style="font-size:.95rem">Choose an area of life beneath the conversation. You\'ll look at it through seven lenses, then close it with a belief you choose.</p>'+
           (st.chosen.length ? '<ul class="list">'+Object.keys(LID.chosenByArea(st)).map(function(a){ return '<li><span class="mono muted">'+esc(a)+'</span><span style="font-size:.92rem">'+esc(LID.chosenByArea(st)[a].ChosenBelief)+'</span></li>'; }).join('')+'</ul>' : '')+'</section>'
-      : ctx==='checkin' || ctx==='start' ? '' : '<section class="panel brief">'+briefFor(ctx)+'</section>')+
+      : ctx==='checkin' || ctx==='start' || isToday(ctx) ? '' : '<section class="panel brief">'+briefFor(ctx)+'</section>')+
     (pathFirst ? '' : pathCard(ctx))+
   '</aside>';
-  return '<section class="hero compact"><p class="eyebrow">Design</p><h1>'+esc(greet)+'</h1><p class="lede">'+esc(lede)+'</p></section>'+
+  return '<section class="hero compact'+(isToday(ctx)?' today':'')+'"><p class="eyebrow">Design</p><h1>'+esc(greet)+'</h1><p class="lede">'+esc(lede)+'</p></section>'+
     '<div class="home">'+chatPanel(ctx, true)+rail+'</div>';
 }
 
@@ -2173,7 +2427,7 @@ function guideStep(i){
     { eb:'Welcome', t:'Consider yourself an iterative design.', b:
       '<div class="art">'+pyramidArt()+'</div>'+
       '<p>This is a place to uncover who you are and shape it into a living design: a clear <strong>Why</strong>, a deliberate <strong>How</strong> and a concrete <strong>What</strong>, aligned with each other.</p>'+
-      '<p>You are the designer and the authority on your own life. Your coach brings structure, questions, reflection and a little accountability. The design is never finished, and that is the joy: every draft is a version, not a verdict.</p>' },
+      '<p>You are the designer and the authority on your own life. <strong>MAIA</strong>, your coach, brings structure, questions, reflection and a little accountability. The design is never finished, and that is the joy: every draft is a version, not a verdict.</p>' },
     { eb:'The framework', t:'Three layers, built from the ground up', b:
       '<p>Nine elements in three layers. Nothing higher can stand without what lies beneath it.</p>'+
       '<div class="layers">'+gl('What','the living part')+gl('How','the structure')+gl('Why','the foundation')+'</div>' },
@@ -2189,13 +2443,13 @@ function guideStep(i){
         '<div class="gl Why"><div><b>Why</b><br><span class="muted" style="font-size:.85rem">deeper, challenging</span></div><ul><li>Start at the foundation with the <strong>Core Beliefs Exploration</strong>: one area of life at a time, through seven lenses, from what you inherited to what you choose.</li></ul></div>'+
       '</div>'+
       '<p>Wherever you begin, the hierarchy holds. What you build is tested against what lies beneath it, and every way in leads, in time, down to the foundation.</p>' },
-    { eb:'Your coach', t:'How we\'ll walk it together', b:
+    { eb:'MAIA, your coach', t:'How we\'ll walk it together', b:
       '<ol class="flow"><li><span><strong>Choose a way in:</strong> the What and your Inputs, the How, or the foundation.</span></li>'+
       '<li><span><strong>Design one element at a time,</strong> in conversation, a question or two at a time.</span></li>'+
-      '<li><span><strong>Follow the thread.</strong> Your coach notices what your answers say about the layers beneath, and invites you deeper when you\'re ready.</span></li>'+
+      '<li><span><strong>Follow the thread.</strong> MAIA notices what your answers say about the layers beneath, and invites you deeper when you\'re ready.</span></li>'+
       '<li><span><strong>Reach the foundation:</strong> your Core Beliefs, Vision and Purpose hold everything up.</span></li>'+
       '<li><span><strong>Check the alignment</strong>, live with it, and iterate as life changes.</span></li></ol>'+
-      '<p>Your coach reflects your words back and offers drafts in your own words. Nothing is saved to your design until you approve it. If you came with something pressing, it\'s held safely and worked through when your design reaches the What.</p>'+
+      '<p>MAIA reflects your words back and offers drafts in your own words. Nothing is saved to your design until you approve it. If you came with something pressing, it\'s held safely and worked through when your design reaches the What.</p>'+
       '<p class="muted" style="font-size:.92rem">The conversation lives here on the Design page. Journey shows the whole pyramid; Inputs holds your tests, goals, experiences and journal; Record holds your design and its history.</p>' }
   ];
   var s = steps[i];
@@ -2226,13 +2480,18 @@ function paintStream(pending){
   var html = S.messages.map(function(m){
     var c = String(m.Content||'');
     if (/^\[note\]/.test(c)) return '<div class="divider">'+esc(noteText(c))+'</div>';
-    return m.Role==='assistant' ? '<div class="msg coach">'+md(c)+'</div>' : '<div class="msg me">'+esc(c)+'</div>';
+    if (m.Role!=='assistant') return '<div class="msg me">'+esc(c)+'</div>';
+    var r = routes(c);
+    return '<div class="msg coach">'+md(r.text)+(r.btns.length?'<div class="routes">'+r.btns.join('')+'</div>':'')+'</div>';
   }).join('');
-  if (S.busy) html += '<div class="msg coach" id="pending">'+(pending?md(pending):'<span class="typing" aria-label="The coach is writing"><i></i><i></i><i></i></span>')+'</div>';
+  var today = isToday(S.ctx);
+  if (today) html = nudgeBubble() + html;
+  if (S.busy) html += '<div class="msg coach" id="pending">'+(pending?md(routes(pending).text):'<span class="typing" aria-label="MAIA is writing"><i></i><i></i><i></i></span>')+'</div>';
   if (S.coachErr) html += '<div class="coach-err"><span>'+esc(S.coachErr)+'</span><button class="btn small" data-act="retry">Try again</button></div>';
-  if (!S.messages.length && !S.busy && !S.coachErr) html = '<p class="muted">Opening the conversation…</p>';
+  if (!S.messages.length && !S.busy && !S.coachErr) html = today ? (html || '<p class="today-empty">Tell MAIA what\'s on your mind, or choose a place to begin below.</p>') : '<p class="muted">Opening the conversation…</p>';
   el.innerHTML = html;
-  el.scrollTop = el.scrollHeight;
+  // Today opens at the top, so MAIA's first words are read first; conversations follow their latest turn.
+  el.scrollTop = today && !S.messages.length ? 0 : el.scrollHeight;
   if (window.innerWidth<=900 && S.busy) { var pd=$('#pending'); if(pd) pd.scrollIntoView({block:'nearest'}); }
 }
 
@@ -2321,7 +2580,7 @@ function coachTurn(opts){
     .then(function(){ S.busy=false; if(S.ctx===ctx && isChat()){ render(); var m=$('#msg'); if(m && !$('#layer').innerHTML) m.focus({ preventScroll:true }); } });
 }
 
-function openCtx(ctx, view){
+function openCtx(ctx, view, quiet){
   view = view || 'studio';
   if (S.ctx!==ctx) S.messages = [];
   S.ctx = ctx; S.coachErr=null; S.view=view; render(); if (view==='studio') window.scrollTo(0,0);
@@ -2332,10 +2591,10 @@ function openCtx(ctx, view){
       if (S.ctx!==ctx || !isChat()) return;
       S.messages = msgs || [];
       render();
+      // MAIA speaks first only when no question of MAIA's is waiting: a new conversation, or one where the
+      // last word was the person's or the app's. A question still awaiting an answer is left to wait.
       var last = S.messages[S.messages.length-1];
-      var hasCoach = S.messages.some(function(m){ return m.Role==='assistant'; });
-      var stale = last && (Date.now() - new Date(last.Timestamp).getTime() > 8*3600*1000);
-      if (!hasCoach || (last && last.Role!=='assistant') || stale) coachTurn({ mode:'open' });
+      if (!quiet && (!last || last.Role!=='assistant')) coachTurn({ mode:'open' });
     }).catch(fail);
   var stage = { alignment:'alignment', checkin:'living', remodel:'remodel', iterate:'living' }[ctx];
   if (stage) api('updateUser',{ patch:{ Stage:stage, CurrentFocus:ctxTitle(ctx) } }).then(setState).catch(function(){});
@@ -2355,10 +2614,12 @@ document.addEventListener('click', function(ev){
     if (key==='exploration') go('explore'); else openCtx('element:'+key); return;
   }
   if (act==='ctx'){ openCtx(t.dataset.ctx); return; }
-  if (act==='area'){ openCtx('explore:'+t.dataset.area, S.view==='home' ? 'home' : 'studio'); return; }
-  if (act==='ownArea'){ var oa=($('#ownArea').value||'').trim().replace(/\s+/g,' '); if(!oa){ $('#ownArea').focus(); return; } openCtx('explore:'+oa.charAt(0).toUpperCase()+oa.slice(1), 'home'); return; }
-  if (act==='entry'){ api('savePrefs',{ prefs:{ entry:t.dataset.entry, focus:'' } }).then(setState).then(function(){ loadHome(); breathe(); }).catch(fail); return; }
-  if (act==='moveOn'){ api('savePrefs',{ prefs:{ focus:'element:Core Beliefs' } }).then(setState).then(function(){ loadHome(); breathe(); }).catch(fail); return; }
+  if (act==='area'){ if (S.view==='home') setHomeCtx('explore:'+t.dataset.area); else openCtx('explore:'+t.dataset.area, 'studio'); return; }
+  if (act==='ownArea'){ var oa=($('#ownArea').value||'').trim().replace(/\s+/g,' '); if(!oa){ $('#ownArea').focus(); return; } setHomeCtx('explore:'+oa.charAt(0).toUpperCase()+oa.slice(1)); return; }
+  if (act==='entry'){ api('savePrefs',{ prefs:{ entry:t.dataset.entry, focus:'' } }).then(setState).then(function(){ setHomeCtx(LID.homeContext(S.state)); breathe(); }).catch(fail); return; }
+  if (act==='moveOn'){ setHomeCtx('element:Core Beliefs'); breathe(); return; }
+  if (act==='goCtx'){ goCtx(t.dataset.ctx); return; }
+  if (act==='today'){ setHomeCtx('today:'); return; }
   if (act==='guide'){ showGuide(0); return; }
   if (act==='guideGo'){ showGuide(Number(t.dataset.step)||0); return; }
   if (act==='guideDone'){ closeDialog(); var gm=$('#msg'); if(gm) gm.focus({ preventScroll:true }); return; }
@@ -2391,7 +2652,8 @@ document.addEventListener('click', function(ev){
   if (act==='whatsNew'){ showWhatsNew(); return; }
   if (act==='signOut'){
     try { sessionStorage.removeItem('lid.alive'); } catch(e){}
-    S.localExplored = []; S.newsChecked = false;
+    S.localExplored = []; S.newsChecked = false; S.visit = null; S.awarding = {};
+    try { sessionStorage.removeItem('lid.visit'); } catch(e){}
     if (HOSTED){ Hosted.signOut().then(function(){ S.userId=null; S.state=null; S.sessionId=null; S.email=''; S.linkSentTo=''; go('signin'); }); return; }
     store.del('lid.userId'); S.userId=null; S.state=null; S.sessionId=null; go('welcome'); return;
   }
@@ -2415,7 +2677,7 @@ document.addEventListener('submit', function(ev){
     Hosted.sendLink(em).then(function(){ S.linkSentTo=em; S.signinErr=''; render(); breathe(); }, function(e){ S.signinErr=e.message; render(); });
     return;
   }
-  if (f.id==='compose'){ var ta=$('#msg'), v=(ta.value||'').trim(); if(!v||S.busy) return; S.messages.push({ Role:'user', Content:v, Timestamp:new Date().toISOString() }); ta.value=''; coachTurnWith(v); return; }
+  if (f.id==='compose'){ var ta=$('#msg'), v=(ta.value||'').trim(); if(!v||S.busy) return; if (isToday(S.ctx)) explore(newFor('home','','today')); S.messages.push({ Role:'user', Content:v, Timestamp:new Date().toISOString() }); ta.value=''; coachTurnWith(v); return; }
   if (f.id==='addArea'){ var a=($('#newArea').value||'').trim().replace(/\s+/g,' '); if(!a) return; openCtx('explore:'+a.charAt(0).toUpperCase()+a.slice(1)); return; }
   if (f.id==='parkForm'){ var d=($('#parkText').value||'').trim(); if(!d) return; api('parkProblem',{ description:d, returnState:true }).then(setState).then(function(){ render(); breathe(); toast('Parked.'); }).catch(fail); return; }
   if (f.id==='youForm'){
@@ -2447,7 +2709,7 @@ function onboard(){
   if (minor) { go('under18'); return; }
   var name=$('#ob-name').value.trim();
   // Only a name and the age answer are needed; everything else on this form is optional.
-  var miss = !name ? ['#ob-name','Add a name for your coach to use.'] : !adult ? ['#ob-adult','Please confirm you\'re 18 or older to begin.'] : null;
+  var miss = !name ? ['#ob-name','Add a name for MAIA to use.'] : !adult ? ['#ob-adult','Please confirm you\'re 18 or older to begin.'] : null;
   if (miss){ var el=$(miss[0]); el.setAttribute('aria-invalid','true'); err.textContent=miss[1]; err.hidden=false; el.focus({ preventScroll:true }); el.scrollIntoView({ block:'center', behavior:'smooth' }); return; }
   api('createUser',{ name:name, whatBrought:$('#ob-brought').value.trim(), hopedChange:$('#ob-hope').value.trim(), pressing:$('#ob-pressing').value.trim(), is18:true, plain:$('#ob-plain').checked, userId:null })
     .then(function(u){ S.userId=u.UserID; store.set('lid.userId', u.UserID); return api('startSession'); })
@@ -2468,7 +2730,7 @@ function captureDraft(){
   api('coach',{ context:S.ctx, mode:'draft' }).then(function(r){
     var text = r.draft || s.statement || '';
     openDialog('<span class="eyebrow">Capture · '+esc(name)+'</span><h2>Is this yours?</h2>'+
-      (r.notEnough?'<p class="muted">The coach thinks there isn\'t quite enough yet to draft honestly. Keep talking, or write your own version here.</p>':'<p class="muted">Proposed from your own words. Edit until it sounds like you. Nothing is saved until you choose.</p>')+
+      (r.notEnough?'<p class="muted">MAIA thinks there isn\'t quite enough yet to draft honestly. Keep talking, or write your own version here.</p>':'<p class="muted">Proposed from your own words. Edit until it sounds like you. Nothing is saved until you choose.</p>')+
       '<div class="field"><label for="cap-text">'+esc(name)+'</label><textarea id="cap-text" rows="7">'+esc(text)+'</textarea></div>'+
       (s.statement?'<div class="field"><label for="cap-note">What changed, in one line <span class="hint">Kept with the version history</span></label><input id="cap-note" type="text" maxlength="140"></div>':'')+
       '<div class="row"><button class="btn primary" data-act="saveEl" data-status="Approved">Save as approved</button><button class="btn" data-act="saveEl" data-status="Draft">Save as draft</button><button class="btn ghost" data-act="cancel">Not yet</button></div>');
@@ -2479,7 +2741,7 @@ function saveElement(status){
   var n=$('#cap-note');
   api('saveElement',{ element:S.ctx.slice(8), statement:txt, status:status, changeNote:n?n.value.trim():'' })
     .then(setState).then(refreshMessages).then(function(){
-      closeDialog(); if (S.view==='home') loadHome(); else render();
+      closeDialog(); if (S.view==='home') setHomeCtx(LID.homeContext(S.state)); else render();
       var p=LID.progress(S.state), nx=p.next;
       breathe(); toast(S.ctx.slice(8)+' saved as '+status.toLowerCase()+'.'+(nx&&nx.key!==S.ctx.slice(8)&&!p.allDrafted?' Suggested next: '+nx.name+'.':''));
     }).catch(fail);
@@ -2499,7 +2761,7 @@ function closeAreaDialog(){
 function saveBelief(){
   var b=($('#cb-belief').value||'').trim(); if(!b){ toast('Write the belief first.'); return; }
   api('saveChosenBelief',{ area:S.ctx.slice(8), belief:b, why:($('#cb-why').value||'').trim() })
-    .then(setState).then(refreshMessages).then(function(){ closeDialog(); if (S.view==='home') loadHome(); else render(); breathe(); toast('Chosen and saved.'+(S.state.chosen.length===1?' Core Beliefs is now open, whenever you\'re ready.':'')); }).catch(fail);
+    .then(setState).then(refreshMessages).then(function(){ closeDialog(); if (S.view==='home') setHomeCtx(LID.homeContext(S.state)); else render(); breathe(); toast('Chosen and saved.'+(S.state.chosen.length===1?' Core Beliefs is now open, whenever you\'re ready.':'')); }).catch(fail);
 }
 function endSessionDialog(){
   openDialog('<span class="eyebrow">End of session</span><h2>One small step before next time</h2><p class="muted">Something specific you can do or reflect on this week.</p>'+
@@ -2541,7 +2803,7 @@ function vInputs(){
   var tabs = [['tests','Strengths & personality'],['goals','Goals'],['experiences','Life experiences'],['journal','Journal'],['growth','Learning & skills']];
   var body = S.inputsTab==='journal' ? journalTab() : S.inputsTab==='growth' ? growthTab() : S.inputsTab==='goals' ? goalsTab() : S.inputsTab==='experiences' ? experiencesTab() : testsTab();
   return '<section class="hero"><p class="eyebrow">Inputs</p><h1>What feeds your design</h1>'+
-    '<p class="lede">Supplements to the guided process. Your coach draws on them to guide, nudge and suggest, and the framework stays at the core.</p></section>'+
+    '<p class="lede">Supplements to the guided process. MAIA draws on them to guide, nudge and suggest, and the framework stays at the core.</p></section>'+
     '<div class="tabs" role="tablist">'+tabs.map(function(t){ var nw=newFor('inputs', t[0]); return '<button role="tab" data-act="tab" data-tab="'+t[0]+'" aria-selected="'+(S.inputsTab===t[0])+'"'+(nw?' aria-description="New"':'')+'>'+t[1]+(nw?'<span class="newpip" aria-hidden="true">new</span>':'')+'</button>'; }).join('')+'</div>'+body;
 }
 
@@ -2565,14 +2827,14 @@ function journalTab(){
   return '<form class="panel card" id="journalForm"><span class="eyebrow">New entry · '+fmtDate(new Date().toISOString())+'</span>'+
     (S.journalPrompt ? '<div class="row" style="justify-content:space-between;align-items:flex-start"><p class="q" style="font-family:var(--display);font-size:1.15rem;max-width:60ch">'+esc(S.journalPrompt)+'</p><button type="button" class="btn small ghost" data-act="clearPrompt">No prompt</button></div>' : '')+
     '<div class="field"><label for="jr-entry" class="eyebrow" style="position:absolute;left:-9999px">Journal entry</label><textarea id="jr-entry" rows="6" placeholder="Write freely. Nothing here needs to be tidy.">'+esc(S.jrDraft)+'</textarea></div>'+
-    '<label class="choice"><input type="checkbox" id="jr-share" checked> Let my coach read this entry</label>'+
+    '<label class="choice"><input type="checkbox" id="jr-share" checked> Let MAIA read this entry</label>'+
     '<div class="row"><button class="btn primary" type="submit">Save entry</button><button class="btn ghost" type="button" data-act="nextPrompt">'+(S.journalPrompt?'Another prompt':'Give me a prompt')+'</button></div></form>'+
     (entries.length ? '<div class="entries">'+entries.map(function(j){
       var shared = LID.truthy(j.CoachCanRead);
-      return '<article class="panel entry"><div class="meta"><span>'+fmtDate(j.CreatedAt)+'</span><span class="chip '+(shared?'approved':'gap')+'">'+(shared?'Coach can read':'Private')+'</span></div>'+
+      return '<article class="panel entry"><div class="meta"><span>'+fmtDate(j.CreatedAt)+'</span><span class="chip '+(shared?'approved':'gap')+'">'+(shared?'MAIA can read':'Private')+'</span></div>'+
         (j.Prompt?'<p class="prompt">'+esc(j.Prompt)+'</p>':'')+'<div class="body">'+esc(j.Entry)+'</div>'+
-        '<div class="row"><button class="btn small ghost" data-act="jrShare" data-id="'+esc(j.EntryID)+'" data-v="'+(shared?'0':'1')+'">'+(shared?'Make private':'Share with coach')+'</button><button class="btn small ghost" data-act="jrDel" data-id="'+esc(j.EntryID)+'">Delete</button></div></article>';
-    }).join('')+'</div>' : '<p class="muted" style="margin-top:16px">Your entries will appear here. Only entries you share are visible to your coach.</p>');
+        '<div class="row"><button class="btn small ghost" data-act="jrShare" data-id="'+esc(j.EntryID)+'" data-v="'+(shared?'0':'1')+'">'+(shared?'Make private':'Share with MAIA')+'</button><button class="btn small ghost" data-act="jrDel" data-id="'+esc(j.EntryID)+'">Delete</button></div></article>';
+    }).join('')+'</div>' : '<p class="muted" style="margin-top:16px">Your entries will appear here. Only entries you share are visible to MAIA.</p>');
 }
 
 function growthTab(){
@@ -2593,8 +2855,72 @@ function growthTab(){
       '<div class="row"><button class="btn primary" type="submit">Add to my log</button></div></form>'+
     '<div class="growthcol">'+
       '<section class="panel card"><span class="eyebrow">Building</span>'+(planned.length?'<ul class="list">'+planned.map(item).join('')+'</ul>':'<p class="muted">Things you are learning now, or guidance you accepted, show up here.</p>')+'</section>'+
-      '<section class="panel card"><span class="eyebrow">Acquired</span>'+(done.length?'<ul class="list">'+done.map(item).join('')+'</ul>':'<p class="muted">Nothing logged yet. These feed Resources and your coach\'s suggestions.</p>')+'</section>'+
+      '<section class="panel card"><span class="eyebrow">Acquired</span>'+(done.length?'<ul class="list">'+done.map(item).join('')+'</ul>':'<p class="muted">Nothing logged yet. These feed Resources and MAIA\'s suggestions.</p>')+'</section>'+
     '</div></div>';
+}
+
+/* ---------- the v1 score and badges ---------- */
+function ringSvg(pct, d){
+  var r=40, c=2*Math.PI*r, off=c*(1-Math.max(0,Math.min(100,pct))/100);
+  return '<span class="ring" style="--d:'+(d||92)+'px" role="img" aria-label="'+pct+' percent"><svg viewBox="0 0 100 100" aria-hidden="true"><circle class="bg" cx="50" cy="50" r="'+r+'"/><circle class="fg" cx="50" cy="50" r="'+r+'" stroke-dasharray="'+c.toFixed(1)+'" stroke-dashoffset="'+off.toFixed(1)+'"/></svg><b>'+pct+'%</b></span>';
+}
+/* A small cairn: one, two or three stones. Laid stones take the path's color; the rest wait in outline. */
+function cairnSvg(level, earned){
+  var stones = [[27,44,20,7.5],[27,31,14.5,6.5],[27,20,9.5,5.5]], out='';
+  for (var i=0;i<3;i++){
+    var s=stones[i], show=i<level;
+    if (!show) continue;
+    out += '<ellipse cx="'+s[0]+'" cy="'+s[1]+'" rx="'+s[2]+'" ry="'+s[3]+'" fill="'+(earned?'var(--c)':'none')+'" stroke="'+(earned?'var(--c)':'var(--rule)')+'" stroke-width="1.6" '+(earned?'':'stroke-dasharray="3 3"')+' transform="rotate('+(i%2?-4:3)+' '+s[0]+' '+s[1]+')"/>';
+  }
+  return '<svg class="cairn-svg" viewBox="0 0 54 54" aria-hidden="true">'+out+'</svg>';
+}
+function scoreCard(){
+  var bb=LID.badgeBoard(S.state), sc=bb.score;
+  return '<section class="panel card"><button class="scorecard" data-act="nav" data-view="badges">'+ringSvg(sc.pct, 74)+
+    '<span class="t"><span class="eyebrow">'+(sc.complete?'Design v1 · laid':'Design v1')+'</span><span>'+(sc.complete?'Version one is complete. Now it lives and grows.':sc.drafted+' of 9 elements drafted'+(sc.areas?' · '+sc.areas+' belief area'+(sc.areas===1?'':'s'):''))+'</span>'+
+    '<span>'+bb.earned+' of '+bb.total+' badges · <strong style="color:var(--accent)">See badges →</strong></span></span></button></section>';
+}
+function vBadges(){
+  var st=S.state, bb=LID.badgeBoard(st), sc=bb.score, p=LID.progress(st);
+  var nx = !sc.complete && p.next ? (p.next.key==='exploration' ? 'begin' : 'element:'+p.next.key) : '';
+  var top = '<section class="panel badge-top">'+ringSvg(sc.pct, 128)+
+    '<div class="t"><span class="eyebrow">Your design, version one</span><h2>'+(sc.complete?'Version one is laid.':sc.pct+'% of the way to version one')+'</h2>'+
+      '<p class="muted" style="margin:0">'+(sc.complete?'From here the design lives: you iterate it, see yourself more clearly, grow past its edges and bring Why, How and What into tune. The paths below follow that.'
+        :sc.drafted+' of 9 elements drafted, '+sc.approved+' approved, '+sc.areas+' area'+(sc.areas===1?'':'s')+' of belief explored. A first draft of all nine, on a foundation of at least one chosen belief, completes version one.')+'</p>'+
+      (nx?'<div class="row"><button class="btn primary" data-act="goCtx" data-ctx="'+esc(nx)+'">Keep building: '+esc(p.next.name)+'</button></div>':'')+
+    '</div></section>';
+  var legend = '<div class="legend" style="margin-bottom:16px">'+LID.TIERS.map(function(t,i){ return '<span>'+cairnSvg(i+1,true).replace('class="cairn-svg"','class="cairn-svg" style="width:30px;height:30px;--c:var(--muted)"')+t+'</span>'; }).join('')+'<span>Every path has three stones: a Pebble to begin, a Stone as it deepens, a Cairn when it\'s well laid.</span></div>';
+  var cats = bb.categories.map(function(c){
+    var tiers = c.tiers.map(function(t){
+      return '<div class="btier '+(t.earned?'earned':'locked')+'">'+cairnSvg(t.level, t.earned)+'<span class="lv">'+t.tier+'</span><span class="nm">'+esc(t.name)+'</span>'+(t.earned&&t.on?'<span class="when">'+fmtDate(t.on).replace(/, \d{4}$/,'')+'</span>':'')+'</div>';
+    }).join('');
+    var nextUp = c.next ? '<div class="nextup"><span class="eyebrow">Next · '+esc(c.next.name)+' ('+c.next.tier+')</span>'+c.next.needs.map(function(n){
+        var have = n.fact==='ratio' ? Math.round(n.have*100)+'%' : n.fact==='complete'||n.fact==='lifeReflection' ? (n.met?'done':'not yet') : Math.min(n.have, n.need)+' of '+n.need;
+        var pctN = n.fact==='ratio' ? Math.min(1, n.have/n.need) : Math.min(1, n.have/(n.need||1));
+        return '<div class="need'+(n.met?' met':'')+'"><span>'+esc(n.label)+'</span><span class="muted">'+have+'</span><span class="mini"><i style="width:'+Math.round(pctN*100)+'%"></i></span></div>';
+      }).join('')+'</div>'
+      : '<p class="muted" style="margin:0;font-size:.9rem">All three stones laid. Beautifully done.</p>';
+    return '<section class="panel bcat '+c.key+'"><div><h3>'+esc(c.name)+'</h3><p class="blurb">'+esc(c.blurb)+'</p></div><div class="btiers">'+tiers+'</div>'+nextUp+'</section>';
+  }).join('');
+  return '<section class="hero compact"><p class="eyebrow">Badges</p><h1>Stones along the way</h1><p class="lede">They mark the work, never grade it. '+bb.earned+' of '+bb.total+' laid so far.</p></section>'+
+    top + legend + '<div class="badges">'+cats+'</div>';
+}
+/* Notice newly earned badges once, keep them, and celebrate quietly. */
+function checkBadges(){
+  if (!S.state || !S.state.user) return;
+  var bb = LID.badgeBoard(S.state);
+  S.awarding = S.awarding || {};
+  var fresh = bb.fresh.filter(function(k){ return !S.awarding[k]; });
+  if (!fresh.length) return;
+  fresh.forEach(function(k){ S.awarding[k]=1; });
+  api('savePrefs',{ prefs:{ award:fresh }, silent:true }).then(function(){
+    var p = LID.parseJSON(S.state.user.Prefs, {}) || {}; p.badges = p.badges || {};
+    fresh.forEach(function(k){ if(!p.badges[k]) p.badges[k] = new Date().toISOString().slice(0,10); });
+    S.state.user.Prefs = JSON.stringify(p);
+  }).catch(function(){ fresh.forEach(function(k){ delete S.awarding[k]; }); });
+  var names = []; bb.categories.forEach(function(c){ c.tiers.forEach(function(t){ if (fresh.indexOf(t.key)>=0) names.push(t.name+' · '+t.tier+' of '+c.name); }); });
+  S.badgePip = true; paintNews();
+  setTimeout(function(){ breathe(); toast(names.length===1 ? 'Badge earned: '+names[0]+'.' : names.length+' badges earned along the way. See them under Badges.'); }, 600);
 }
 
 /* ---------- goals: four horizons ---------- */
@@ -2642,7 +2968,7 @@ function goalsTab(){
     return '<section class="gband"><h3>'+HZ[h].name+' <span>'+HZ[h].span+'</span></h3><div class="goals">'+open.map(goalCard).join('')+'</div></section>';
   }).join('');
   var done = gs.filter(function(g){ return g.Status==='Done'; }).reverse();
-  return '<p class="muted" style="margin-bottom:16px;max-width:70ch">Goals at four horizons, each shaped to its distance. Your coach weighs them against your Purpose and Strategy, and helps you name the trade-offs.</p>'+
+  return '<p class="muted" style="margin-bottom:16px;max-width:70ch">Goals at four horizons, each shaped to its distance. MAIA weighs them against your Purpose and Strategy, and helps you name the trade-offs.</p>'+
     '<div class="horizons">'+HZ_ORDER.map(function(h){
       var n = gs.filter(function(g){ return g.Horizon===h && g.Status!=='Done'; }).length;
       return '<button class="hz '+HZ[h].cls+'" data-act="newGoal" data-h="'+h+'"><span class="span">'+HZ[h].span+'</span><b>'+HZ[h].name+'</b><span class="shape">'+HZ[h].shape+(n?' · '+n+' held':'')+'</span><span class="add">'+(h==='life'?'Begin the reflection →':'Add a goal →')+'</span></button>';
@@ -2759,7 +3085,7 @@ function experiencesTab(){
       (!done&&(x.Impediments||x.Actions)?'<span class="marks" style="display:flex;gap:6px;flex-wrap:wrap">'+(x.Impediments?'<span class="chip gap">Obstacle named</span>':'')+(x.Actions?'<span class="chip draft">Plan in place</span>':'')+'</span>':'')+
     '</button>';
   };
-  return '<div class="row" style="justify-content:space-between;margin-bottom:18px"><p class="muted" style="margin:0;max-width:62ch">A ledger of experiences you want to live: the bucket list, held with intention. Your coach weighs them against your Strategy and Key Activities.</p>'+
+  return '<div class="row" style="justify-content:space-between;margin-bottom:18px"><p class="muted" style="margin:0;max-width:62ch">A ledger of experiences you want to live: the bucket list, held with intention. MAIA weighs them against your Strategy and Key Activities.</p>'+
       '<button class="btn primary" data-act="newExp">Add an experience</button></div>'+
     '<div class="ledger"><section class="col"><span class="eyebrow">Still ahead · '+ahead.length+'</span>'+(ahead.length?ahead.map(ticket).join(''):'<p class="muted">Somewhere you want to stand, something you want to make, someone you want to meet. Add the first.</p>')+'</section>'+
       '<section class="col"><span class="eyebrow">Lived · '+lived.length+'</span>'+(lived.length?lived.map(ticket).join(''):'<p class="muted">Experiences you fulfill move here, with what they taught you.</p>')+'</section></div>';
@@ -2902,7 +3228,7 @@ function vIterate(){
   var hero = '<section class="hero"><p class="eyebrow">Life Design Iteration</p><h1>Toward congruence</h1>';
   if (!p.allDrafted){
     var done = p.steps.slice(1).filter(function(s){ return s.done; }).length;
-    return hero+'<p class="lede">Iteration begins once your v1 design is formulated, with a first draft of all nine elements. Then your coach becomes an objective evaluator of how well your What carries out your How and Why.</p></section>'+
+    return hero+'<p class="lede">Iteration begins once your v1 design is formulated, with a first draft of all nine elements. Then MAIA becomes an objective evaluator of how well your What carries out your How and Why.</p></section>'+
       '<section class="panel card" style="max-width:640px"><div class="meter"><span class="eyebrow">Your v1 design · '+done+' of 9 drafted</span><div class="bar"><i class="tr" style="width:'+(done/9*100)+'%"></i></div></div>'+
       (p.next?'<div class="row"><button class="btn primary" data-act="step" data-key="'+esc(p.next.key)+'">Continue with '+esc(p.next.name)+'</button></div>':'')+'</section>';
   }
@@ -2959,7 +3285,7 @@ function respond(id, status, extra){
   api('respondRec', Object.assign({ recId:id, status:status }, extra||{})).then(function(res){
     setState(res.state); closeDialog();
     var nx = res.next || {};
-    if (status==='Declined'){ render(); toast('Declined. Your reason helps your coach.'); return; }
+    if (status==='Declined'){ render(); toast('Declined. Your reason helps MAIA.'); return; }
     if (status==='Accepted') breathe();
     if (nx.open){ toast('Accepted. Let\'s work it into '+nx.open.slice(8)+'.'); openCtx(nx.open); return; }
     if (nx.journal){ S.inputsTab='journal'; S.journalPrompt=nx.journal; go('inputs'); return; }
@@ -3025,7 +3351,7 @@ function phaseAClick(act, t){
     case 'edSave': {
       E.takenOn = $('#ed-date').value; E.notes = $('#ed-notes').value;
       var err = $('#ed-err'); err.hidden = true;
-      api('saveAssessment',{ test:E.key, values:V, takenOn:E.takenOn, notes:E.notes }).then(function(st){ setState(st); closeDialog(); render(); breathe(); toast(LID.testDef(E.key).name+' saved. Your coach will draw on it.'); })
+      api('saveAssessment',{ test:E.key, values:V, takenOn:E.takenOn, notes:E.notes }).then(function(st){ setState(st); closeDialog(); render(); breathe(); toast(LID.testDef(E.key).name+' saved. MAIA will draw on it.'); })
         .catch(function(e){ err.textContent = e.message; err.hidden = false; });
       return true;
     }
@@ -3034,7 +3360,7 @@ function phaseAClick(act, t){
       api('clearAssessment',{ test:E.key }).then(function(st){ setState(st); closeDialog(); render(); toast('Results cleared.'); }).catch(fail); return true;
     case 'nextPrompt': { var j2=$('#jr-entry'); if(j2) S.jrDraft=j2.value; var pool=promptPool(); S.promptIdx=(S.promptIdx+1)%pool.length; S.journalPrompt=pool[S.promptIdx]; render(); return true; }
     case 'clearPrompt': { var j3=$('#jr-entry'); if(j3) S.jrDraft=j3.value; S.journalPrompt=''; render(); return true; }
-    case 'jrShare': api('updateJournal',{ entryId:t.dataset.id, coachCanRead:t.dataset.v==='1' }).then(setState).then(function(){ keepJournalDraft(); render(); toast(t.dataset.v==='1'?'Shared with your coach.':'Now private.'); }).catch(fail); return true;
+    case 'jrShare': api('updateJournal',{ entryId:t.dataset.id, coachCanRead:t.dataset.v==='1' }).then(setState).then(function(){ keepJournalDraft(); render(); toast(t.dataset.v==='1'?'Shared with MAIA.':'Now private.'); }).catch(fail); return true;
     case 'jrDel': openDialog('<h2>Delete this entry?</h2><p>The text is erased from your design record and can\'t be recovered.</p><div class="row"><button class="btn primary" data-act="jrDelYes" data-id="'+esc(t.dataset.id)+'">Delete</button><button class="btn ghost" data-act="cancel">Keep it</button></div>'); return true;
     case 'jrDelYes': api('updateJournal',{ entryId:t.dataset.id, erase:true }).then(setState).then(function(){ closeDialog(); keepJournalDraft(); render(); toast('Entry deleted.'); }).catch(fail); return true;
     case 'gkind': S.growthKind=t.dataset.v; Array.prototype.forEach.call(t.parentNode.children, function(b){ b.setAttribute('aria-pressed', String(b===t)); }); return true;
@@ -3049,7 +3375,7 @@ function phaseAClick(act, t){
     case 'recAdaptSave': { var r2=findRec(t.dataset.id), txt=($('#rec-text').value||'').trim(); if(!txt){ toast('Write your version first.'); return true; }
       if (/⟨Skill⟩/.test(r2.ActionText)) txt += ' ⟨Skill⟩'; respond(r2.RecID,'Accepted',{ actionText:txt }); return true; }
     case 'recDecline': { var r3=findRec(t.dataset.id);
-      openDialog('<span class="eyebrow">Decline</span><h2>'+esc(r3.Title)+'</h2><div class="field"><label for="rec-note">Why not? <span class="hint">Optional. It helps your coach understand you.</span></label><textarea id="rec-note" rows="3"></textarea></div>'+
+      openDialog('<span class="eyebrow">Decline</span><h2>'+esc(r3.Title)+'</h2><div class="field"><label for="rec-note">Why not? <span class="hint">Optional. It helps MAIA understand you.</span></label><textarea id="rec-note" rows="3"></textarea></div>'+
         '<div class="row"><button class="btn primary" data-act="recDeclineSave" data-id="'+esc(r3.RecID)+'">Decline</button><button class="btn ghost" data-act="cancel">Cancel</button></div>'); return true; }
     case 'recDeclineSave': respond(t.dataset.id,'Declined',{ note:($('#rec-note').value||'').trim() }); return true;
     case 'nudge': {

@@ -77,6 +77,16 @@ The framework stays at the core; these are supplements the coach draws on to gui
 | **Communities of Activity** | Review cards of kind *community*: a type of group that fits the design plus a search phrase (e.g. "crossfit gym near me"). Saved ones are listed under *Communities to look for*. |
 | **Notifications** | Nudges on the Journey (guidance waiting, review due every 14 days, a quarterly look at the Why, journaling after 7 quiet days, stale commitments, adding strengths results). Each type can be turned off, all of them can be, and a weekly email (when there's something to say) can be turned off separately under *You*. |
 
+## MAIA, the Design page and badges
+
+- **MAIA** is the coach's name, in the app and in its instructions (`src/guide.md`).
+- **The Design page starts fresh each visit** (a browser tab's session): "Good morning, Nate. What part of your design would you like to work on today?" over a clean conversation, with picks for where they left off and what's suggested next. Whatever the person tells MAIA, MAIA can answer with a button to the right place: an element, an area of the Exploration, a check-in, a review or a tab of Inputs (MAIA writes `[[open:element:Vision]]`; the app turns it into a button). A refresh keeps the conversation they chose; a new visit starts fresh.
+- **No repeated questions.** Opening a conversation, MAIA speaks first only if nothing of MAIA's is waiting: a new conversation, or one where the last word was the person's or the app's.
+- **Easy ways back in.** When nothing has moved for a while (no progress two days after joining, a week of stillness before v1 is complete, three weeks after), MAIA opens the visit with three small, concrete steps. It can be turned off under *You → Notifications* like the other nudges.
+- **The v1 score** (Design page, Badges): exploration up to 10 points (three areas), each element 9 for a draft and 1 more once approved. Version one is complete with all nine drafted on at least one chosen belief.
+- **Badges** in six paths, each with a Pebble, a Stone and a Cairn: *The First Design*, *The Living Design* (revisions and reviews), *Awareness* (areas explored, tests, journal), *Expansion* (goals reached, experiences lived, skills gained, the life-long reflection), *Congruence* (reviews, guidance taken on, how much of the What traces to the Why) and *Rhythm* (weeks spent with the design). Badges are worked out from the design itself and kept, once earned, with their date in the person's settings. New ones are celebrated with a quiet note and a mark on the Badges tab.
+- **Inputs, used actively.** MAIA is told to bring a relevant result, goal and its obstacle, hoped-for experience, journal theme or skill into the conversation when it bears on the moment, and to notice where Inputs and the design pull against each other.
+
 ## Look and feel
 
 The interface aims to feel like a deep breath: organic minimalism, wabi-sabi and fluid modernism.

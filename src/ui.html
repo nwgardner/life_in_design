@@ -441,6 +441,60 @@ input[type=number],input[type=date],select{border:1px solid var(--line);backgrou
   .notice{top:calc(env(safe-area-inset-top,0px) + 112px)}
 }
 @media (prefers-reduced-motion:reduce){ .newpip,.notice,.spot-glow{animation:none} }
+/* MAIA on the Design page: a fresh greeting, a clean conversation */
+.maia{width:22px;height:22px;flex:none;border-radius:58% 42% 52% 48%/55% 50% 50% 45%;background:radial-gradient(circle at 35% 30%,var(--glow),var(--accent) 70%);box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 14%,transparent);animation:maia-breathe 6s var(--ease) infinite}
+@keyframes maia-breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
+.home .chat.today .stream{height:clamp(280px,calc(100vh - 560px),560px)}
+.hero.today h1{font-size:clamp(2.2rem,4.6vw,3.3rem)}
+.hero.today .lede{font-family:var(--display);font-size:clamp(1.2rem,2.2vw,1.5rem);color:var(--ink);opacity:.82;max-width:34ch}
+.today-empty{color:var(--muted);font-family:var(--display);font-size:1.08rem;margin:auto 0;text-align:center;padding:40px 10px}
+.picks{display:grid;gap:8px}
+.picks .opts{gap:8px}
+.routes{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.msg.coach.nudge{border-style:dashed;max-width:min(560px,100%)}
+.msg.coach.nudge .steps{display:grid;gap:8px;margin-top:12px}
+.msg.coach.nudge .step{display:flex;justify-content:space-between;gap:12px;align-items:baseline;text-align:left;cursor:pointer;padding:10px 14px;color:var(--ink);
+  background:var(--sheet-solid);border:1px solid var(--line);border-radius:16px 20px 14px 18px;font-size:.95rem;transition:transform .6s var(--spring),box-shadow .5s var(--ease)}
+.msg.coach.nudge .step:hover{transform:translateX(3px);box-shadow:var(--shadow)}
+.msg.coach.nudge .step em{font-style:normal;font-family:var(--hand);font-size:1rem;color:var(--muted);white-space:nowrap}
+/* score: how much of v1 is laid */
+.ring{position:relative;width:var(--d,92px);height:var(--d,92px);flex:none}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:8;stroke-linecap:round}
+.ring .bg{stroke:color-mix(in srgb,var(--rule) 70%,transparent)}
+.ring .fg{stroke:var(--accent);transition:stroke-dashoffset 1.4s var(--ease)}
+.ring b{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--display);font-weight:450;font-size:calc(var(--d,92px) * .27)}
+.scorecard{display:flex;gap:16px;align-items:center;text-align:left;cursor:pointer;width:100%;color:var(--ink)}
+.scorecard .t{display:grid;gap:3px}
+.scorecard .t span{font-size:.9rem;color:var(--muted);line-height:1.4}
+/* badges: six paths, three stones each */
+.badge-top{display:flex;gap:28px;align-items:center;flex-wrap:wrap;padding:24px 28px;margin-bottom:24px}
+.badge-top .t{display:grid;gap:6px;flex:1;min-width:240px}
+.badge-top h2{margin:0;font-size:clamp(1.5rem,3vw,2rem)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:.88rem;color:var(--muted)}
+.legend span{display:inline-flex;gap:6px;align-items:center}
+.badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+.bcat{display:grid;gap:14px;padding:22px 24px;align-content:start}
+.bcat h3{font-family:var(--display);font-weight:450;font-size:1.35rem;margin:0}
+.bcat .blurb{margin:0;font-size:.92rem;color:var(--muted);line-height:1.5}
+.btiers{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.btier{display:grid;gap:3px;justify-items:center;align-content:start;text-align:center;padding:10px 4px 10px;border-radius:18px 22px 16px 20px;border:1px solid transparent}
+.btier.earned{background:color-mix(in srgb,var(--c) 12%,transparent);border-color:color-mix(in srgb,var(--c) 30%,transparent)}
+.btier .nm{font-weight:800;font-size:.88rem;line-height:1.25}
+.btier .lv{font-family:var(--hand);font-size:1.02rem;line-height:1;color:var(--muted)}
+.btier.locked .nm{color:var(--muted);font-weight:600}
+.btier .when{font-size:.75rem;color:var(--muted)}
+.cairn-svg{width:60px;height:60px}
+.cairn-svg ellipse{transition:opacity .6s}
+.nextup{display:grid;gap:6px;padding-top:12px;border-top:1px solid var(--line)}
+.nextup .need{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;font-size:.88rem;align-items:center}
+.nextup .need .mini{grid-column:1/-1;height:5px;border-radius:999px;background:color-mix(in srgb,var(--rule) 60%,transparent);overflow:hidden}
+.nextup .need .mini i{display:block;height:100%;background:var(--c);border-radius:999px}
+.nextup .need.met{color:var(--muted);text-decoration:line-through;text-decoration-color:color-mix(in srgb,var(--muted) 50%,transparent)}
+.bcat.first{--c:var(--why)}.bcat.living{--c:var(--how)}.bcat.awareness{--c:color-mix(in srgb,var(--why) 50%,var(--accent))}
+.bcat.expansion{--c:var(--what)}.bcat.congruence{--c:var(--accent)}.bcat.rhythm{--c:color-mix(in srgb,var(--how) 55%,var(--what))}
+@media (max-width:560px){ .badge-top{padding:20px} .badges{grid-template-columns:minmax(0,1fr)} }
+@media (prefers-reduced-motion:reduce){ .maia{animation:none} }
 /* goals: four horizons, each with its own shape */
 .horizons{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:26px}
 .hz{display:grid;gap:6px;align-content:start;text-align:left;padding:18px 18px 16px;cursor:pointer;color:var(--ink);border:1px solid var(--line);background:var(--sheet);
@@ -545,7 +599,7 @@ input[type=number],input[type=date],select{border:1px solid var(--line);backgrou
   .home{grid-template-columns:minmax(0,1fr)}
   .rail{position:static}
   .home .chat{min-height:0}
-  .home .stream,.home .chat.begin .stream{height:auto;max-height:none;min-height:240px;padding:22px 18px}
+  .home .stream,.home .chat.begin .stream,.home .chat.today .stream{height:auto;max-height:none;min-height:240px;padding:22px 18px}
 }
 @media (max-width:560px){
   .dialog.guide{padding:24px 20px 20px}
@@ -573,6 +627,7 @@ input[type=number],input[type=date],select{border:1px solid var(--line);backgrou
   header .bar-in{gap:6px;border-radius:26px;padding:8px 10px}
   .nav{width:100%;margin-left:0;justify-content:space-between;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
   .nav::-webkit-scrollbar{display:none}
+  .nav{-webkit-mask-image:linear-gradient(90deg,#000 88%,transparent);mask-image:linear-gradient(90deg,#000 88%,transparent);padding-right:18px}
   .nav button{padding:6px 6px;font-size:.84rem;flex:none}
   .plan,.card,.welcome form,.dialog{padding:20px}
   .tabs{width:100%}
@@ -604,6 +659,7 @@ input[type=number],input[type=date],select{border:1px solid var(--line);backgrou
     <button data-act="nav" data-view="design">Record</button>
     <button data-act="nav" data-view="inputs">Inputs</button>
     <button data-act="nav" data-view="iterate">Iterate</button>
+    <button data-act="nav" data-view="badges">Badges</button>
     <button data-act="nav" data-view="you">You</button>
   </nav>
 </div></header>
@@ -667,18 +723,18 @@ var Local = (function(){
     return sampleP;
   }
   var SAMPLE_MSG = {
-    not_granted:'Allow this page to use Claude to hear from the coach.', sampling_disabled:'Claude is not available for this account.',
-    rate_limited:'The coach needs a short pause. Try again in a minute.', session_expired:'Sign in to Claude again, then retry.',
-    refused:'The coach could not answer that. Try rephrasing.', prompt_too_large:'This conversation has grown long. Start a fresh session.'
+    not_granted:'Allow this page to use Claude to hear from MAIA.', sampling_disabled:'Claude is not available for this account.',
+    rate_limited:'MAIA needs a short pause. Try again in a minute.', session_expired:'Sign in to Claude again, then retry.',
+    refused:'MAIA could not answer that. Try rephrasing.', prompt_too_large:'This conversation has grown long. Start a fresh session.'
   };
   function coach(a, onText){
     var prepared = LID.coachPrepare(d, a);
     return getSample().then(function(sample){
-      if(!sample) throw new Error('The coach answers inside Claude. Open this preview in Claude, or use the live app.');
+      if(!sample) throw new Error('MAIA answers inside Claude. Open this preview in Claude, or use the live app.');
       var msgs = prepared.messages.map(function(m){ return {role:m.role, content:m.content}; });
-      msgs[0].content = 'You are acting as the coach inside the Life in Design app. Follow these instructions throughout.\n\n' + GUIDE_PUBLIC + '\n\n' + prepared.system + '\n\n---\n\n' + msgs[0].content;
+      msgs[0].content = 'You are acting as MAIA, the coach inside the Life in Design app. Follow these instructions throughout.\n\n' + GUIDE_PUBLIC + '\n\n' + prepared.system + '\n\n---\n\n' + msgs[0].content;
       return sample(msgs, { cache:false, onText: onText ? function(u){ onText(u.text); } : undefined })
-        .catch(function(e){ throw new Error(SAMPLE_MSG[e && e.code] || 'The coach could not answer just now. Try again.'); });
+        .catch(function(e){ throw new Error(SAMPLE_MSG[e && e.code] || 'MAIA could not answer just now. Try again.'); });
     }).then(function(r){ return LID.coachRecord(d, a, prepared, r.text); });
   }
   return {
@@ -727,7 +783,7 @@ var Hosted = (function(){
     }
     function pump(){
       return reader.read().then(function(r){
-        if (r.done){ handle(buf); if (error) throw new Error(error); if (result === undefined) throw new Error('The coach was interrupted. Try again.'); return result; }
+        if (r.done){ handle(buf); if (error) throw new Error(error); if (result === undefined) throw new Error('MAIA was interrupted. Try again.'); return result; }
         buf += decoder.decode(r.value, { stream:true });
         var i; while ((i = buf.indexOf('\n')) >= 0){ handle(buf.slice(0, i)); buf = buf.slice(i+1); }
         return pump();
@@ -785,11 +841,12 @@ function toast(t){
 }
 function fail(e){ toast(e && e.message ? e.message : String(e)); }
 
-function setState(st){ if(st && st.user) S.state = st; }
+function setState(st){ if(st && st.user){ S.state = st; checkBadges(); } }
 
 function go(view){
   S.view = view; closeDialog();
   explore(newFor(view, '', ''));
+  if (view==='badges') S.badgePip = false;
   if (view==='home' && S.state && S.state.user) loadHome(); else render();
   window.scrollTo(0,0);
   var m = $('#view'); m.classList.remove('enter'); void m.offsetWidth; m.classList.add('enter');
@@ -832,7 +889,7 @@ function render(){
   paintNews();
   var v = $('#view');
   var keep = $('#msg') ? $('#msg').value : '';
-  var fns = { welcome:vWelcome, home:vHome, journey:vJourney, explore:vExplore, studio:vStudio, design:vDesign, map:vMap, parked:vParked, you:vYou, under18:vUnder18, inputs:vInputs, iterate:vIterate, signin:vSignIn, setup:vSetup };
+  var fns = { welcome:vWelcome, home:vHome, journey:vJourney, explore:vExplore, studio:vStudio, design:vDesign, map:vMap, parked:vParked, you:vYou, under18:vUnder18, inputs:vInputs, iterate:vIterate, badges:vBadges, signin:vSignIn, setup:vSetup };
   v.innerHTML = (fns[S.view] || function(){ return '<p class="muted">Opening your design…</p>'; })();
   if (isChat()) { paintStream(); var ta=$('#msg'); if(ta){ if(keep && !S.busy) ta.value=keep; autoGrow(ta); } }
 }
@@ -875,7 +932,7 @@ function vWelcome(){
    '</section>'+
    '<form class="panel" id="onboard" autocomplete="on" novalidate>'+
     '<h2>Begin your design</h2>'+
-    '<div class="field"><label for="ob-name">What should your coach call you?</label><input id="ob-name" type="text" required maxlength="60" autocomplete="given-name"></div>'+
+    '<div class="field"><label for="ob-name">What should MAIA call you?</label><input id="ob-name" type="text" required maxlength="60" autocomplete="given-name"></div>'+
     '<div class="field"><label for="ob-brought">What brought you here? <span class="hint">Optional</span></label><textarea id="ob-brought" rows="3"></textarea></div>'+
     '<div class="field"><label for="ob-hope">What do you hope will be different? <span class="hint">Optional</span></label><textarea id="ob-hope" rows="3"></textarea></div>'+
     '<div class="field"><label for="ob-pressing">Is something pressing on you right now? <span class="hint">Optional. We\'ll park it safely and return to it when your design reaches the What, where it can be solved properly.</span></label><textarea id="ob-pressing" rows="2"></textarea></div>'+
@@ -932,7 +989,7 @@ function vSetup(){
 function vUnder18(){
   return '<section class="panel card" style="max-width:640px">'+
     '<h2>Thank you for being honest.</h2>'+
-    '<p>Life in Design is built for adults aged 18 and over, so the coach can\'t begin a design with you yet. The questions it asks are worth asking at any age, and they are best explored with people who know you: a parent, teacher, mentor or counselor you trust.</p>'+
+    '<p>Life in Design is built for adults aged 18 and over, so MAIA can\'t begin a design with you yet. The questions it asks are worth asking at any age, and they are best explored with people who know you: a parent, teacher, mentor or counselor you trust.</p>'+
     '<p>If things feel heavy right now, please talk to a trusted adult. In the US you can call or text <strong>988</strong> any time to reach someone who will listen.</p>'+
     '<div class="row"><button class="btn" data-act="nav" data-view="welcome">Back</button>'+(HOSTED?'<button class="btn ghost" data-act="signOut">Sign out</button>':'')+'</div>'+
   '</section>';
@@ -1036,7 +1093,7 @@ function briefFor(ctx){
       if (rel.length || gr.length) extra+='<div class="block"><span class="eyebrow">From your inputs</span><ul class="list">'+
         rel.map(function(r){ return '<li><span class="mono muted">'+esc(LID.testDef(r.Test).name)+'</span><span style="font-size:.92rem">'+esc(r.Summary)+'</span></li>'; }).join('')+
         gr.slice(-6).map(function(g){ return '<li><span class="mono muted">'+esc(g.Kind)+(g.Status==='Planned'?' · planned':'')+'</span><span style="font-size:.92rem">'+esc(g.Title)+'</span></li>'; }).join('')+'</ul></div>';
-      else if (name==='Resources') extra+='<div class="block"><span class="eyebrow">From your inputs</span><p class="muted" style="font-size:.9rem">Add strengths results under Inputs and your coach will draw on them here.</p></div>';
+      else if (name==='Resources') extra+='<div class="block"><span class="eyebrow">From your inputs</span><p class="muted" style="font-size:.9rem">Add strengths results under Inputs and MAIA will draw on them here.</p></div>';
     }
     if (e.layer==='What'){ var op=st.parked.filter(function(x){ return x.Status!=='Resolved'; }); if(op.length) extra+='<div class="block"><span class="eyebrow">Parked for the What</span><ul class="list">'+op.map(function(x){ return '<li>'+esc(x.Description)+'</li>'; }).join('')+'</ul></div>'; }
     return '<span class="layer-tag '+e.layer+'">'+e.layer+' · '+String(e.order).padStart(2,'0')+'</span><h2>'+esc(e.element)+'</h2><p class="muted">'+esc(e.oneLine)+'</p>'+
@@ -1048,7 +1105,7 @@ function briefFor(ctx){
   }
   if (ctx==='iterate'){
     var lr = LID.latestReview(st), open = st.recs.filter(function(r){ return r.Status==='New'; });
-    return '<span class="eyebrow">Life Design Iteration</span><h2>Talk it through</h2><p class="muted">Your coach as an objective evaluator: provocative, challenging, guiding. Accepted guidance becomes a new input to your design.</p>'+
+    return '<span class="eyebrow">Life Design Iteration</span><h2>Talk it through</h2><p class="muted">MAIA as an objective evaluator: provocative, challenging, guiding. Accepted guidance becomes a new input to your design.</p>'+
       (lr?'<div class="block"><span class="eyebrow">Latest review · '+fmtDate(lr.CreatedAt)+'</span><p><strong>'+esc(lr.Traced)+' of '+esc(lr.Total)+'</strong> What items trace clearly to your How and Why.</p><p class="muted" style="font-size:.92rem">'+esc(lr.Summary)+'</p></div>':'')+
       (open.length?'<div class="block"><span class="eyebrow">Open guidance</span><ul class="list">'+open.map(function(r){ return '<li><span class="layer-tag '+r.Layer+'">'+r.Layer+' · '+esc(r.Kind)+'</span><span style="font-size:.92rem">'+esc(r.Title)+'</span></li>'; }).join('')+'</ul></div>':'');
   }
@@ -1062,6 +1119,7 @@ function briefFor(ctx){
 function ctxTitle(ctx){
   if (ctx.indexOf('explore:')===0) return 'Exploring '+ctx.slice(8);
   if (ctx.indexOf('element:')===0) return ctx.slice(8);
+  if (isToday(ctx)) return 'Today';
   return {alignment:'Alignment check',checkin:'Check-in',remodel:'Remodel',iterate:'Iteration',begin:'The Core Beliefs Exploration',start:'Choosing where to begin'}[ctx]||ctx;
 }
 
@@ -1082,7 +1140,7 @@ function chatActions(ctx){
   } else if (ctx==='iterate') {
     actions = '<button class="btn small" data-act="nav" data-view="iterate">See the review and cards</button>';
   }
-  if (ctx!=='begin' && ctx!=='start') actions += '<button class="btn small ghost" data-act="endSession">End session</button>';
+  if (ctx!=='begin' && ctx!=='start' && !isToday(ctx)) actions += '<button class="btn small ghost" data-act="endSession">End session</button>';
   return actions;
 }
 
@@ -1092,20 +1150,23 @@ function chatPanel(ctx, home){
     var where='';
     if (ctx.indexOf('explore:')===0){ var as=LID.areaState(S.state, ctx.slice(8)); where = as.current ? '<span class="chip draft">Lens '+as.current.order+' of 7 · '+esc(as.current.lens)+'</span>' : '<span class="chip approved">Ready to close</span>'; }
     else if (ctx.indexOf('element:')===0){ var e=LID.elementDef(ctx.slice(8)); where = '<span class="layer-tag '+e.layer+'">'+e.layer+' · '+String(e.order).padStart(2,'0')+'</span>'; }
-    head = '<div class="where"><span class="eyebrow">'+esc(ctxTitle(ctx))+'</span>'+where+'</div>'+
-      (ctx==='begin' || ctx.indexOf('explore:')===0 ? '<button class="btn small ghost" data-act="nav" data-view="explore">All areas</button>' : '');
+    if (isToday(ctx) && newFor('home','','today')) where += '<span class="newmark">New · meet MAIA</span>';
+    head = '<div class="where"><span class="maia" aria-hidden="true"></span><span class="eyebrow">MAIA'+(isToday(ctx)?'':' · '+esc(ctxTitle(ctx)))+'</span>'+where+'</div>'+
+      '<span class="row" style="gap:6px">'+(ctx==='begin' || ctx.indexOf('explore:')===0 ? '<button class="btn small ghost" data-act="nav" data-view="explore">All areas</button>' : '')+
+      (isToday(ctx) || ctx==='start' ? '' : '<button class="btn small ghost" data-act="today">← Today</button>')+'</span>';
   } else {
     head = '<button class="btn small ghost" data-act="back">← '+(ctx.indexOf('explore:')===0?'All areas':ctx==='iterate'?'Iterate':'Journey')+'</button><span class="eyebrow">'+esc(ctxTitle(ctx))+'</span>';
   }
   var actions = chatActions(ctx);
-  return '<section class="panel chat'+(home && (ctx==='begin'||ctx==='start')?' begin':'')+'" aria-label="Coaching conversation">'+
+  return '<section class="panel chat'+(home && (ctx==='begin'||ctx==='start')?' begin':'')+(home && isToday(ctx)?' today':'')+'" aria-label="Conversation with MAIA">'+
     '<div class="chat-head">'+head+'</div>'+
     '<div class="stream" id="stream"></div>'+
     (home && ctx==='begin' ? '<div class="compose">'+stonesHtml()+'</div>' : '')+
     (home && ctx==='start' ? '<div class="compose">'+waysHtml()+'</div>' : '')+
+    (home && isToday(ctx) ? '<div class="compose">'+todayPicks()+'</div>' : '')+
     '<form class="compose" id="compose">'+
       (actions ? '<div class="actions">'+actions+'</div>' : '')+
-      '<div class="send"><label for="msg" class="eyebrow" style="position:absolute;left:-9999px">Your reply</label><textarea id="msg" rows="2" placeholder="Take your time…"'+(S.busy?' disabled':'')+'></textarea><button class="btn primary" type="submit"'+(S.busy?' disabled':'')+'>Send</button></div>'+
+      '<div class="send"><label for="msg" class="eyebrow" style="position:absolute;left:-9999px">Your reply</label><textarea id="msg" rows="2" placeholder="'+(isToday(ctx)?'Tell MAIA what you\'d like to work on…':'Take your time…')+'"'+(S.busy?' disabled':'')+'></textarea><button class="btn primary" type="submit"'+(S.busy?' disabled':'')+'>Send</button></div>'+
     '</form>'+
   '</section>';
 }
@@ -1118,10 +1179,68 @@ function vStudio(){
 }
 
 /* ---------- Design: the landing page, with the coach at the center ---------- */
+// Each visit (a browser tab's session) starts the Design page fresh: a greeting and a clean conversation.
+function stamp(){ return new Date().toISOString().replace(/[-:T.Z]/g,'').slice(0,14); }
+function visit(){
+  if (!S.visit){ var v=null; try { v = JSON.parse(sessionStorage.getItem('lid.visit')||'null'); } catch(e){} S.visit = v && v.today ? v : { today:stamp(), ctx:'' }; saveVisit(); }
+  return S.visit;
+}
+function saveVisit(){ try { sessionStorage.setItem('lid.visit', JSON.stringify(S.visit)); } catch(e){} }
+function isToday(ctx){ return String(ctx||'').indexOf('today:')===0; }
 function loadHome(){
-  openCtx(LID.homeContext(S.state), 'home');
+  var v = visit(), home = LID.homeContext(S.state);
+  var ctx = home==='start' ? 'start' : (v.ctx || 'today:'+v.today);
+  openCtx(ctx, 'home', isToday(ctx));
   maybeGuide();
   maybeWhatsNew();
+}
+/* Take up a part of the design on the Design page, for the rest of this visit. */
+function setHomeCtx(ctx){
+  var v = visit(); v.ctx = isToday(ctx) || ctx==='start' ? '' : ctx; saveVisit();
+  var focus = ctx.indexOf('element:')===0 ? ctx : ctx==='begin' ? 'exploration' : null;
+  var pre = focus ? api('savePrefs',{ prefs:{ focus:focus } }).then(setState) : Promise.resolve();
+  pre.then(function(){ S.view='home'; closeDialog(); loadHome(); window.scrollTo({ top:0, behavior:'smooth' }); }).catch(fail);
+}
+var INPUT_TABS = { tests:'Strengths & personality', goals:'Goals', experiences:'Life experiences', journal:'Journal', growth:'Learning & skills' };
+function targetLabel(t){
+  if (t.indexOf('element:')===0) return LID.elementDef(t.slice(8)) ? 'Work on '+t.slice(8)+' with MAIA' : '';
+  if (t.indexOf('explore:')===0) return t.length>8 ? 'Explore '+t.slice(8) : '';
+  if (t.indexOf('inputs:')===0) return INPUT_TABS[t.slice(7)] ? 'Open Inputs · '+INPUT_TABS[t.slice(7)] : '';
+  return { begin:'Choose an area to explore', checkin:'Check in on your design', iterate:'Open a congruence review', journey:'Open your journey' }[t] || '';
+}
+/* Go wherever MAIA, a pick or a step points. */
+function goCtx(t){
+  if (S.view==='home' && isToday(S.ctx)) explore(newFor('home','','today'));
+  if (t.indexOf('inputs:')===0){ S.inputsTab = t.slice(7); explore(newFor('inputs', S.inputsTab)); go('inputs'); return; }
+  if (t==='iterate'){ go('iterate'); return; }
+  if (t==='journey'){ go('journey'); return; }
+  setHomeCtx(t);
+}
+/* MAIA's lines like [[open:element:Vision]] become buttons. */
+function routes(text){
+  var btns = [];
+  var clean = String(text||'').replace(/\[\[open:([^\]\n]+)\]\]/g, function(_, t){ t=t.trim(); var lab=targetLabel(t); if (lab) btns.push('<button class="btn small primary" data-act="goCtx" data-ctx="'+esc(t)+'">'+esc(lab)+' →</button>'); return ''; });
+  return { text: clean.replace(/\[\[[^\]]*$/,'').trim(), btns: btns };
+}
+function leftOffLabel(c){
+  return c.indexOf('element:')===0 ? 'Pick up where you left off: '+c.slice(8)
+    : c.indexOf('explore:')===0 ? 'Pick up where you left off: exploring '+c.slice(8)
+    : c==='begin' ? 'Continue the Core Beliefs Exploration' : c==='checkin' ? 'Check in on how your design is living' : '';
+}
+function todayPicks(){
+  var st=S.state, p=LID.progress(st), left=LID.homeContext(st), picks=[];
+  if (leftOffLabel(left)) picks.push([left, leftOffLabel(left), 'primary']);
+  if (!p.allDrafted && p.next){ var nx = p.next.key==='exploration' ? 'begin' : 'element:'+p.next.key; if (nx!==left) picks.push([nx, 'Suggested next: '+p.next.name, '']); }
+  if (p.allDrafted) picks.push(['iterate','Run a congruence review','']);
+  picks.push(['inputs:goals','Tend your goals and Inputs','ghost']);
+  return '<div class="picks" role="group" aria-label="Places to begin today"><span class="eyebrow">Or choose a place to begin</span><div class="opts">'+
+    picks.map(function(x){ return '<button type="button" class="btn small '+x[2]+'" data-act="goCtx" data-ctx="'+esc(x[0])+'">'+esc(x[1])+'</button>'; }).join('')+'</div></div>';
+}
+function nudgeBubble(){
+  var mo = LID.momentum(S.state);
+  if (!mo) return '';
+  return '<div class="msg coach nudge"><p>'+esc(mo.say)+'</p><div class="steps">'+mo.steps.map(function(x){
+    return '<button type="button" class="step" data-act="goCtx" data-ctx="'+esc(x.go)+'"><span>'+esc(x.label)+'</span><em>'+esc(x.time)+'</em></button>'; }).join('')+'</div></div>';
 }
 
 /* ---------- what's new: after an update, for people who were here before it ---------- */
@@ -1148,7 +1267,7 @@ function explore(key){
 function paintNews(){
   var items = news().items;
   Array.prototype.forEach.call(document.querySelectorAll('#nav button'), function(b){
-    var has = items.some(function(i){ return i.view===b.dataset.view; });
+    var has = items.some(function(i){ return i.view===b.dataset.view; }) || (S.badgePip && b.dataset.view==='badges');
     var pip = b.querySelector('.newpip');
     if (has && !pip){ b.insertAdjacentHTML('beforeend','<span class="newpip" aria-hidden="true">new</span>'); b.setAttribute('aria-description','Something new here'); }
     if (!has && pip){ pip.remove(); b.removeAttribute('aria-description'); }
@@ -1196,7 +1315,7 @@ function tryNew(key){
   closeDialog(); hideNotice();
   if (it.tab){ S.inputsTab = it.tab; explore(it.key); }
   go(it.view);
-  if (it.spot){ setTimeout(function(){ var el = it.spot==='path' ? $('#pathCard') : null; if (el){ el.scrollIntoView({ block:'center', behavior:'smooth' }); el.classList.add('spot-glow'); } }, 350); }
+  if (it.spot){ setTimeout(function(){ var el = it.spot==='path' ? $('#pathCard') : it.spot==='today' ? $('.home .chat') : null; if (el){ el.scrollIntoView({ block:'center', behavior:'smooth' }); el.classList.add('spot-glow'); if (it.spot==='today'){ var m=$('#msg'); if(m) m.focus({ preventScroll:true }); } } }, 350); }
 }
 
 function stonesHtml(){
@@ -1223,9 +1342,7 @@ function waysHtml(){
     way('why','Why','Deeper · challenging','Start at the foundation','The Core Beliefs Exploration: where your beliefs came from, and which you choose.')+
   '</div>';
 }
-function chooseFocus(focus){
-  api('savePrefs',{ prefs:{ focus:focus } }).then(setState).then(function(){ loadHome(); window.scrollTo({ top:0, behavior:'smooth' }); }).catch(fail);
-}
+function chooseFocus(focus){ setHomeCtx(focus==='exploration' ? 'begin' : focus); }
 
 function pathCard(ctx){
   var p=LID.progress(S.state);
@@ -1243,25 +1360,25 @@ function pathCard(ctx){
 
 function vHome(){
   var st=S.state, u=st.user, ctx=S.ctx || LID.homeContext(st);
-  var h=new Date().getHours();
   var fresh = ctx==='start';
-  var greet = fresh ? 'Welcome, '+u.Name+'.' : (h<5?'Good evening':h<12?'Good morning':h<17?'Good afternoon':'Good evening')+', '+u.Name+'.';
+  var greet = fresh ? 'Welcome, '+u.Name+'.' : 'Good '+LID.partOfDay()+', '+u.Name+'.';
   var lede = ctx==='start' ? 'Begin wherever you feel ready. Every way in leads through the whole design.'
+    : isToday(ctx) ? 'What part of your design would you like to work on today?'
     : ctx==='begin' ? (st.chosen.length ? 'The Exploration continues, one area at a time.' : 'The foundation: what you believe, and why.')
     : ctx.indexOf('explore:')===0 ? 'Exploring '+ctx.slice(8)+', one lens at a time.'
     : ctx.indexOf('element:')===0 ? 'On the drawing board: '+ctx.slice(8)+'.'
     : 'Living with your design: what you did, what you learned, what you\'ll change.';
   // While the open path is new, it sits at the top of the rail where the mark can be seen.
   var pathFirst = !!newFor('home', '', 'path');
-  var rail = '<aside class="rail">'+(pathFirst ? pathCard(ctx) : '')+
-    '<button class="protip" data-act="guide"><span class="k">Pro tip</span><span class="tx">New here, or been a while? Revisit how the framework works and how your coach will walk with you.</span><span class="go">Open the guide →</span></button>'+
+  var rail = '<aside class="rail">'+(pathFirst ? pathCard(ctx) : '')+(ctx==='start' ? '' : scoreCard())+
+    '<button class="protip" data-act="guide"><span class="k">Pro tip</span><span class="tx">New here, or been a while? Revisit how the framework works and how MAIA, your coach, will walk with you.</span><span class="go">Open the guide →</span></button>'+
     (ctx==='begin'
       ? '<section class="panel card"><span class="eyebrow">Where we begin</span><p style="font-size:.95rem">Choose an area of life beneath the conversation. You\'ll look at it through seven lenses, then close it with a belief you choose.</p>'+
           (st.chosen.length ? '<ul class="list">'+Object.keys(LID.chosenByArea(st)).map(function(a){ return '<li><span class="mono muted">'+esc(a)+'</span><span style="font-size:.92rem">'+esc(LID.chosenByArea(st)[a].ChosenBelief)+'</span></li>'; }).join('')+'</ul>' : '')+'</section>'
-      : ctx==='checkin' || ctx==='start' ? '' : '<section class="panel brief">'+briefFor(ctx)+'</section>')+
+      : ctx==='checkin' || ctx==='start' || isToday(ctx) ? '' : '<section class="panel brief">'+briefFor(ctx)+'</section>')+
     (pathFirst ? '' : pathCard(ctx))+
   '</aside>';
-  return '<section class="hero compact"><p class="eyebrow">Design</p><h1>'+esc(greet)+'</h1><p class="lede">'+esc(lede)+'</p></section>'+
+  return '<section class="hero compact'+(isToday(ctx)?' today':'')+'"><p class="eyebrow">Design</p><h1>'+esc(greet)+'</h1><p class="lede">'+esc(lede)+'</p></section>'+
     '<div class="home">'+chatPanel(ctx, true)+rail+'</div>';
 }
 
@@ -1274,7 +1391,7 @@ function guideStep(i){
     { eb:'Welcome', t:'Consider yourself an iterative design.', b:
       '<div class="art">'+pyramidArt()+'</div>'+
       '<p>This is a place to uncover who you are and shape it into a living design: a clear <strong>Why</strong>, a deliberate <strong>How</strong> and a concrete <strong>What</strong>, aligned with each other.</p>'+
-      '<p>You are the designer and the authority on your own life. Your coach brings structure, questions, reflection and a little accountability. The design is never finished, and that is the joy: every draft is a version, not a verdict.</p>' },
+      '<p>You are the designer and the authority on your own life. <strong>MAIA</strong>, your coach, brings structure, questions, reflection and a little accountability. The design is never finished, and that is the joy: every draft is a version, not a verdict.</p>' },
     { eb:'The framework', t:'Three layers, built from the ground up', b:
       '<p>Nine elements in three layers. Nothing higher can stand without what lies beneath it.</p>'+
       '<div class="layers">'+gl('What','the living part')+gl('How','the structure')+gl('Why','the foundation')+'</div>' },
@@ -1290,13 +1407,13 @@ function guideStep(i){
         '<div class="gl Why"><div><b>Why</b><br><span class="muted" style="font-size:.85rem">deeper, challenging</span></div><ul><li>Start at the foundation with the <strong>Core Beliefs Exploration</strong>: one area of life at a time, through seven lenses, from what you inherited to what you choose.</li></ul></div>'+
       '</div>'+
       '<p>Wherever you begin, the hierarchy holds. What you build is tested against what lies beneath it, and every way in leads, in time, down to the foundation.</p>' },
-    { eb:'Your coach', t:'How we\'ll walk it together', b:
+    { eb:'MAIA, your coach', t:'How we\'ll walk it together', b:
       '<ol class="flow"><li><span><strong>Choose a way in:</strong> the What and your Inputs, the How, or the foundation.</span></li>'+
       '<li><span><strong>Design one element at a time,</strong> in conversation, a question or two at a time.</span></li>'+
-      '<li><span><strong>Follow the thread.</strong> Your coach notices what your answers say about the layers beneath, and invites you deeper when you\'re ready.</span></li>'+
+      '<li><span><strong>Follow the thread.</strong> MAIA notices what your answers say about the layers beneath, and invites you deeper when you\'re ready.</span></li>'+
       '<li><span><strong>Reach the foundation:</strong> your Core Beliefs, Vision and Purpose hold everything up.</span></li>'+
       '<li><span><strong>Check the alignment</strong>, live with it, and iterate as life changes.</span></li></ol>'+
-      '<p>Your coach reflects your words back and offers drafts in your own words. Nothing is saved to your design until you approve it. If you came with something pressing, it\'s held safely and worked through when your design reaches the What.</p>'+
+      '<p>MAIA reflects your words back and offers drafts in your own words. Nothing is saved to your design until you approve it. If you came with something pressing, it\'s held safely and worked through when your design reaches the What.</p>'+
       '<p class="muted" style="font-size:.92rem">The conversation lives here on the Design page. Journey shows the whole pyramid; Inputs holds your tests, goals, experiences and journal; Record holds your design and its history.</p>' }
   ];
   var s = steps[i];
@@ -1327,13 +1444,18 @@ function paintStream(pending){
   var html = S.messages.map(function(m){
     var c = String(m.Content||'');
     if (/^\[note\]/.test(c)) return '<div class="divider">'+esc(noteText(c))+'</div>';
-    return m.Role==='assistant' ? '<div class="msg coach">'+md(c)+'</div>' : '<div class="msg me">'+esc(c)+'</div>';
+    if (m.Role!=='assistant') return '<div class="msg me">'+esc(c)+'</div>';
+    var r = routes(c);
+    return '<div class="msg coach">'+md(r.text)+(r.btns.length?'<div class="routes">'+r.btns.join('')+'</div>':'')+'</div>';
   }).join('');
-  if (S.busy) html += '<div class="msg coach" id="pending">'+(pending?md(pending):'<span class="typing" aria-label="The coach is writing"><i></i><i></i><i></i></span>')+'</div>';
+  var today = isToday(S.ctx);
+  if (today) html = nudgeBubble() + html;
+  if (S.busy) html += '<div class="msg coach" id="pending">'+(pending?md(routes(pending).text):'<span class="typing" aria-label="MAIA is writing"><i></i><i></i><i></i></span>')+'</div>';
   if (S.coachErr) html += '<div class="coach-err"><span>'+esc(S.coachErr)+'</span><button class="btn small" data-act="retry">Try again</button></div>';
-  if (!S.messages.length && !S.busy && !S.coachErr) html = '<p class="muted">Opening the conversation…</p>';
+  if (!S.messages.length && !S.busy && !S.coachErr) html = today ? (html || '<p class="today-empty">Tell MAIA what\'s on your mind, or choose a place to begin below.</p>') : '<p class="muted">Opening the conversation…</p>';
   el.innerHTML = html;
-  el.scrollTop = el.scrollHeight;
+  // Today opens at the top, so MAIA's first words are read first; conversations follow their latest turn.
+  el.scrollTop = today && !S.messages.length ? 0 : el.scrollHeight;
   if (window.innerWidth<=900 && S.busy) { var pd=$('#pending'); if(pd) pd.scrollIntoView({block:'nearest'}); }
 }
 
@@ -1422,7 +1544,7 @@ function coachTurn(opts){
     .then(function(){ S.busy=false; if(S.ctx===ctx && isChat()){ render(); var m=$('#msg'); if(m && !$('#layer').innerHTML) m.focus({ preventScroll:true }); } });
 }
 
-function openCtx(ctx, view){
+function openCtx(ctx, view, quiet){
   view = view || 'studio';
   if (S.ctx!==ctx) S.messages = [];
   S.ctx = ctx; S.coachErr=null; S.view=view; render(); if (view==='studio') window.scrollTo(0,0);
@@ -1433,10 +1555,10 @@ function openCtx(ctx, view){
       if (S.ctx!==ctx || !isChat()) return;
       S.messages = msgs || [];
       render();
+      // MAIA speaks first only when no question of MAIA's is waiting: a new conversation, or one where the
+      // last word was the person's or the app's. A question still awaiting an answer is left to wait.
       var last = S.messages[S.messages.length-1];
-      var hasCoach = S.messages.some(function(m){ return m.Role==='assistant'; });
-      var stale = last && (Date.now() - new Date(last.Timestamp).getTime() > 8*3600*1000);
-      if (!hasCoach || (last && last.Role!=='assistant') || stale) coachTurn({ mode:'open' });
+      if (!quiet && (!last || last.Role!=='assistant')) coachTurn({ mode:'open' });
     }).catch(fail);
   var stage = { alignment:'alignment', checkin:'living', remodel:'remodel', iterate:'living' }[ctx];
   if (stage) api('updateUser',{ patch:{ Stage:stage, CurrentFocus:ctxTitle(ctx) } }).then(setState).catch(function(){});
@@ -1456,10 +1578,12 @@ document.addEventListener('click', function(ev){
     if (key==='exploration') go('explore'); else openCtx('element:'+key); return;
   }
   if (act==='ctx'){ openCtx(t.dataset.ctx); return; }
-  if (act==='area'){ openCtx('explore:'+t.dataset.area, S.view==='home' ? 'home' : 'studio'); return; }
-  if (act==='ownArea'){ var oa=($('#ownArea').value||'').trim().replace(/\s+/g,' '); if(!oa){ $('#ownArea').focus(); return; } openCtx('explore:'+oa.charAt(0).toUpperCase()+oa.slice(1), 'home'); return; }
-  if (act==='entry'){ api('savePrefs',{ prefs:{ entry:t.dataset.entry, focus:'' } }).then(setState).then(function(){ loadHome(); breathe(); }).catch(fail); return; }
-  if (act==='moveOn'){ api('savePrefs',{ prefs:{ focus:'element:Core Beliefs' } }).then(setState).then(function(){ loadHome(); breathe(); }).catch(fail); return; }
+  if (act==='area'){ if (S.view==='home') setHomeCtx('explore:'+t.dataset.area); else openCtx('explore:'+t.dataset.area, 'studio'); return; }
+  if (act==='ownArea'){ var oa=($('#ownArea').value||'').trim().replace(/\s+/g,' '); if(!oa){ $('#ownArea').focus(); return; } setHomeCtx('explore:'+oa.charAt(0).toUpperCase()+oa.slice(1)); return; }
+  if (act==='entry'){ api('savePrefs',{ prefs:{ entry:t.dataset.entry, focus:'' } }).then(setState).then(function(){ setHomeCtx(LID.homeContext(S.state)); breathe(); }).catch(fail); return; }
+  if (act==='moveOn'){ setHomeCtx('element:Core Beliefs'); breathe(); return; }
+  if (act==='goCtx'){ goCtx(t.dataset.ctx); return; }
+  if (act==='today'){ setHomeCtx('today:'); return; }
   if (act==='guide'){ showGuide(0); return; }
   if (act==='guideGo'){ showGuide(Number(t.dataset.step)||0); return; }
   if (act==='guideDone'){ closeDialog(); var gm=$('#msg'); if(gm) gm.focus({ preventScroll:true }); return; }
@@ -1492,7 +1616,8 @@ document.addEventListener('click', function(ev){
   if (act==='whatsNew'){ showWhatsNew(); return; }
   if (act==='signOut'){
     try { sessionStorage.removeItem('lid.alive'); } catch(e){}
-    S.localExplored = []; S.newsChecked = false;
+    S.localExplored = []; S.newsChecked = false; S.visit = null; S.awarding = {};
+    try { sessionStorage.removeItem('lid.visit'); } catch(e){}
     if (HOSTED){ Hosted.signOut().then(function(){ S.userId=null; S.state=null; S.sessionId=null; S.email=''; S.linkSentTo=''; go('signin'); }); return; }
     store.del('lid.userId'); S.userId=null; S.state=null; S.sessionId=null; go('welcome'); return;
   }
@@ -1516,7 +1641,7 @@ document.addEventListener('submit', function(ev){
     Hosted.sendLink(em).then(function(){ S.linkSentTo=em; S.signinErr=''; render(); breathe(); }, function(e){ S.signinErr=e.message; render(); });
     return;
   }
-  if (f.id==='compose'){ var ta=$('#msg'), v=(ta.value||'').trim(); if(!v||S.busy) return; S.messages.push({ Role:'user', Content:v, Timestamp:new Date().toISOString() }); ta.value=''; coachTurnWith(v); return; }
+  if (f.id==='compose'){ var ta=$('#msg'), v=(ta.value||'').trim(); if(!v||S.busy) return; if (isToday(S.ctx)) explore(newFor('home','','today')); S.messages.push({ Role:'user', Content:v, Timestamp:new Date().toISOString() }); ta.value=''; coachTurnWith(v); return; }
   if (f.id==='addArea'){ var a=($('#newArea').value||'').trim().replace(/\s+/g,' '); if(!a) return; openCtx('explore:'+a.charAt(0).toUpperCase()+a.slice(1)); return; }
   if (f.id==='parkForm'){ var d=($('#parkText').value||'').trim(); if(!d) return; api('parkProblem',{ description:d, returnState:true }).then(setState).then(function(){ render(); breathe(); toast('Parked.'); }).catch(fail); return; }
   if (f.id==='youForm'){
@@ -1548,7 +1673,7 @@ function onboard(){
   if (minor) { go('under18'); return; }
   var name=$('#ob-name').value.trim();
   // Only a name and the age answer are needed; everything else on this form is optional.
-  var miss = !name ? ['#ob-name','Add a name for your coach to use.'] : !adult ? ['#ob-adult','Please confirm you\'re 18 or older to begin.'] : null;
+  var miss = !name ? ['#ob-name','Add a name for MAIA to use.'] : !adult ? ['#ob-adult','Please confirm you\'re 18 or older to begin.'] : null;
   if (miss){ var el=$(miss[0]); el.setAttribute('aria-invalid','true'); err.textContent=miss[1]; err.hidden=false; el.focus({ preventScroll:true }); el.scrollIntoView({ block:'center', behavior:'smooth' }); return; }
   api('createUser',{ name:name, whatBrought:$('#ob-brought').value.trim(), hopedChange:$('#ob-hope').value.trim(), pressing:$('#ob-pressing').value.trim(), is18:true, plain:$('#ob-plain').checked, userId:null })
     .then(function(u){ S.userId=u.UserID; store.set('lid.userId', u.UserID); return api('startSession'); })
@@ -1569,7 +1694,7 @@ function captureDraft(){
   api('coach',{ context:S.ctx, mode:'draft' }).then(function(r){
     var text = r.draft || s.statement || '';
     openDialog('<span class="eyebrow">Capture · '+esc(name)+'</span><h2>Is this yours?</h2>'+
-      (r.notEnough?'<p class="muted">The coach thinks there isn\'t quite enough yet to draft honestly. Keep talking, or write your own version here.</p>':'<p class="muted">Proposed from your own words. Edit until it sounds like you. Nothing is saved until you choose.</p>')+
+      (r.notEnough?'<p class="muted">MAIA thinks there isn\'t quite enough yet to draft honestly. Keep talking, or write your own version here.</p>':'<p class="muted">Proposed from your own words. Edit until it sounds like you. Nothing is saved until you choose.</p>')+
       '<div class="field"><label for="cap-text">'+esc(name)+'</label><textarea id="cap-text" rows="7">'+esc(text)+'</textarea></div>'+
       (s.statement?'<div class="field"><label for="cap-note">What changed, in one line <span class="hint">Kept with the version history</span></label><input id="cap-note" type="text" maxlength="140"></div>':'')+
       '<div class="row"><button class="btn primary" data-act="saveEl" data-status="Approved">Save as approved</button><button class="btn" data-act="saveEl" data-status="Draft">Save as draft</button><button class="btn ghost" data-act="cancel">Not yet</button></div>');
@@ -1580,7 +1705,7 @@ function saveElement(status){
   var n=$('#cap-note');
   api('saveElement',{ element:S.ctx.slice(8), statement:txt, status:status, changeNote:n?n.value.trim():'' })
     .then(setState).then(refreshMessages).then(function(){
-      closeDialog(); if (S.view==='home') loadHome(); else render();
+      closeDialog(); if (S.view==='home') setHomeCtx(LID.homeContext(S.state)); else render();
       var p=LID.progress(S.state), nx=p.next;
       breathe(); toast(S.ctx.slice(8)+' saved as '+status.toLowerCase()+'.'+(nx&&nx.key!==S.ctx.slice(8)&&!p.allDrafted?' Suggested next: '+nx.name+'.':''));
     }).catch(fail);
@@ -1600,7 +1725,7 @@ function closeAreaDialog(){
 function saveBelief(){
   var b=($('#cb-belief').value||'').trim(); if(!b){ toast('Write the belief first.'); return; }
   api('saveChosenBelief',{ area:S.ctx.slice(8), belief:b, why:($('#cb-why').value||'').trim() })
-    .then(setState).then(refreshMessages).then(function(){ closeDialog(); if (S.view==='home') loadHome(); else render(); breathe(); toast('Chosen and saved.'+(S.state.chosen.length===1?' Core Beliefs is now open, whenever you\'re ready.':'')); }).catch(fail);
+    .then(setState).then(refreshMessages).then(function(){ closeDialog(); if (S.view==='home') setHomeCtx(LID.homeContext(S.state)); else render(); breathe(); toast('Chosen and saved.'+(S.state.chosen.length===1?' Core Beliefs is now open, whenever you\'re ready.':'')); }).catch(fail);
 }
 function endSessionDialog(){
   openDialog('<span class="eyebrow">End of session</span><h2>One small step before next time</h2><p class="muted">Something specific you can do or reflect on this week.</p>'+
@@ -1642,7 +1767,7 @@ function vInputs(){
   var tabs = [['tests','Strengths & personality'],['goals','Goals'],['experiences','Life experiences'],['journal','Journal'],['growth','Learning & skills']];
   var body = S.inputsTab==='journal' ? journalTab() : S.inputsTab==='growth' ? growthTab() : S.inputsTab==='goals' ? goalsTab() : S.inputsTab==='experiences' ? experiencesTab() : testsTab();
   return '<section class="hero"><p class="eyebrow">Inputs</p><h1>What feeds your design</h1>'+
-    '<p class="lede">Supplements to the guided process. Your coach draws on them to guide, nudge and suggest, and the framework stays at the core.</p></section>'+
+    '<p class="lede">Supplements to the guided process. MAIA draws on them to guide, nudge and suggest, and the framework stays at the core.</p></section>'+
     '<div class="tabs" role="tablist">'+tabs.map(function(t){ var nw=newFor('inputs', t[0]); return '<button role="tab" data-act="tab" data-tab="'+t[0]+'" aria-selected="'+(S.inputsTab===t[0])+'"'+(nw?' aria-description="New"':'')+'>'+t[1]+(nw?'<span class="newpip" aria-hidden="true">new</span>':'')+'</button>'; }).join('')+'</div>'+body;
 }
 
@@ -1666,14 +1791,14 @@ function journalTab(){
   return '<form class="panel card" id="journalForm"><span class="eyebrow">New entry · '+fmtDate(new Date().toISOString())+'</span>'+
     (S.journalPrompt ? '<div class="row" style="justify-content:space-between;align-items:flex-start"><p class="q" style="font-family:var(--display);font-size:1.15rem;max-width:60ch">'+esc(S.journalPrompt)+'</p><button type="button" class="btn small ghost" data-act="clearPrompt">No prompt</button></div>' : '')+
     '<div class="field"><label for="jr-entry" class="eyebrow" style="position:absolute;left:-9999px">Journal entry</label><textarea id="jr-entry" rows="6" placeholder="Write freely. Nothing here needs to be tidy.">'+esc(S.jrDraft)+'</textarea></div>'+
-    '<label class="choice"><input type="checkbox" id="jr-share" checked> Let my coach read this entry</label>'+
+    '<label class="choice"><input type="checkbox" id="jr-share" checked> Let MAIA read this entry</label>'+
     '<div class="row"><button class="btn primary" type="submit">Save entry</button><button class="btn ghost" type="button" data-act="nextPrompt">'+(S.journalPrompt?'Another prompt':'Give me a prompt')+'</button></div></form>'+
     (entries.length ? '<div class="entries">'+entries.map(function(j){
       var shared = LID.truthy(j.CoachCanRead);
-      return '<article class="panel entry"><div class="meta"><span>'+fmtDate(j.CreatedAt)+'</span><span class="chip '+(shared?'approved':'gap')+'">'+(shared?'Coach can read':'Private')+'</span></div>'+
+      return '<article class="panel entry"><div class="meta"><span>'+fmtDate(j.CreatedAt)+'</span><span class="chip '+(shared?'approved':'gap')+'">'+(shared?'MAIA can read':'Private')+'</span></div>'+
         (j.Prompt?'<p class="prompt">'+esc(j.Prompt)+'</p>':'')+'<div class="body">'+esc(j.Entry)+'</div>'+
-        '<div class="row"><button class="btn small ghost" data-act="jrShare" data-id="'+esc(j.EntryID)+'" data-v="'+(shared?'0':'1')+'">'+(shared?'Make private':'Share with coach')+'</button><button class="btn small ghost" data-act="jrDel" data-id="'+esc(j.EntryID)+'">Delete</button></div></article>';
-    }).join('')+'</div>' : '<p class="muted" style="margin-top:16px">Your entries will appear here. Only entries you share are visible to your coach.</p>');
+        '<div class="row"><button class="btn small ghost" data-act="jrShare" data-id="'+esc(j.EntryID)+'" data-v="'+(shared?'0':'1')+'">'+(shared?'Make private':'Share with MAIA')+'</button><button class="btn small ghost" data-act="jrDel" data-id="'+esc(j.EntryID)+'">Delete</button></div></article>';
+    }).join('')+'</div>' : '<p class="muted" style="margin-top:16px">Your entries will appear here. Only entries you share are visible to MAIA.</p>');
 }
 
 function growthTab(){
@@ -1694,8 +1819,72 @@ function growthTab(){
       '<div class="row"><button class="btn primary" type="submit">Add to my log</button></div></form>'+
     '<div class="growthcol">'+
       '<section class="panel card"><span class="eyebrow">Building</span>'+(planned.length?'<ul class="list">'+planned.map(item).join('')+'</ul>':'<p class="muted">Things you are learning now, or guidance you accepted, show up here.</p>')+'</section>'+
-      '<section class="panel card"><span class="eyebrow">Acquired</span>'+(done.length?'<ul class="list">'+done.map(item).join('')+'</ul>':'<p class="muted">Nothing logged yet. These feed Resources and your coach\'s suggestions.</p>')+'</section>'+
+      '<section class="panel card"><span class="eyebrow">Acquired</span>'+(done.length?'<ul class="list">'+done.map(item).join('')+'</ul>':'<p class="muted">Nothing logged yet. These feed Resources and MAIA\'s suggestions.</p>')+'</section>'+
     '</div></div>';
+}
+
+/* ---------- the v1 score and badges ---------- */
+function ringSvg(pct, d){
+  var r=40, c=2*Math.PI*r, off=c*(1-Math.max(0,Math.min(100,pct))/100);
+  return '<span class="ring" style="--d:'+(d||92)+'px" role="img" aria-label="'+pct+' percent"><svg viewBox="0 0 100 100" aria-hidden="true"><circle class="bg" cx="50" cy="50" r="'+r+'"/><circle class="fg" cx="50" cy="50" r="'+r+'" stroke-dasharray="'+c.toFixed(1)+'" stroke-dashoffset="'+off.toFixed(1)+'"/></svg><b>'+pct+'%</b></span>';
+}
+/* A small cairn: one, two or three stones. Laid stones take the path's color; the rest wait in outline. */
+function cairnSvg(level, earned){
+  var stones = [[27,44,20,7.5],[27,31,14.5,6.5],[27,20,9.5,5.5]], out='';
+  for (var i=0;i<3;i++){
+    var s=stones[i], show=i<level;
+    if (!show) continue;
+    out += '<ellipse cx="'+s[0]+'" cy="'+s[1]+'" rx="'+s[2]+'" ry="'+s[3]+'" fill="'+(earned?'var(--c)':'none')+'" stroke="'+(earned?'var(--c)':'var(--rule)')+'" stroke-width="1.6" '+(earned?'':'stroke-dasharray="3 3"')+' transform="rotate('+(i%2?-4:3)+' '+s[0]+' '+s[1]+')"/>';
+  }
+  return '<svg class="cairn-svg" viewBox="0 0 54 54" aria-hidden="true">'+out+'</svg>';
+}
+function scoreCard(){
+  var bb=LID.badgeBoard(S.state), sc=bb.score;
+  return '<section class="panel card"><button class="scorecard" data-act="nav" data-view="badges">'+ringSvg(sc.pct, 74)+
+    '<span class="t"><span class="eyebrow">'+(sc.complete?'Design v1 · laid':'Design v1')+'</span><span>'+(sc.complete?'Version one is complete. Now it lives and grows.':sc.drafted+' of 9 elements drafted'+(sc.areas?' · '+sc.areas+' belief area'+(sc.areas===1?'':'s'):''))+'</span>'+
+    '<span>'+bb.earned+' of '+bb.total+' badges · <strong style="color:var(--accent)">See badges →</strong></span></span></button></section>';
+}
+function vBadges(){
+  var st=S.state, bb=LID.badgeBoard(st), sc=bb.score, p=LID.progress(st);
+  var nx = !sc.complete && p.next ? (p.next.key==='exploration' ? 'begin' : 'element:'+p.next.key) : '';
+  var top = '<section class="panel badge-top">'+ringSvg(sc.pct, 128)+
+    '<div class="t"><span class="eyebrow">Your design, version one</span><h2>'+(sc.complete?'Version one is laid.':sc.pct+'% of the way to version one')+'</h2>'+
+      '<p class="muted" style="margin:0">'+(sc.complete?'From here the design lives: you iterate it, see yourself more clearly, grow past its edges and bring Why, How and What into tune. The paths below follow that.'
+        :sc.drafted+' of 9 elements drafted, '+sc.approved+' approved, '+sc.areas+' area'+(sc.areas===1?'':'s')+' of belief explored. A first draft of all nine, on a foundation of at least one chosen belief, completes version one.')+'</p>'+
+      (nx?'<div class="row"><button class="btn primary" data-act="goCtx" data-ctx="'+esc(nx)+'">Keep building: '+esc(p.next.name)+'</button></div>':'')+
+    '</div></section>';
+  var legend = '<div class="legend" style="margin-bottom:16px">'+LID.TIERS.map(function(t,i){ return '<span>'+cairnSvg(i+1,true).replace('class="cairn-svg"','class="cairn-svg" style="width:30px;height:30px;--c:var(--muted)"')+t+'</span>'; }).join('')+'<span>Every path has three stones: a Pebble to begin, a Stone as it deepens, a Cairn when it\'s well laid.</span></div>';
+  var cats = bb.categories.map(function(c){
+    var tiers = c.tiers.map(function(t){
+      return '<div class="btier '+(t.earned?'earned':'locked')+'">'+cairnSvg(t.level, t.earned)+'<span class="lv">'+t.tier+'</span><span class="nm">'+esc(t.name)+'</span>'+(t.earned&&t.on?'<span class="when">'+fmtDate(t.on).replace(/, \d{4}$/,'')+'</span>':'')+'</div>';
+    }).join('');
+    var nextUp = c.next ? '<div class="nextup"><span class="eyebrow">Next · '+esc(c.next.name)+' ('+c.next.tier+')</span>'+c.next.needs.map(function(n){
+        var have = n.fact==='ratio' ? Math.round(n.have*100)+'%' : n.fact==='complete'||n.fact==='lifeReflection' ? (n.met?'done':'not yet') : Math.min(n.have, n.need)+' of '+n.need;
+        var pctN = n.fact==='ratio' ? Math.min(1, n.have/n.need) : Math.min(1, n.have/(n.need||1));
+        return '<div class="need'+(n.met?' met':'')+'"><span>'+esc(n.label)+'</span><span class="muted">'+have+'</span><span class="mini"><i style="width:'+Math.round(pctN*100)+'%"></i></span></div>';
+      }).join('')+'</div>'
+      : '<p class="muted" style="margin:0;font-size:.9rem">All three stones laid. Beautifully done.</p>';
+    return '<section class="panel bcat '+c.key+'"><div><h3>'+esc(c.name)+'</h3><p class="blurb">'+esc(c.blurb)+'</p></div><div class="btiers">'+tiers+'</div>'+nextUp+'</section>';
+  }).join('');
+  return '<section class="hero compact"><p class="eyebrow">Badges</p><h1>Stones along the way</h1><p class="lede">They mark the work, never grade it. '+bb.earned+' of '+bb.total+' laid so far.</p></section>'+
+    top + legend + '<div class="badges">'+cats+'</div>';
+}
+/* Notice newly earned badges once, keep them, and celebrate quietly. */
+function checkBadges(){
+  if (!S.state || !S.state.user) return;
+  var bb = LID.badgeBoard(S.state);
+  S.awarding = S.awarding || {};
+  var fresh = bb.fresh.filter(function(k){ return !S.awarding[k]; });
+  if (!fresh.length) return;
+  fresh.forEach(function(k){ S.awarding[k]=1; });
+  api('savePrefs',{ prefs:{ award:fresh }, silent:true }).then(function(){
+    var p = LID.parseJSON(S.state.user.Prefs, {}) || {}; p.badges = p.badges || {};
+    fresh.forEach(function(k){ if(!p.badges[k]) p.badges[k] = new Date().toISOString().slice(0,10); });
+    S.state.user.Prefs = JSON.stringify(p);
+  }).catch(function(){ fresh.forEach(function(k){ delete S.awarding[k]; }); });
+  var names = []; bb.categories.forEach(function(c){ c.tiers.forEach(function(t){ if (fresh.indexOf(t.key)>=0) names.push(t.name+' · '+t.tier+' of '+c.name); }); });
+  S.badgePip = true; paintNews();
+  setTimeout(function(){ breathe(); toast(names.length===1 ? 'Badge earned: '+names[0]+'.' : names.length+' badges earned along the way. See them under Badges.'); }, 600);
 }
 
 /* ---------- goals: four horizons ---------- */
@@ -1743,7 +1932,7 @@ function goalsTab(){
     return '<section class="gband"><h3>'+HZ[h].name+' <span>'+HZ[h].span+'</span></h3><div class="goals">'+open.map(goalCard).join('')+'</div></section>';
   }).join('');
   var done = gs.filter(function(g){ return g.Status==='Done'; }).reverse();
-  return '<p class="muted" style="margin-bottom:16px;max-width:70ch">Goals at four horizons, each shaped to its distance. Your coach weighs them against your Purpose and Strategy, and helps you name the trade-offs.</p>'+
+  return '<p class="muted" style="margin-bottom:16px;max-width:70ch">Goals at four horizons, each shaped to its distance. MAIA weighs them against your Purpose and Strategy, and helps you name the trade-offs.</p>'+
     '<div class="horizons">'+HZ_ORDER.map(function(h){
       var n = gs.filter(function(g){ return g.Horizon===h && g.Status!=='Done'; }).length;
       return '<button class="hz '+HZ[h].cls+'" data-act="newGoal" data-h="'+h+'"><span class="span">'+HZ[h].span+'</span><b>'+HZ[h].name+'</b><span class="shape">'+HZ[h].shape+(n?' · '+n+' held':'')+'</span><span class="add">'+(h==='life'?'Begin the reflection →':'Add a goal →')+'</span></button>';
@@ -1860,7 +2049,7 @@ function experiencesTab(){
       (!done&&(x.Impediments||x.Actions)?'<span class="marks" style="display:flex;gap:6px;flex-wrap:wrap">'+(x.Impediments?'<span class="chip gap">Obstacle named</span>':'')+(x.Actions?'<span class="chip draft">Plan in place</span>':'')+'</span>':'')+
     '</button>';
   };
-  return '<div class="row" style="justify-content:space-between;margin-bottom:18px"><p class="muted" style="margin:0;max-width:62ch">A ledger of experiences you want to live: the bucket list, held with intention. Your coach weighs them against your Strategy and Key Activities.</p>'+
+  return '<div class="row" style="justify-content:space-between;margin-bottom:18px"><p class="muted" style="margin:0;max-width:62ch">A ledger of experiences you want to live: the bucket list, held with intention. MAIA weighs them against your Strategy and Key Activities.</p>'+
       '<button class="btn primary" data-act="newExp">Add an experience</button></div>'+
     '<div class="ledger"><section class="col"><span class="eyebrow">Still ahead · '+ahead.length+'</span>'+(ahead.length?ahead.map(ticket).join(''):'<p class="muted">Somewhere you want to stand, something you want to make, someone you want to meet. Add the first.</p>')+'</section>'+
       '<section class="col"><span class="eyebrow">Lived · '+lived.length+'</span>'+(lived.length?lived.map(ticket).join(''):'<p class="muted">Experiences you fulfill move here, with what they taught you.</p>')+'</section></div>';
@@ -2003,7 +2192,7 @@ function vIterate(){
   var hero = '<section class="hero"><p class="eyebrow">Life Design Iteration</p><h1>Toward congruence</h1>';
   if (!p.allDrafted){
     var done = p.steps.slice(1).filter(function(s){ return s.done; }).length;
-    return hero+'<p class="lede">Iteration begins once your v1 design is formulated, with a first draft of all nine elements. Then your coach becomes an objective evaluator of how well your What carries out your How and Why.</p></section>'+
+    return hero+'<p class="lede">Iteration begins once your v1 design is formulated, with a first draft of all nine elements. Then MAIA becomes an objective evaluator of how well your What carries out your How and Why.</p></section>'+
       '<section class="panel card" style="max-width:640px"><div class="meter"><span class="eyebrow">Your v1 design · '+done+' of 9 drafted</span><div class="bar"><i class="tr" style="width:'+(done/9*100)+'%"></i></div></div>'+
       (p.next?'<div class="row"><button class="btn primary" data-act="step" data-key="'+esc(p.next.key)+'">Continue with '+esc(p.next.name)+'</button></div>':'')+'</section>';
   }
@@ -2060,7 +2249,7 @@ function respond(id, status, extra){
   api('respondRec', Object.assign({ recId:id, status:status }, extra||{})).then(function(res){
     setState(res.state); closeDialog();
     var nx = res.next || {};
-    if (status==='Declined'){ render(); toast('Declined. Your reason helps your coach.'); return; }
+    if (status==='Declined'){ render(); toast('Declined. Your reason helps MAIA.'); return; }
     if (status==='Accepted') breathe();
     if (nx.open){ toast('Accepted. Let\'s work it into '+nx.open.slice(8)+'.'); openCtx(nx.open); return; }
     if (nx.journal){ S.inputsTab='journal'; S.journalPrompt=nx.journal; go('inputs'); return; }
@@ -2126,7 +2315,7 @@ function phaseAClick(act, t){
     case 'edSave': {
       E.takenOn = $('#ed-date').value; E.notes = $('#ed-notes').value;
       var err = $('#ed-err'); err.hidden = true;
-      api('saveAssessment',{ test:E.key, values:V, takenOn:E.takenOn, notes:E.notes }).then(function(st){ setState(st); closeDialog(); render(); breathe(); toast(LID.testDef(E.key).name+' saved. Your coach will draw on it.'); })
+      api('saveAssessment',{ test:E.key, values:V, takenOn:E.takenOn, notes:E.notes }).then(function(st){ setState(st); closeDialog(); render(); breathe(); toast(LID.testDef(E.key).name+' saved. MAIA will draw on it.'); })
         .catch(function(e){ err.textContent = e.message; err.hidden = false; });
       return true;
     }
@@ -2135,7 +2324,7 @@ function phaseAClick(act, t){
       api('clearAssessment',{ test:E.key }).then(function(st){ setState(st); closeDialog(); render(); toast('Results cleared.'); }).catch(fail); return true;
     case 'nextPrompt': { var j2=$('#jr-entry'); if(j2) S.jrDraft=j2.value; var pool=promptPool(); S.promptIdx=(S.promptIdx+1)%pool.length; S.journalPrompt=pool[S.promptIdx]; render(); return true; }
     case 'clearPrompt': { var j3=$('#jr-entry'); if(j3) S.jrDraft=j3.value; S.journalPrompt=''; render(); return true; }
-    case 'jrShare': api('updateJournal',{ entryId:t.dataset.id, coachCanRead:t.dataset.v==='1' }).then(setState).then(function(){ keepJournalDraft(); render(); toast(t.dataset.v==='1'?'Shared with your coach.':'Now private.'); }).catch(fail); return true;
+    case 'jrShare': api('updateJournal',{ entryId:t.dataset.id, coachCanRead:t.dataset.v==='1' }).then(setState).then(function(){ keepJournalDraft(); render(); toast(t.dataset.v==='1'?'Shared with MAIA.':'Now private.'); }).catch(fail); return true;
     case 'jrDel': openDialog('<h2>Delete this entry?</h2><p>The text is erased from your design record and can\'t be recovered.</p><div class="row"><button class="btn primary" data-act="jrDelYes" data-id="'+esc(t.dataset.id)+'">Delete</button><button class="btn ghost" data-act="cancel">Keep it</button></div>'); return true;
     case 'jrDelYes': api('updateJournal',{ entryId:t.dataset.id, erase:true }).then(setState).then(function(){ closeDialog(); keepJournalDraft(); render(); toast('Entry deleted.'); }).catch(fail); return true;
     case 'gkind': S.growthKind=t.dataset.v; Array.prototype.forEach.call(t.parentNode.children, function(b){ b.setAttribute('aria-pressed', String(b===t)); }); return true;
@@ -2150,7 +2339,7 @@ function phaseAClick(act, t){
     case 'recAdaptSave': { var r2=findRec(t.dataset.id), txt=($('#rec-text').value||'').trim(); if(!txt){ toast('Write your version first.'); return true; }
       if (/⟨Skill⟩/.test(r2.ActionText)) txt += ' ⟨Skill⟩'; respond(r2.RecID,'Accepted',{ actionText:txt }); return true; }
     case 'recDecline': { var r3=findRec(t.dataset.id);
-      openDialog('<span class="eyebrow">Decline</span><h2>'+esc(r3.Title)+'</h2><div class="field"><label for="rec-note">Why not? <span class="hint">Optional. It helps your coach understand you.</span></label><textarea id="rec-note" rows="3"></textarea></div>'+
+      openDialog('<span class="eyebrow">Decline</span><h2>'+esc(r3.Title)+'</h2><div class="field"><label for="rec-note">Why not? <span class="hint">Optional. It helps MAIA understand you.</span></label><textarea id="rec-note" rows="3"></textarea></div>'+
         '<div class="row"><button class="btn primary" data-act="recDeclineSave" data-id="'+esc(r3.RecID)+'">Decline</button><button class="btn ghost" data-act="cancel">Cancel</button></div>'); return true; }
     case 'recDeclineSave': respond(t.dataset.id,'Declined',{ note:($('#rec-note').value||'').trim() }); return true;
     case 'nudge': {

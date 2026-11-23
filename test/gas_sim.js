@@ -210,6 +210,44 @@ assert(ctx.LID.homeContext(api('getState',{ userId }))==='checkin', 'with all ni
   assert(wn.unseen.length===0 && wn.items.map(i=>i.key).join()==='open-path', 'after the window, marks stay on what has not been visited yet');
   assert(ctx.LID.RELEASES.length>=1 && ctx.LID.RELEASES.every(r => r.items.every(i => i.key && i.view && i.title && i.body)), 'the shipped release notes are complete');
 }
+// MAIA: the Today conversation, momentum, the v1 score and badges
+{
+  const day = 86400000, NOW = Date.parse('2026-11-23T16:00:00Z');
+  const m = api('createUser',{ name:'Mo', is18:true }).UserID;
+  api('savePrefs',{ userId:m, prefs:{ entry:'how' } });
+  let ms = api('getState',{ userId:m });
+  ms.user.CreatedAt = new Date(NOW - 10*day).toISOString();
+  let mo = ctx.LID.momentum(ms, NOW);
+  assert(mo && mo.kind==='not-started' && mo.steps.length===3 && mo.steps[0].go==='element:Governing Principles' && mo.steps.some(x => x.go==='inputs:tests'), 'with no progress after joining, MAIA offers three easy, concrete steps, starting where they chose to begin');
+  ms.user.CreatedAt = new Date(NOW - 1*day).toISOString();
+  assert(ctx.LID.momentum(ms, NOW)===null, 'no nudge in the first days');
+  api('saveElement',{ userId:m, element:'Governing Principles', statement:'I say the hard thing early', status:'Draft' });
+  ms = api('getState',{ userId:m });
+  assert(ctx.LID.momentum(ms, Date.now())===null && ctx.LID.momentum(ms, Date.now() + 9*day).kind==='stalled', 'recent progress keeps MAIA quiet; a week and more of stillness brings a gentle nudge');
+  api('savePrefs',{ userId:m, prefs:{ types:{ momentum:false } } });
+  assert(ctx.LID.momentum(api('getState',{ userId:m }), Date.now() + 9*day)===null, 'the nudge can be turned off like the others');
+  api('coach',{ userId:m, context:'today:20261123160000', mode:'chat', message:'Not sure where to start today' });
+  const tsys = lastBody.system[1].text;
+  assert(/What part of your design would you like to work on today\?/.test(tsys) && /\[\[open:TARGET\]\]/.test(tsys) && /Where they left off: Strategy/.test(tsys) && /Badges earned/.test(tsys), 'the Today conversation helps choose a focus, knows where they left off, and can hand off with a button');
+  assert(/MAIA/.test(lastBody.system[0].text), 'the coach knows its name is MAIA');
+  api('saveGoal',{ userId:m, horizon:'short', title:'Ship the essay', details:{ timeBound:'2027-01-15' }, impediments:'Perfectionism' });
+  api('coach',{ userId:m, context:'element:Strategy', mode:'open' });
+  assert(/Coach with these actively/.test(lastBody.system[1].text) && /Ship the essay/.test(lastBody.system[1].text) && /in the way: Perfectionism/.test(lastBody.system[1].text), 'MAIA coaches with their Inputs actively, obstacles included');
+  // score and badges
+  let bb = ctx.LID.badgeBoard(api('getState',{ userId:m }));
+  assert(bb.score.pct===9 && bb.score.drafted===1 && !bb.score.complete && bb.total===18 && bb.categories.length===6, 'the v1 score counts a drafted element as 9 of 100');
+  assert(bb.fresh.indexOf('first-stone')>=0 && bb.categories[0].level===1 && bb.categories[0].next.key==='halfway-up', 'a first element earns First Stone, and the next stone is named');
+  api('savePrefs',{ userId:m, prefs:{ award:['first-stone','not-a-badge'] } });
+  const kept = ctx.LID.getPrefs(api('getState',{ userId:m }).user).badges;
+  assert(kept['first-stone'] && !kept['not-a-badge'] && ctx.LID.badgeBoard(api('getState',{ userId:m })).fresh.indexOf('first-stone')<0, 'earned badges are kept with their day; unknown ones are refused');
+  ['Core Beliefs','Vision','Purpose','Strategy','Relationships','Key Activities','Resources','Methods'].forEach(e => api('saveElement',{ userId:m, element:e, statement:e+' v1', status:'Approved' }));
+  api('saveElement',{ userId:m, element:'Vision', statement:'Vision v2', status:'Approved', changeNote:'Bigger' });
+  bb = ctx.LID.badgeBoard(api('getState',{ userId:m }));
+  assert(bb.score.pct===89 && !bb.score.complete && bb.categories[0].level===2, 'nine elements without a chosen belief are not yet version one');
+  assert(bb.categories[1].tiers[0].earned, 'a revision earns Second Draft');
+  const ok3 = ctx.LID.badgeBoard(Object.assign({}, api('getState',{ userId:m }), { chosen:[{ Area:'Money', ChosenBelief:'Enough' }] }));
+  assert(ok3.score.complete && ok3.score.pct===92 && ok3.categories[0].level===3, 'with a chosen belief beneath it, version one is complete');
+}
 // other ways in: the What and the How
 {
   const w = api('createUser',{ name:'Wren', is18:true }).UserID;

@@ -3,7 +3,7 @@
 
 function createClaude({ apiKey, model, baseUrl = 'https://api.anthropic.com', fetchImpl = fetch }) {
   return async function ask({ guide, context, messages, maxTokens, onText }) {
-    if (!apiKey) throw Object.assign(new Error('The coach is not connected yet: add ANTHROPIC_API_KEY in Render → Environment.'), { status: 503 });
+    if (!apiKey) throw Object.assign(new Error('MAIA is not connected yet: add ANTHROPIC_API_KEY in Render → Environment.'), { status: 503 });
     const res = await fetchImpl(baseUrl.replace(/\/+$/, '') + '/v1/messages', {
       method: 'POST',
       headers: { 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
@@ -21,9 +21,9 @@ function createClaude({ apiKey, model, baseUrl = 'https://api.anthropic.com', fe
     if (!res.ok) {
       let detail = '';
       try { const j = await res.json(); detail = (j.error && j.error.message) || ''; } catch (e) { /* not JSON */ }
-      if (res.status === 429 || res.status === 529) throw Object.assign(new Error('The coach is busy right now. Try again in a minute.'), { status: 503 });
-      if (res.status === 401) throw Object.assign(new Error('The coach could not sign in to Claude: check ANTHROPIC_API_KEY in Render → Environment.'), { status: 503 });
-      throw Object.assign(new Error('The coach could not answer' + (detail ? ': ' + detail : '.')), { status: 502 });
+      if (res.status === 429 || res.status === 529) throw Object.assign(new Error('MAIA is busy right now. Try again in a minute.'), { status: 503 });
+      if (res.status === 401) throw Object.assign(new Error('MAIA could not sign in to Claude: check ANTHROPIC_API_KEY in Render → Environment.'), { status: 503 });
+      throw Object.assign(new Error('MAIA could not answer' + (detail ? ': ' + detail : '.')), { status: 502 });
     }
 
     let text = '';
@@ -39,7 +39,7 @@ function createClaude({ apiKey, model, baseUrl = 'https://api.anthropic.com', fe
         if (onText) onText(ev.delta.text, text);
       } else if (ev.type === 'error') {
         const overloaded = ev.error && /overloaded/i.test(ev.error.type || '');
-        throw Object.assign(new Error(overloaded ? 'The coach is busy right now. Try again in a minute.' : 'The coach stopped partway. Try again.'), { status: 503, partial: text });
+        throw Object.assign(new Error(overloaded ? 'MAIA is busy right now. Try again in a minute.' : 'MAIA stopped partway. Try again.'), { status: 503, partial: text });
       }
     };
     for await (const chunk of res.body) {

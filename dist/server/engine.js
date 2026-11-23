@@ -2,7 +2,7 @@
 /* Life in Design · shared engine (runs in Apps Script and in the browser) */
 var LID = (function () {
   var FW = {"version":"1.0","elements":[{"order":1,"layer":"Why","element":"Core Beliefs","oneLine":"The beliefs you accept as true about yourself, others and the cosmos","definingQuestion":"What do I choose to believe is fundamentally true about myself, others and the universe?","strongDraft":"3–7 short statements covering self, others and the universe, each one the person would act on."},{"order":2,"layer":"Why","element":"Vision","oneLine":"A future state you envision for you and others","definingQuestion":"What is the grandest possible future, emerging from my beliefs, that I can see for me and others?","strongDraft":"A vivid, energizing picture that includes other people, not only the self, and that clearly grows out of the Core Beliefs."},{"order":3,"layer":"Why","element":"Purpose","oneLine":"Your role in bringing about the vision you see","definingQuestion":"What is my central role in bringing about my Vision of the future?","strongDraft":"One or two sentences naming the person's distinct role in the Vision. Memorable enough to recall in a hard moment."},{"order":4,"layer":"How","element":"Governing Principles","oneLine":"The fundamental ethos that governs and motivates your attitudes and actions","definingQuestion":"What governing principles naturally emerge as necessarily connected to my Core Beliefs, Vision and Purpose?","strongDraft":"3–7 principles phrased as usable decision rules, each traceable to the Why."},{"order":5,"layer":"How","element":"Strategy","oneLine":"Your action plan, aligning vision and purpose with time, energy and resources","definingQuestion":"With finite time and finite resources, what trade-offs (say yes, say no) will I make to accomplish my Purpose?","strongDraft":"A short list of focus areas and goals for a defined period, plus an explicit list of what the person is saying no to."},{"order":6,"layer":"How","element":"Relationships","oneLine":"The people you choose to work with to achieve your purpose","definingQuestion":"Who will I walk with to enrich my Purpose and bring about my Vision?","strongDraft":"Named people or groups in roles (multipliers, complements, fellow travelers), plus energizing and draining influences to adjust."},{"order":7,"layer":"What","element":"Key Activities","oneLine":"Your priorities, daily habits and where you spend your time","definingQuestion":"How will I spend my time to accomplish my Purpose, and what activities will I say no to?","strongDraft":"A realistic picture of a typical week, with specific activities added and removed to match the Strategy."},{"order":8,"layer":"What","element":"Resources","oneLine":"Your strengths: what you are good at and passionate about","definingQuestion":"What strengths, tools, resources and advantages are at my disposal to help me achieve my Purpose?","strongDraft":"An honest inventory of strengths, skills, assets and access, each linked to where it serves the Strategy."},{"order":9,"layer":"What","element":"Methods","oneLine":"The style, habits, systems and processes that govern your actions","definingQuestion":"What systems, tools and metrics do I use to achieve and measure progress toward my Purpose?","strongDraft":"A few habits or routines, one to three measures of progress, and the mindset practices that keep the person on course."}],"areas":[{"order":1,"area":"Success in Life","weight":"Gentle start"},{"order":2,"area":"Career","weight":"Gentle start"},{"order":3,"area":"Money","weight":"Gentle start"},{"order":4,"area":"The Nature of Themselves","weight":""},{"order":5,"area":"The Future","weight":""},{"order":6,"area":"Leadership","weight":""},{"order":7,"area":"Relationships","weight":""},{"order":8,"area":"Belief","weight":""},{"order":9,"area":"Doubt","weight":""},{"order":10,"area":"God","weight":"Tender"},{"order":11,"area":"Parenting","weight":"Tender"},{"order":12,"area":"Failure","weight":"Tender"},{"order":13,"area":"Love","weight":"Tender"},{"order":14,"area":"Sex","weight":"Tender"}],"lenses":[{"order":1,"key":"father","lens":"Father figure","kind":"Inherited","questions":"What do you believe your father figure holds as true about this? What explicit and implicit messages led you to that conclusion? Where do you think their belief came from?","alt":"If a father figure was absent, unknown or painful, explore another caregiver or early influence instead, or skip this lens."},{"order":2,"key":"mother","lens":"Mother figure","kind":"Inherited","questions":"What do you believe your mother figure holds as true about this? What explicit and implicit messages led you to that conclusion? Where do you think their belief came from?","alt":"If a mother figure was absent, unknown or painful, explore another caregiver or early influence instead, or skip this lens."},{"order":3,"key":"admired","lens":"Admired figure","kind":"Inherited","questions":"What do you believe someone you admire holds as true about this? What explicit and implicit messages led you to that conclusion? Where do you think their belief came from?","alt":""},{"order":4,"key":"society","lens":"Society","kind":"Inherited","questions":"What does general society hold as true about this? What messages tell you so? Where does that belief come from?","alt":""},{"order":5,"key":"own","lens":"My own","kind":"Own","questions":"What do I hold as true about this?","alt":""},{"order":6,"key":"vis","lens":"Me vis-à-vis others","kind":"Own","questions":"What am I carrying forward from my father, mother, admired figure and society? How well does this belief serve me in becoming the grandest version of myself I can imagine? Is there a belief that could expand my possibilities beyond what I believe now?","alt":""},{"order":7,"key":"truth","lens":"Belief vs. verifiable truth","kind":"Own","questions":"What here is truth and what is belief? Why do I choose to believe it, and what is really motivating that choice?","alt":""}],"tables":{"Users":["UserID","Name","Email","CreatedAt","LastActiveAt","Stage","CurrentFocus","WhatBroughtYou","HopedChange","Is18OrOlder","PlainStyle","Prefs"],"DesignRecord":["UserID","Layer","Element","ElementOrder","Statement","Status","Version","UpdatedAt"],"ElementHistory":["HistoryID","UserID","Element","Version","Statement","Status","ChangedAt","ChangeNote"],"BeliefExploration":["EntryID","UserID","Area","IsCustomArea","LensOrder","Lens","Response","Skipped","UpdatedAt","LensStatus"],"ChosenBeliefs":["ChoiceID","UserID","Area","ChosenBelief","Why","ApprovedAt"],"ParkedProblems":["ProblemID","UserID","Description","ParkedAt","Status","ResolvedAt","ResolutionNote"],"Commitments":["CommitmentID","UserID","SessionID","Focus","Commitment","Status","CreatedAt","CompletedAt","Reflection"],"Sessions":["SessionID","UserID","StartedAt","EndedAt","Focus","Summary"],"Messages":["MessageID","UserID","SessionID","Timestamp","Context","Role","Content"],"Assessments":["AssessmentID","UserID","Test","TakenOn","Results","Summary","Notes","UpdatedAt"],"Journal":["EntryID","UserID","CreatedAt","Prompt","Entry","CoachCanRead","Tag"],"Growth":["ItemID","UserID","Kind","Title","Detail","Source","Status","AcquiredOn","LinkedElement","CreatedAt"],"Recommendations":["RecID","UserID","ReviewID","CreatedAt","Layer","Kind","Title","Body","TracesTo","ActionType","ActionElement","ActionText","SearchQuery","Status","RespondedAt","UserNote"],"Reviews":["ReviewID","UserID","CreatedAt","Summary","TraceJSON","Traced","Total"],"Goals":["GoalID","UserID","Horizon","Title","Details","Impediments","Actions","Status","CompletedOn","Learned","LinkedElement","CreatedAt","UpdatedAt"],"LifeExperiences":["ExperienceID","UserID","Title","Description","Category","TargetWhen","Impediments","Actions","Status","CompletedOn","Learned","CreatedAt","UpdatedAt"]},"tests":[{"key":"clifton","name":"CliftonStrengths","publisher":"Gallup","url":"https://www.gallup.com/cliftonstrengths/","what":"Your top talent themes out of 34, grouped in four domains.","feeds":["Resources","Key Activities"],"fields":[{"key":"top","label":"Your themes, in order","type":"rank","min":5,"max":34,"hint":"Add your top 5 at least. Add all 34 if you have the full report.","options":[{"v":"Achiever","g":"Executing"},{"v":"Arranger","g":"Executing"},{"v":"Belief","g":"Executing"},{"v":"Consistency","g":"Executing"},{"v":"Deliberative","g":"Executing"},{"v":"Discipline","g":"Executing"},{"v":"Focus","g":"Executing"},{"v":"Responsibility","g":"Executing"},{"v":"Restorative","g":"Executing"},{"v":"Activator","g":"Influencing"},{"v":"Command","g":"Influencing"},{"v":"Communication","g":"Influencing"},{"v":"Competition","g":"Influencing"},{"v":"Maximizer","g":"Influencing"},{"v":"Self-Assurance","g":"Influencing"},{"v":"Significance","g":"Influencing"},{"v":"Woo","g":"Influencing"},{"v":"Adaptability","g":"Relationship Building"},{"v":"Connectedness","g":"Relationship Building"},{"v":"Developer","g":"Relationship Building"},{"v":"Empathy","g":"Relationship Building"},{"v":"Harmony","g":"Relationship Building"},{"v":"Includer","g":"Relationship Building"},{"v":"Individualization","g":"Relationship Building"},{"v":"Positivity","g":"Relationship Building"},{"v":"Relator","g":"Relationship Building"},{"v":"Analytical","g":"Strategic Thinking"},{"v":"Context","g":"Strategic Thinking"},{"v":"Futuristic","g":"Strategic Thinking"},{"v":"Ideation","g":"Strategic Thinking"},{"v":"Input","g":"Strategic Thinking"},{"v":"Intellection","g":"Strategic Thinking"},{"v":"Learner","g":"Strategic Thinking"},{"v":"Strategic","g":"Strategic Thinking"}]}]},{"key":"via","name":"VIA Character Strengths","publisher":"VIA Institute on Character","url":"https://www.viacharacter.org/","what":"Your 24 character strengths, ranked, across six virtues.","feeds":["Resources","Governing Principles"],"fields":[{"key":"rank","label":"Your strengths, in order","type":"rank","min":5,"max":24,"hint":"Your top 5 are your signature strengths. Add more if you like.","options":[{"v":"Creativity","g":"Wisdom"},{"v":"Curiosity","g":"Wisdom"},{"v":"Judgment","g":"Wisdom"},{"v":"Love of Learning","g":"Wisdom"},{"v":"Perspective","g":"Wisdom"},{"v":"Bravery","g":"Courage"},{"v":"Perseverance","g":"Courage"},{"v":"Honesty","g":"Courage"},{"v":"Zest","g":"Courage"},{"v":"Love","g":"Humanity"},{"v":"Kindness","g":"Humanity"},{"v":"Social Intelligence","g":"Humanity"},{"v":"Teamwork","g":"Justice"},{"v":"Fairness","g":"Justice"},{"v":"Leadership","g":"Justice"},{"v":"Forgiveness","g":"Temperance"},{"v":"Humility","g":"Temperance"},{"v":"Prudence","g":"Temperance"},{"v":"Self-Regulation","g":"Temperance"},{"v":"Appreciation of Beauty & Excellence","g":"Transcendence"},{"v":"Gratitude","g":"Transcendence"},{"v":"Hope","g":"Transcendence"},{"v":"Humor","g":"Transcendence"},{"v":"Spirituality","g":"Transcendence"}]}]},{"key":"mbti","name":"Myers-Briggs / 16Personalities","publisher":"The Myers-Briggs Company · 16Personalities","url":"https://www.16personalities.com/","what":"Your four-letter type, with how clear each preference is.","feeds":["Methods","Relationships"],"fields":[{"key":"pairs","label":"Your preferences","type":"pairs","pairs":[["E","Extraversion","I","Introversion"],["S","Sensing","N","Intuition"],["T","Thinking","F","Feeling"],["J","Judging","P","Perceiving"]],"hint":"Percentages are optional."},{"key":"identity","label":"Identity (16Personalities only)","type":"select","optional":true,"options":[{"v":"A","label":"Assertive (-A)"},{"v":"T","label":"Turbulent (-T)"}]}]},{"key":"enneagram","name":"Enneagram","publisher":"Various (e.g. The Enneagram Institute)","url":"https://www.enneagraminstitute.com/","what":"Your core type, wing and instinct.","feeds":["Core Beliefs","Governing Principles"],"fields":[{"key":"type","label":"Core type","type":"select","options":[{"v":"1","label":"1 · Reformer"},{"v":"2","label":"2 · Helper"},{"v":"3","label":"3 · Achiever"},{"v":"4","label":"4 · Individualist"},{"v":"5","label":"5 · Investigator"},{"v":"6","label":"6 · Loyalist"},{"v":"7","label":"7 · Enthusiast"},{"v":"8","label":"8 · Challenger"},{"v":"9","label":"9 · Peacemaker"}]},{"key":"wing","label":"Wing","type":"wing","of":"type","optional":true},{"key":"instinct","label":"Dominant instinct","type":"select","optional":true,"options":[{"v":"sp","label":"Self-preservation (sp)"},{"v":"so","label":"Social (so)"},{"v":"sx","label":"One-to-one (sx)"}]},{"key":"tritype","label":"Tritype","type":"text","optional":true,"placeholder":"e.g. 513"}]},{"key":"bigfive","name":"Big Five (OCEAN)","publisher":"Various (e.g. IPIP-NEO)","url":"https://bigfive-test.com/","what":"Five broad traits, as percentiles.","feeds":["Methods","Relationships"],"fields":[{"key":"scores","label":"Percentile for each trait","type":"scores","min":0,"max":100,"unit":"th pct","items":["Openness","Conscientiousness","Extraversion","Agreeableness","Neuroticism"]}]},{"key":"disc","name":"DISC","publisher":"Various (e.g. Everything DiSC)","url":"https://www.discprofile.com/","what":"Your behavioral style across four dimensions.","feeds":["Relationships","Methods"],"fields":[{"key":"primary","label":"Primary style","type":"select","options":[{"v":"D","label":"D · Dominance"},{"v":"I","label":"I · Influence"},{"v":"S","label":"S · Steadiness"},{"v":"C","label":"C · Conscientiousness"}]},{"key":"secondary","label":"Secondary style","type":"select","optional":true,"options":[{"v":"D","label":"D · Dominance"},{"v":"I","label":"I · Influence"},{"v":"S","label":"S · Steadiness"},{"v":"C","label":"C · Conscientiousness"}]},{"key":"scores","label":"Scores","type":"scores","min":0,"max":100,"optional":true,"items":["Dominance","Influence","Steadiness","Conscientiousness"]}]},{"key":"genius","name":"Working Genius","publisher":"The Table Group","url":"https://www.workinggenius.com/","what":"Which kinds of work give you energy and which drain it.","feeds":["Key Activities","Relationships"],"fields":[{"key":"buckets","label":"Sort the six types","type":"buckets","items":["Wonder","Invention","Discernment","Galvanizing","Enablement","Tenacity"],"buckets":[{"v":"genius","label":"Genius","count":2},{"v":"competency","label":"Competency","count":2},{"v":"frustration","label":"Frustration","count":2}]}]},{"key":"kolbe","name":"Kolbe A Index","publisher":"Kolbe Corp","url":"https://www.kolbe.com/","what":"How you naturally take action, in four modes.","feeds":["Methods","Key Activities"],"fields":[{"key":"modes","label":"Your score in each Action Mode","type":"scores","min":1,"max":10,"items":["Fact Finder","Follow Thru","Quick Start","Implementor"]}]},{"key":"holland","name":"Holland Code (RIASEC)","publisher":"e.g. O*NET Interest Profiler, Strong Interest Inventory","url":"https://www.mynextmove.org/explore/ip","what":"Your three strongest interest areas, in order.","feeds":["Strategy","Key Activities"],"fields":[{"key":"code","label":"Your three-letter code, in order","type":"rank","min":3,"max":3,"options":[{"v":"Realistic","code":"R"},{"v":"Investigative","code":"I"},{"v":"Artistic","code":"A"},{"v":"Social","code":"S"},{"v":"Enterprising","code":"E"},{"v":"Conventional","code":"C"}]}]},{"key":"love","name":"5 Love Languages","publisher":"Gary Chapman","url":"https://5lovelanguages.com/quizzes","what":"How you most give and receive care.","feeds":["Relationships"],"fields":[{"key":"scores","label":"Your score for each language","type":"scores","min":0,"max":12,"items":["Words of Affirmation","Quality Time","Receiving Gifts","Acts of Service","Physical Touch"]}]}],"goalHorizons":[{"key":"short","name":"Short-term","span":"30 – 90 days","shape":"SMART"},{"key":"mid","name":"Mid-term","span":"90 – 360 days","shape":"OKR"},{"key":"long","name":"Long-term","span":"1 – 5 years","shape":"Vivid imagining"},{"key":"life","name":"Life-long","span":"A lifetime","shape":"Reflection"}]};
-  var RELEASES = [{"id":"2026-11-11","since":"2026-11-11T19:08:57Z","title":"New rooms in your design","intro":"A few things have been added since you were last here. Each one feeds your coach, so your conversations can go further.","items":[{"key":"goals","title":"Goals at four horizons","where":"Inputs → Goals","body":"A SMART goal for the next few months, an objective with key results for the year, a vivid picture of life a few years out, and a life-long reflection on who you hope to become. Each asks what's in the way, and what you'll do.","view":"inputs","tab":"goals"},{"key":"experiences","title":"Life experiences","where":"Inputs → Life experiences","body":"A ledger for the experiences you want to live, from \"still ahead\" to \"lived\", with what each one taught you.","view":"inputs","tab":"experiences"},{"key":"open-path","title":"Open at every level","where":"Design → Your path","body":"Work on any part of your pyramid whenever you feel ready. Tap any step on your path, and your coach will help it trace back to the foundation.","view":"home","spot":"path"}]}];
+  var RELEASES = [{"id":"2026-11-11","since":"2026-11-11T19:08:57Z","title":"New rooms in your design","intro":"A few things have been added since you were last here. Each one feeds your coach, so your conversations can go further.","items":[{"key":"goals","title":"Goals at four horizons","where":"Inputs → Goals","body":"A SMART goal for the next few months, an objective with key results for the year, a vivid picture of life a few years out, and a life-long reflection on who you hope to become. Each asks what's in the way, and what you'll do.","view":"inputs","tab":"goals"},{"key":"experiences","title":"Life experiences","where":"Inputs → Life experiences","body":"A ledger for the experiences you want to live, from \"still ahead\" to \"lived\", with what each one taught you.","view":"inputs","tab":"experiences"},{"key":"open-path","title":"Open at every level","where":"Design → Your path","body":"Work on any part of your pyramid whenever you feel ready. Tap any step on your path, and your coach will help it trace back to the foundation.","view":"home","spot":"path"}]},{"id":"2026-11-23","since":"2026-11-23T16:00:00Z","title":"Meet MAIA, and stones along the way","intro":"Your coach has a name, the Design page starts fresh each visit, and there's a new way to see how far your design has come.","items":[{"key":"maia","title":"Meet MAIA","where":"Design","body":"Your coach is now MAIA. Each visit begins with a fresh greeting and one question: what part of your design would you like to work on today? MAIA takes you there, and when a question is still waiting for your answer, MAIA waits with it.","view":"home","spot":"today"},{"key":"badges","title":"Badges","where":"Badges","body":"See how close your first full design is, and earn stones along six paths: The First Design, The Living Design, Awareness, Expansion, Congruence and Rhythm. Each has a Pebble, a Stone and a Cairn.","view":"badges"}]}];
   var ELEMENTS = FW.elements;
   var STEPS = [{ key: 'exploration', name: 'Core Beliefs Exploration', layer: 'Why', order: 0 }]
     .concat(ELEMENTS.map(function (e) { return { key: e.element, name: e.element, layer: e.layer, order: e.order, el: e }; }));
@@ -40,7 +40,8 @@ var LID = (function () {
       recs: mine(d, 'Recommendations', userId).slice(-80),
       reviews: mine(d, 'Reviews', userId),
       goals: mine(d, 'Goals', userId).filter(function (g) { return g.Status !== 'Removed'; }),
-      experiences: mine(d, 'LifeExperiences', userId).filter(function (x) { return x.Status !== 'Removed'; })
+      experiences: mine(d, 'LifeExperiences', userId).filter(function (x) { return x.Status !== 'Removed'; }),
+      visits: mine(d, 'Sessions', userId).map(function (s) { return s.StartedAt; }).slice(-400)
     };
   }
 
@@ -100,6 +101,7 @@ var LID = (function () {
     if (first) { var el = elementDef(first.Element); if (el) return el.layer.toLowerCase(); }
     return '';
   }
+  function partOfDay(d) { var h = (d || new Date()).getHours(); return h < 5 ? 'evening' : h < 12 ? 'morning' : h < 17 ? 'afternoon' : 'evening'; }
   /* What's new for this person: releases since they joined that they haven't been shown,
      and the new things they haven't clicked into yet. People who joined after a release meet it as part of the app. */
   function whatsNew(state, releases) {
@@ -356,6 +358,13 @@ var LID = (function () {
         parts.push('Areas closed so far: ' + cbA.join(', ') + '. Reflect briefly on any theme you notice across their chosen beliefs, as an observation. Depth over coverage: a few areas (three or more is a good guide) let real patterns show before they distill Core Beliefs, but they decide. Ask which area they would like to explore next, or whether they feel ready to move on to Core Beliefs.');
       }
       parts.push('To start an area they tap its stone or name it in the field below; the conversation then moves into that area. If they name an area in chat, warmly point them to the stone or the field. Do not begin the first lens here.');
+    } else if (ctx.indexOf('today:') === 0) {
+      var mo = momentum(state);
+      var where = homeContext(state);
+      parts.push('FOCUS: the Design page, at the start of today\'s visit. The app has just greeted them: "Good ' + partOfDay() + ', ' + state.user.Name + '. What part of your design would you like to work on today?" Help them choose one focus for today. Listen for what is alive for them and connect it to a place in their design: an element, an area of the Exploration, their Inputs, a check-in or a congruence review. Draw on their Inputs when it helps (a goal coming due, a journal theme, a result that bears on it). Keep it light and brief: a sentence or two of framing, not the work itself.');
+      parts.push('Where they left off: ' + (where.indexOf('element:') === 0 ? where.slice(8) : where.indexOf('explore:') === 0 ? 'the ' + where.slice(8) + ' area of the Exploration' : where === 'begin' ? 'the Core Beliefs Exploration' : where === 'checkin' ? 'living with a complete v1 design' : 'not begun') + '. Their v1 design is ' + scoreV1(state).pct + '% complete.');
+      if (mo) parts.push('Their design has held still for ' + mo.days + ' days. If they seem unsure, offer one or two easy, concrete first steps, never a lecture. Easy steps the app suggests: ' + mo.steps.map(function (x) { return x.label; }).join('; ') + '.');
+      parts.push('When they have chosen, or you can name a clear fit, end your reply with one line in exactly this form, and nothing after it: [[open:TARGET]] where TARGET is one of: element:<one of the nine element names>, explore:<an area of the Exploration>, begin (choose an area of the Exploration), checkin, iterate (a congruence review), inputs:tests, inputs:goals, inputs:experiences, inputs:journal or inputs:growth. The app turns that line into a button for them to tap; never mention the brackets or the button. At most two such lines in a reply. Do not begin the element\'s questions here: the conversation continues there.');
     } else if (ctx === 'start') {
       var parkedNow = state.parked.filter(function (x) { return x.Status !== 'Resolved'; }).length;
       parts.push('FOCUS: the Design page, at the very start of their design. The person has just read the app\'s short guide to the framework. Welcome them warmly by name, briefly, in your own words, with the invitation "Consider yourself an iterative design."');
@@ -406,6 +415,8 @@ var LID = (function () {
       L.push('## Open commitments');
       openC.forEach(function (c) { L.push('- ' + clip(c.Commitment, 200) + ' (from ' + String(c.CreatedAt).slice(0, 10) + ')'); });
     }
+    var bb = badgeBoard(state);
+    L.push('Design v1: ' + bb.score.pct + '% complete' + (bb.score.complete ? ' (v1 is complete; the work now is iteration, awareness, expansion and congruence)' : '') + '. Badges earned: ' + bb.earned + ' of ' + bb.total + '. If a milestone comes up naturally, celebrate it warmly and specifically; never make the work about points.');
     var inp = inputsBlock(state);
     if (inp) L.push(inp);
     L.push('');
@@ -494,7 +505,8 @@ var LID = (function () {
     { key: 'recommendations', label: 'Guidance waiting', hint: 'When a review has left cards for you to accept or decline.' },
     { key: 'review', label: 'Review reminders', hint: 'A congruence review every two weeks, and a deeper look at your Why each quarter.' },
     { key: 'commitments', label: 'Small steps', hint: 'A check on steps you committed to more than a week ago.' },
-    { key: 'inputs', label: 'Inputs', hint: 'Suggestions to add strengths results or log what you are learning.' }
+    { key: 'inputs', label: 'Inputs', hint: 'Suggestions to add strengths results or log what you are learning.' },
+    { key: 'momentum', label: 'Easy ways back in', hint: 'When your design has held still for a while, MAIA suggests a few small steps.' }
   ];
   function getPrefs(user) {
     var p = parseJSON(user && user.Prefs, {}) || {};
@@ -502,7 +514,8 @@ var LID = (function () {
     NUDGE_TYPES.forEach(function (t) { types[t.key] = !(p.types && p.types[t.key] === false); });
     return { nudges: p.nudges !== false, email: p.email !== false, types: types, lastEmailAt: p.lastEmailAt || '',
       guideSeen: p.guideSeen === true, premiseHeard: p.premiseHeard === true, focus: p.focus || '', entry: p.entry || '',
-      seenRelease: p.seenRelease || '', explored: Array.isArray(p.explored) ? p.explored : [] };
+      seenRelease: p.seenRelease || '', explored: Array.isArray(p.explored) ? p.explored : [],
+      badges: p.badges && typeof p.badges === 'object' && !Array.isArray(p.badges) ? p.badges : {} };
   }
   function savePrefs(d, a) {
     var cur = getPrefs(mine(d, 'Users', a.userId)[0]);
@@ -518,7 +531,9 @@ var LID = (function () {
       entry: next.entry !== undefined ? (ENTRIES[next.entry] ? next.entry : '') : cur.entry,
       seenRelease: next.seenRelease !== undefined ? String(next.seenRelease || '').slice(0, 40) : cur.seenRelease,
       explored: cur.explored.concat([].concat(next.explore || []).map(function (k) { return String(k).slice(0, 60); })
-        .filter(function (k, i, all) { return k && cur.explored.indexOf(k) < 0 && all.indexOf(k) === i; })).slice(-100)
+        .filter(function (k, i, all) { return k && cur.explored.indexOf(k) < 0 && all.indexOf(k) === i; })).slice(-100),
+      // Badges, once earned, stay earned, with the day they were first noticed.
+      badges: (function () { var b = Object.assign({}, cur.badges); [].concat(next.award || []).forEach(function (k) { k = String(k).slice(0, 40); if (BADGE_KEYS[k] && !b[k]) b[k] = now().slice(0, 10); }); return b; })()
     };
     var patch = { Prefs: JSON.stringify(merged) };
     if (next.focus) patch.CurrentFocus = /^element:/.test(next.focus) ? next.focus.slice(8) : 'Core Beliefs Exploration';
@@ -803,6 +818,126 @@ var LID = (function () {
   }
 
   /* ---------- nudges (pure) ---------- */
+  /* ---------- the v1 score: how much of the first full design exists ---------- */
+  function scoreV1(state) {
+    var p = progress(state);
+    var areas = Object.keys(chosenByArea(state)).length;
+    var drafted = p.steps.filter(function (s) { return s.key !== 'exploration' && s.done; });
+    var approved = drafted.filter(function (s) { return s.status === 'Approved'; }).length;
+    // Exploration up to 10 (three areas), each element 9 for a draft and 1 more once approved.
+    var pts = Math.min(areas, 3) / 3 * 10 + drafted.length * 9 + approved;
+    return { pct: Math.round(pts), areas: areas, drafted: drafted.length, approved: approved, complete: drafted.length === 9 && areas > 0 };
+  }
+
+  /* ---------- badges: six paths, each in three tiers ---------- */
+  var TIERS = ['Pebble', 'Stone', 'Cairn'];
+  function isoWeek(t) { var d = new Date(t); if (isNaN(d)) return ''; d = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate())); var day = d.getUTCDay() || 7; d.setUTCDate(d.getUTCDate() + 4 - day); var y = d.getUTCFullYear(); return y + '-' + Math.ceil(((d - Date.UTC(y, 0, 1)) / 86400000 + 1) / 7); }
+  function facts(state) {
+    var sc = scoreV1(state);
+    var revisions = state.history.filter(function (h) { return Number(h.Version) > 1; });
+    var revisedEls = {}; revisions.forEach(function (h) { revisedEls[h.Element] = 1; });
+    var lr = latestReview(state);
+    var weeks = {};
+    (state.visits || []).concat(state.history.map(function (h) { return h.ChangedAt; }), state.journal.map(function (j) { return j.CreatedAt; })).forEach(function (t) { var w = isoWeek(t); if (w) weeks[w] = 1; });
+    var goals = state.goals || [], exps = state.experiences || [];
+    return {
+      score: sc.pct, complete: sc.complete, areas: sc.areas,
+      revisions: revisions.length, revisedElements: Object.keys(revisedEls).length,
+      reviews: state.reviews.length, ratio: lr && Number(lr.Total) ? Number(lr.Traced) / Number(lr.Total) : 0,
+      accepted: state.recs.filter(function (r) { return r.Status === 'Accepted'; }).length,
+      tests: state.assessments.filter(function (r) { return r.Summary; }).length,
+      journal: state.journal.filter(function (j) { return j.Entry; }).length,
+      planted: goals.length + exps.length + state.growth.length,
+      fulfilled: goals.filter(function (g) { return g.Status === 'Done'; }).length + exps.filter(function (x) { return x.Status === 'Done'; }).length,
+      acquired: state.growth.filter(function (g) { return g.Status === 'Acquired'; }).length,
+      lifeReflection: goals.some(function (g) { return g.Horizon === 'life' && parseJSON(g.Details, {}).become; }) ? 1 : 0,
+      weeks: Object.keys(weeks).length
+    };
+  }
+  // Each tier lists what it asks for: [fact, at least, how to say it].
+  var BADGES = [
+    { key: 'first', name: 'The First Design', blurb: 'Laying the first full version of your design, stone by stone.', tiers: [
+      { key: 'first-stone', name: 'First Stone', needs: [['score', 1, 'Choose a belief or draft any element']] },
+      { key: 'halfway-up', name: 'Halfway Up', needs: [['score', 50, 'Reach 50% of your v1 design']] },
+      { key: 'version-one', name: 'Version One', needs: [['complete', 1, 'Draft all nine elements, on a foundation of at least one chosen belief']] }] },
+    { key: 'living', name: 'The Living Design', blurb: 'Returning to the design and letting it change as you do.', tiers: [
+      { key: 'second-draft', name: 'Second Draft', needs: [['revisions', 1, 'Revise any element']] },
+      { key: 'remodeler', name: 'Remodeler', needs: [['revisions', 5, 'Make five revisions'], ['revisedElements', 3, 'across three elements']] },
+      { key: 'never-finished', name: 'Never Finished', needs: [['revisions', 15, 'Make fifteen revisions'], ['reviews', 3, 'and run three congruence reviews']] }] },
+    { key: 'awareness', name: 'Awareness', blurb: 'Seeing where your beliefs came from, and who you are becoming.', tiers: [
+      { key: 'looking-in', name: 'Looking In', needs: [['areas', 1, 'Close one area of the Exploration']] },
+      { key: 'deep-well', name: 'Deep Well', needs: [['areas', 3, 'Close three areas'], ['tests', 1, 'add a strengths or personality result'], ['journal', 5, 'and write five journal entries']] },
+      { key: 'still-water', name: 'Still Water', needs: [['areas', 6, 'Close six areas'], ['tests', 3, 'add three results'], ['journal', 20, 'and write twenty journal entries']] }] },
+    { key: 'expansion', name: 'Expansion', blurb: 'Growing past the edges: goals reached, experiences lived, skills gained.', tiers: [
+      { key: 'first-sprout', name: 'First Sprout', needs: [['planted', 1, 'Add a goal, a life experience or something you\'re learning']] },
+      { key: 'branching-out', name: 'Branching Out', needs: [['fulfilled', 1, 'Accomplish a goal or live an experience'], ['acquired', 3, 'and gain three skills or pieces of knowledge']] },
+      { key: 'canopy', name: 'Canopy', needs: [['fulfilled', 5, 'Accomplish or live five'], ['acquired', 8, 'gain eight'], ['lifeReflection', 1, 'and write your life-long reflection']] }] },
+    { key: 'congruence', name: 'Congruence', blurb: 'Why, How and What, sounding together.', tiers: [
+      { key: 'first-reflection', name: 'First Reflection', needs: [['reviews', 1, 'Run a congruence review']] },
+      { key: 'in-tune', name: 'In Tune', needs: [['accepted', 3, 'Take on three pieces of guidance'], ['ratio', 0.6, 'and trace 60% of your What to its Why']] },
+      { key: 'whole-chord', name: 'Whole Chord', needs: [['reviews', 3, 'Run three reviews'], ['ratio', 0.85, 'and trace 85% of your What to its Why']] }] },
+    { key: 'rhythm', name: 'Rhythm', blurb: 'Coming back to the practice, week after week.', tiers: [
+      { key: 'returning', name: 'Returning', needs: [['weeks', 2, 'Spend time with your design in two different weeks']] },
+      { key: 'steady', name: 'Steady', needs: [['weeks', 6, 'in six weeks']] },
+      { key: 'tidal', name: 'Tidal', needs: [['weeks', 12, 'in twelve weeks']] }] }
+  ];
+  var BADGE_KEYS = {}; BADGES.forEach(function (c) { c.tiers.forEach(function (t) { BADGE_KEYS[t.key] = 1; }); });
+  function badgeBoard(state) {
+    var f = facts(state), kept = getPrefs(state.user).badges;
+    var cats = BADGES.map(function (c) {
+      var tiers = c.tiers.map(function (t, i) {
+        var needs = t.needs.map(function (n) { var have = Number(f[n[0]]) || 0; return { fact: n[0], have: have, need: n[1], label: n[2], met: have >= n[1] }; });
+        var met = needs.every(function (n) { return n.met; });
+        return { key: t.key, name: t.name, tier: TIERS[i], level: i + 1, needs: needs, met: met, earned: met || !!kept[t.key], on: kept[t.key] || '' };
+      });
+      var level = 0; tiers.forEach(function (t) { if (t.earned && t.level === level + 1) level = t.level; });
+      return { key: c.key, name: c.name, blurb: c.blurb, tiers: tiers, level: level, next: tiers[level] || null };
+    });
+    var fresh = []; cats.forEach(function (c) { c.tiers.forEach(function (t) { if (t.met && !kept[t.key]) fresh.push(t.key); }); });
+    return { score: scoreV1(state), facts: f, categories: cats, fresh: fresh,
+      earned: cats.reduce(function (n, c) { return n + c.tiers.filter(function (t) { return t.earned; }).length; }, 0), total: BADGES.length * 3 };
+  }
+
+  /* ---------- momentum: when the design has held still, a few easy ways back in ---------- */
+  function latestTime(list) { var m = 0; list.forEach(function (t) { var v = new Date(t).getTime(); if (!isNaN(v) && v > m) m = v; }); return m; }
+  function momentum(state, nowMs) {
+    nowMs = nowMs || Date.now();
+    var prefs = getPrefs(state.user);
+    if (!prefs.nudges || !prefs.types.momentum) return null;
+    var p = progress(state), sc = scoreV1(state);
+    var joined = new Date(state.user.CreatedAt).getTime();
+    var v1Moves = latestTime(state.history.map(function (h) { return h.ChangedAt; }).concat(state.chosen.map(function (c) { return c.ApprovedAt; }), state.exploration.map(function (r) { return r.UpdatedAt; })));
+    var kind, last, days;
+    if (!p.allDrafted) {
+      if (!v1Moves) { days = isNaN(joined) ? 0 : (nowMs - joined) / 86400000; if (days < 2) return null; kind = 'not-started'; }
+      else { days = (nowMs - v1Moves) / 86400000; if (days < 7) return null; kind = 'stalled'; }
+    } else {
+      last = latestTime(state.history.map(function (h) { return h.ChangedAt; }).concat(state.reviews.map(function (r) { return r.CreatedAt; }), state.recs.map(function (r) { return r.RespondedAt; })));
+      days = (nowMs - last) / 86400000; if (days < 21) return null; kind = 'iteration';
+    }
+    var steps = [];
+    var nx = p.next;
+    if (kind !== 'iteration' && nx) steps.push(nx.key === 'exploration'
+      ? { label: 'Explore one area of belief, one lens at a time', go: 'begin', time: 'about 10 minutes' }
+      : { label: 'Answer one question about your ' + nx.name, go: 'element:' + nx.key, time: 'about 5 minutes' });
+    if (kind === 'iteration') {
+      var lr = latestReview(state);
+      if (!lr || daysSince(lr.CreatedAt, nowMs) > 30) steps.push({ label: 'Run a congruence review and see what has drifted', go: 'iterate', time: 'about 5 minutes' });
+      var byEl = {}; state.design.forEach(function (r) { byEl[r.Element] = r.UpdatedAt; });
+      var oldest = ELEMENTS.slice().sort(function (a, b) { return new Date(byEl[a.element] || 0) - new Date(byEl[b.element] || 0); })[0];
+      steps.push({ label: 'Reread your ' + oldest.element + '. Does it still hold?', go: 'element:' + oldest.element, time: 'about 5 minutes' });
+    }
+    var openC = state.commitments.filter(function (c) { return c.Status === 'Open'; }).slice(-1)[0];
+    if (openC) steps.push({ label: 'Close the loop on "' + clip(openC.Commitment, 60) + '"', go: 'journey', time: 'a minute' });
+    if (!state.assessments.some(function (r) { return r.Summary; })) steps.push({ label: 'Add a strengths or personality result you already have', go: 'inputs:tests', time: 'a few minutes' });
+    else if (!(state.goals || []).some(function (g) { return g.Status === 'Open'; })) steps.push({ label: 'Set one goal for the next 30 to 90 days', go: 'inputs:goals', time: 'a few minutes' });
+    steps.push({ label: 'Write one honest line in your journal', go: 'inputs:journal', time: 'a minute' });
+    var say = kind === 'not-started' ? 'Every design begins with a single stone. Here are a few easy ways to set the first one:'
+      : kind === 'stalled' ? 'It\'s been ' + Math.floor(days) + ' days since your design last moved, and that\'s all right. A few small ways back in:'
+      : 'Your design has held still for ' + Math.floor(days) + ' days. A living design likes a little tending. A few light ways to stir it:';
+    return { kind: kind, days: Math.floor(days), say: say, steps: steps.slice(0, 3), score: sc.pct };
+  }
+
   function daysSince(iso, nowMs) { var t = new Date(iso).getTime(); return isNaN(t) ? 9999 : (nowMs - t) / 86400000; }
   function computeNudges(state, nowMs) {
     nowMs = nowMs || Date.now();
@@ -825,7 +960,7 @@ var LID = (function () {
       if (lastWhy && (nowMs - lastWhy) / 86400000 > 90) out.push({ type: 'review', text: 'A season has passed since your Why last changed. Does it still hold?', action: 'design', cta: 'Revisit your Why' });
     }
     if (on('reflection') && age > 2 && (!lastJournal || daysSince(lastJournal.CreatedAt, nowMs) > 7)) {
-      out.push({ type: 'reflection', text: lastJournal ? 'A week since your last journal entry. A few lines is plenty.' : 'Try the journal: a few honest lines between sessions give your coach more to work with.', action: 'journal', cta: 'Write' });
+      out.push({ type: 'reflection', text: lastJournal ? 'A week since your last journal entry. A few lines is plenty.' : 'Try the journal: a few honest lines between sessions give MAIA more to work with.', action: 'journal', cta: 'Write' });
     }
     if (on('commitments')) {
       var stale = state.commitments.filter(function (c) { return c.Status === 'Open' && daysSince(c.CreatedAt, nowMs) > 7; });
@@ -833,7 +968,7 @@ var LID = (function () {
     }
     if (on('inputs')) {
       var have = state.assessments.filter(function (r) { return r.Summary; }).length;
-      if (p.whatOpen && !have) out.push({ type: 'inputs', text: 'Your design has reached the What. Strengths results will sharpen Resources and your coach\'s suggestions.', action: 'tests', cta: 'Add results' });
+      if (p.whatOpen && !have) out.push({ type: 'inputs', text: 'Your design has reached the What. Strengths results will sharpen Resources and MAIA\'s suggestions.', action: 'tests', cta: 'Add results' });
       else if (p.allDrafted && !state.growth.length) out.push({ type: 'inputs', text: 'Log something you\'ve learned or a skill you\'re building. It feeds Resources and future suggestions.', action: 'growth', cta: 'Log it' });
     }
     return out;
@@ -850,7 +985,8 @@ var LID = (function () {
     var lr = latestReview(state);
     var goals = (state.goals || []), exps = (state.experiences || []);
     if (!(tests.length || growth.length || journal.length || accepted.length || declined.length || lr || goals.length || exps.length)) return '';
-    L.push('## Supplementary inputs (aids to guidance; the framework stays at the core. Never let a test result define the person; their own words lead.)');
+    L.push('## Their Inputs (aids to guidance; the framework stays at the core. Never let a test result define the person; their own words lead.)');
+    L.push('Coach with these actively. When one bears on the moment, name it specifically (a result, a goal and its obstacle, an experience they hope for, a journal theme, a skill) and ask how it connects. Notice where an input and the design pull against each other, and where an input is evidence for something they have not yet said. Weave them in; do not list them back.');
     if (tests.length) { L.push('Strengths & personality results (self-reported):'); tests.forEach(function (r) { var t = testDef(r.Test); L.push('- ' + (t ? t.name : r.Test) + ': ' + r.Summary + (r.Notes ? ' — their note: "' + clip(r.Notes, 160) + '"' : '')); }); }
     if (growth.length) { L.push('Learning & skills log:'); growth.slice(-10).forEach(function (g) { L.push('- ' + g.Kind + (g.Status === 'Planned' ? ' (planned)' : '') + ': ' + clip(g.Title, 120) + (g.Detail ? ' — ' + clip(g.Detail, 160) : '')); }); }
     var openG = goals.filter(function (g) { return g.Status === 'Open'; }), doneG = goals.filter(function (g) { return g.Status === 'Done'; });
@@ -895,6 +1031,7 @@ var LID = (function () {
     coachPrepare: coachPrepare, coachRecord: coachRecord, contextBlock: contextBlock,
     TESTS: TESTS, testDef: testDef, summarizeAssessment: summarizeAssessment, validateAssessment: validateAssessment, parseJSON: parseJSON,
     NUDGE_TYPES: NUDGE_TYPES, getPrefs: getPrefs, computeNudges: computeNudges, latestReview: latestReview, homeContext: homeContext, whatsNew: whatsNew, RELEASES: RELEASES,
+    scoreV1: scoreV1, badgeBoard: badgeBoard, BADGES: BADGES, TIERS: TIERS, momentum: momentum, partOfDay: partOfDay,
     HORIZONS: HORIZONS, EXPERIENCE_KINDS: EXPERIENCE_KINDS, PATHS: PATHS
   };
 })();
