@@ -84,6 +84,8 @@ function claudeStub() {
               { layer: 'What', kind: 'community', title: 'Find a writers circle', body: 'Fellow travelers.', tracesTo: 'Relationships', action: { type: 'community' }, search: 'writers circle near me' }]
     }) + '\n```';
     if (/TASK FOR THE APP/.test(last)) return /Belief:/.test(last) ? 'Belief: Enough is a choice I make each day.\nWhy: Chasing more kept me from noticing what I had.' : '- I am enough, and growing.\n- People mostly do their best.';
+    const sys = (body.system || []).map((x) => x.text).join('\n');
+    if (/start of today's visit/.test(sys) && /vision/i.test(String(last))) return 'Vision sounds alive for you today. Let us go there together.\n[[open:element:Vision]]';
     return 'Take your time with that. What do you notice when you sit with it?';
   };
   const handler = async (req, res) => {

@@ -125,6 +125,8 @@ const FONTS = process.env.LID_FONT_CSS ? fs.readFileSync(process.env.LID_FONT_CS
       await pg.click('[data-act=saveGoal]');
       await pg.waitForSelector('.goal:has-text("Run a 10k")');
       ok(/Plan in place/.test(await pg.textContent('.goal')), 'a SMART goal is added with its obstacle and plan');
+      await pg.waitForSelector('.toast:has-text("Badge earned: First Sprout")');
+      ok(!!(await pg.$('#nav [data-view=badges] .newpip')), 'a first goal earns a badge, celebrated quietly, with a mark on Badges');
       await pg.click('.goal:has-text("Run a 10k")');
       await pg.check('#gl-done');
       ok(await pg.isVisible('#gl-learned'), 'completing a goal asks what it taught you');
@@ -163,13 +165,20 @@ const FONTS = process.env.LID_FONT_CSS ? fs.readFileSync(process.env.LID_FONT_CS
       await pg.waitForSelector('.ticket.lived');
       await pg.waitForTimeout(1500); await pg.screenshot({ path: path.join(SHOTS, 'H7-experiences.png'), fullPage: true });
       ok(/Awe needs patience/.test(await pg.textContent('.ticket.lived')), 'a life experience moves to Lived with what it taught');
+      // Badges: the v1 score and six paths in three tiers
+      await pg.click('#nav [data-view=badges]');
+      await pg.waitForSelector('.bcat');
+      ok((await pg.$$('.bcat')).length === 6 && (await pg.$$('.bcat .btier')).length === 18 && !!(await pg.$('.bcat.expansion .btier.earned')) && !(await pg.$('#nav [data-view=badges] .newpip')),
+        'Badges shows six paths of three stones, the earned one laid, and the mark clears on arrival');
+      ok(/of the way to version one/.test(await pg.textContent('.badge-top')), 'the v1 score leads the Badges page');
+      await pg.waitForTimeout(1200); await pg.screenshot({ path: path.join(SHOTS, 'H12-badges-desktop.png'), fullPage: true });
       await pg.click('#nav [data-view=home]');
       await pg.waitForSelector('.home .chat');
     } else {
       await pg.waitForSelector('.home .chat');
       // Returning after an update: the what's-new window, once, with a mark on each place that changed.
       await pg.waitForSelector('.dialog.whatsnew');
-      ok((await pg.$$('.wn-item')).length === 3 && /Give it a try/.test(await pg.textContent('.dialog.whatsnew')), 'phone: returning after an update opens what\'s new, with a nudge to try each thing');
+      ok((await pg.$$('.wn-item')).length === 5 && /Give it a try/.test(await pg.textContent('.dialog.whatsnew')), 'phone: returning after an update opens what\'s new, with a nudge to try each thing');
       await pg.waitForTimeout(900); await pg.screenshot({ path: path.join(SHOTS, 'H10-whatsnew-phone.png') });
       ok(!!(await pg.$('#nav [data-view=inputs] .newpip')) && !!(await pg.$('#nav [data-view=home] .newpip')) && !(await pg.$('#nav [data-view=journey] .newpip')), 'the tabs where things changed carry a small mark, and only those');
       await pg.click('[data-act=wnTry][data-key=goals]');
@@ -178,9 +187,24 @@ const FONTS = process.env.LID_FONT_CSS ? fs.readFileSync(process.env.LID_FONT_CS
       await pg.click('[data-act=tab][data-tab=experiences]');
       await pg.waitForFunction(() => !document.querySelector('#nav [data-view=inputs] .newpip'));
       ok(true, 'once both new places are visited, the Inputs tab is quiet');
+      await pg.click('#nav [data-view=badges]'); await pg.waitForSelector('.bcat');
+      ok(!(await pg.$('#nav [data-view=badges] .newpip')), 'visiting Badges clears its mark');
       await pg.click('#nav [data-view=home]');
       await pg.waitForSelector('#pathCard .newmark');
+      // A new visit opens the Design page fresh: the greeting, a clean conversation, and places to begin.
+      ok(/^Good (morning|afternoon|evening), Nate\.$/.test((await pg.textContent('.hero h1')).trim()) && (await pg.textContent('.hero .lede')).trim() === 'What part of your design would you like to work on today?',
+        'phone: a new visit greets by time of day and name, and asks what to work on today');
+      ok(!!(await pg.$('.today-empty')) && !(await pg.$('.msg')) && /Pick up where you left off: Strategy/.test(await pg.textContent('.picks')) && /meet MAIA/.test(await pg.textContent('.chat-head')), 'phone: the conversation starts clean, with a way back to where they left off, and MAIA marked new');
+      await pg.waitForTimeout(900); await pg.screenshot({ path: path.join(SHOTS, 'H13-today-phone.png') });
+      await pg.fill('#msg', 'I think I want to work on my vision'); await pg.keyboard.press('Enter');
+      await pg.waitForSelector('.routes [data-act=goCtx][data-ctx="element:Vision"]', { timeout: 15000 });
+      ok(!/\[\[open/.test(await pg.textContent('#stream')) && /Work on Vision with MAIA/.test(await pg.textContent('.routes')), 'MAIA points to the part they chose with a button, not code');
+      // Returning to a conversation where MAIA's question is still waiting: no new question.
+      const callsBefore = cl.seen.length;
       await pg.click('.path button[data-key="Strategy"]');
+      await pg.waitForFunction(() => /Strategy/.test(document.querySelector('.chat-head').textContent) && document.querySelectorAll('.msg.coach').length >= 1, null, { timeout: 15000 });
+      await pg.waitForTimeout(1500);
+      ok(cl.seen.length === callsBefore, 'returning to Strategy, MAIA does not ask again while a question is still waiting');
       await pg.waitForFunction(() => !document.querySelector('.newpip') && !document.querySelector('.newmark'));
       ok(true, 'stepping onto the path clears the last mark');
       // An update that lands mid-session shows on the next refresh, as a quiet note in the corner.

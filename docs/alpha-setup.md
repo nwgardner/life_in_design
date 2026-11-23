@@ -71,5 +71,5 @@ Open your Render address, enter your invited email, open the link from your inbo
 | "Sign-in emails can't be sent to this address yet" | Supabase's built-in email: add a custom SMTP sender |
 | "Too many sign-in emails just now" | The built-in sender's 2-per-hour limit |
 | The link opens the app but you're still signed out | The Render address isn't in Supabase's Redirect URLs |
-| "The coach could not sign in to Claude" | `ANTHROPIC_API_KEY` is wrong or missing |
+| "MAIA could not sign in to Claude" | `ANTHROPIC_API_KEY` is wrong or missing |
 | "Loading your design failed (404)" | The first migration hasn't run: check **Project Settings → Integrations → GitHub** in Supabase |

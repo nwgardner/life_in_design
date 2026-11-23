@@ -134,7 +134,7 @@ function createApp({ supabase, ask, config, engine = loadEngine(), now = Date.no
       await flush(auth.token, store);
       line({ t: 'done', result: JSON.parse(JSON.stringify(result)) });
     } catch (e) {
-      line({ t: 'error', error: e.message || 'The coach could not answer just now.' });
+      line({ t: 'error', error: e.message || 'MAIA could not answer just now.' });
     }
     res.end();
   }
